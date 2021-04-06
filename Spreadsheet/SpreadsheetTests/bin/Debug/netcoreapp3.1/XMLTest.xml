@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<spreadsheet version="default">
+  <cell name="A1">
+    <contents>10</contents>
+  </cell>
+  <cell name="B2">
+    <contents>=A1+20*90.0</contents>
+  </cell>
+  <cell name="C9">
+    <contents>10</contents>
+  </cell>
+  <cell name="D3">
+    <contents>hello world</contents>
+  </cell>
+</spreadsheet>
