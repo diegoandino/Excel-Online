@@ -11,3 +11,16 @@ C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreads
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.csproj.CopyComplete
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.dll
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\SpreadsheetPanel.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\SpreadsheetPanel.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\Formula.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\Spreadsheet.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\DependencyGraph.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\Formula.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\Spreadsheet.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\DependencyGraph.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.csprojAssemblyReference.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.csproj.CoreCompileInputs.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.csproj.CopyComplete
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.pdb

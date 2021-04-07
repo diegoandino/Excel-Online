@@ -6,3 +6,12 @@ C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreads
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.csproj.CoreCompileInputs.cache
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.dll
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\bin\Debug\netstandard2.0\DependencyGraph.deps.json
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\bin\Debug\netstandard2.0\DependencyGraph.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\bin\Debug\netstandard2.0\DependencyGraph.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.csprojAssemblyReference.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.AssemblyInfoInputs.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.AssemblyInfo.cs
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.csproj.CoreCompileInputs.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\DependencyGraph\obj\Debug\netstandard2.0\DependencyGraph.pdb

@@ -6,3 +6,12 @@ C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreads
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
 C:\Users\Diego\Desktop\CODE\SOFTWARE_PRACTICE_1\PS6-GUI\ps6-de_surf_3500\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.deps.json
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csprojAssemblyReference.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfoInputs.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfo.cs
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb

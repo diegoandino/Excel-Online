@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "zZJpFtrVouTEL8AZmoEzJebINEtWLzIONxqL7VFsUknOSdb1YFt/iS7h7CUPkqZrpgxHf0/JyCFGsyczeT436w==",
+  "dgSpecHash": "HlL7AVPHC6GL0+5yd/w0dyp836Ywn82P/PfkplvuAjINdUynTUai76tyrUjh421gAbg8f8TGA/NkzFkH3sfIhA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj",
+  "projectFilePath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Diego\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Users\\Diego\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
   ],
   "logs": []
 }
