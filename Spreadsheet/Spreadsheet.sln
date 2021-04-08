@@ -27,8 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.txt = README.txt
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkController", "..\..\..\..\Desktop\netwrklib\Tank-Wars-Multiplayer-main\TankWars\NetworkController\NetworkController.csproj", "{2BB68ED1-B7A9-4FD2-A4DB-B641DA2578FF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,10 +73,6 @@ Global
 		{FA926045-E690-4824-845C-EB76882747DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA926045-E690-4824-845C-EB76882747DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA926045-E690-4824-845C-EB76882747DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2BB68ED1-B7A9-4FD2-A4DB-B641DA2578FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BB68ED1-B7A9-4FD2-A4DB-B641DA2578FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BB68ED1-B7A9-4FD2-A4DB-B641DA2578FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BB68ED1-B7A9-4FD2-A4DB-B641DA2578FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
