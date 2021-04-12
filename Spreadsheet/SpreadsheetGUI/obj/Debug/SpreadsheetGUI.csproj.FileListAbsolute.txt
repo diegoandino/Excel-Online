@@ -36,3 +36,5 @@ C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\o
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\obj\Debug\SpreadsheetGUI.csproj.CopyComplete
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\obj\Debug\SpreadsheetGUI.exe
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\obj\Debug\SpreadsheetGUI.pdb
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\bin\Debug\NetworkController.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\bin\Debug\NetworkController.pdb

@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NetworkController">
+      <HintPath>..\NetworkController\obj\Debug\netstandard2.0\NetworkController.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -83,6 +86,10 @@
     <ProjectReference Include="..\Formula\Formula.csproj">
       <Project>{398dfcf0-7870-4a27-94c8-45c14926be9e}</Project>
       <Name>Formula</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkController\NetworkController.csproj">
+      <Project>{d522f7a9-b369-422e-aeda-fbc716c2de4f}</Project>
+      <Name>NetworkController</Name>
     </ProjectReference>
     <ProjectReference Include="..\SpreadsheetPanel\SpreadsheetPanel.csproj">
       <Project>{FA926045-E690-4824-845C-EB76882747DB}</Project>

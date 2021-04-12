@@ -7,6 +7,7 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
+using NetworkController;
 
 namespace SS
 {
@@ -16,36 +17,33 @@ namespace SS
     /// through event handlers where our model will handle cell data as well as dependenceis and arithmetic
     /// calculations.  
     /// @Authors Diego Andino & Tarik Vu
+    /// 
+    /// Ver 1.1 (4/11/2021)
+    /// - Modified to initiate connections to server
+    /// 
     /// </summary>
     /// Testing push for networking
 
 
     public partial class SpreadsheetForm : Form
     {
-        /// <summary>
-        /// Private Controller to manage Spreadsheet.
-        /// </summary>
+        /// <summary> Private Controller to manage Spreadsheet.</summary>
         private SpreadsheetController controller;
 
-
-        /// <summary>
-        /// Private helper dictionary to store cells and their index
-        /// by rows and columns. 
-        /// </summary>
+        /// <summary> Private helper dictionary to store cells and their index
+        /// by rows and columns. </summary>
         private Dictionary<string, int[]> cells;
-
-        
-        /// <summary>
-        /// The name of our default cell.
-        /// </summary>
+  
+        /// <summary> The name of our default cell. </summary>
         private static readonly string DefaultCell = "A1";
 
-
-        /// <summary>
-        /// Bitmap to use for printing feature.
-        /// </summary>
+        /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
+        ////// Added for CS3505 Final: //////
+
+        /// <summary> Our connection to the server </summary>
+        private Network server;
 
         /// <summary>
         /// Public SpreadsheetForm constructor.
@@ -55,7 +53,38 @@ namespace SS
             controller = new SpreadsheetController();
             cells = new Dictionary<string, int[]>();
 
+            // Connection based code:
+            server = new Network();
+            server.Error += ShowError;
+            server.UpdateArrived += ProcessUpdate;
+            server.Connected += HandleConnected;
+
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Upon connection, we setup our spreadsheet.
+        /// </summary>
+        private void HandleConnected()
+        {
+            MessageBox.Show("Connected");
+        }
+
+        /// <summary>
+        /// Method used to report any errors that occured.
+        /// </summary>
+        /// <param name="err">Error to be reported</param>
+        private void ShowError(string error)
+        {
+            MessageBox.Show(error);
+        }
+
+        /// <summary>
+        /// Where we process updates
+        /// </summary>
+        private void ProcessUpdate()
+        {
+            MessageBox.Show("In process update");
         }
 
 
@@ -81,6 +110,55 @@ namespace SS
             // Our Default starting cell A1
             UpdateTextBoxes(DefaultCell);
             MainPanel.Focus();
+
+            ///// Added for 3505 Final /////
+
+            // Hook up new Controls (connect button)
+            ConnectButton.Click+= ConnectClick;
+
+            // convienence for connecting to a local server
+            ServerTextBox.Text = "localhost";
+
+        }
+
+        /// <summary>
+        /// This method is called when our user clicks on the connect button 
+        /// and tries to connect to a server. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ConnectClick(object sender, EventArgs e)
+        {
+            // User must input a name
+            if (UserNameTextBox.Text.Length == 0)
+            {
+                MessageBox.Show("Player Name Cannot Exceed 16 Characters Or Be Empty");
+                return;
+            }
+
+            // Disable controls to try to connect to Server
+            ConnectButton.Enabled = false;
+            UserNameTextBox.Enabled = false;
+            ServerTextBox.Enabled = false;
+
+            // Try to connect to Server
+            try
+            {
+                server.Connect(ServerTextBox.Text, UserNameTextBox.Text);
+                ConnectButton.Text = "Connected!";
+            }
+
+            // Couldn't connect
+            catch
+            {
+                MessageBox.Show("Connecting to server failed.");
+                ConnectButton.Enabled = true;
+                UserNameTextBox.Enabled = true;
+                ServerTextBox.Enabled = true;
+
+                return;
+            }
+
         }
 
 
@@ -121,11 +199,17 @@ namespace SS
         /// This method is called whenever our user enters contents into
         /// our CellContents box.  That (String) contents is then added to our
         /// spreadsheet (model) with the appropriate cell name.
+        /// 
+        /// This method is called when the user presses ENTER on their keyboard.
+        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void UpdateContentsOfCell(object sender, EventArgs e)
         {
+
+            // NOTE: IF !CONNECTED POPUP CANT EDIT
+
             try
             {
                 IEnumerable<string> CellsToRecalculate = controller.SetCellContents(CellContentsBox.Text);
@@ -419,6 +503,11 @@ namespace SS
         private void timer_Tick(object sender, EventArgs e)
         {
             TimeLabel.Text = DateTime.Now.ToLongTimeString();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
