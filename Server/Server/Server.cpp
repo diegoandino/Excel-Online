@@ -123,13 +123,11 @@ void Server::OnClientDisconnect(int client_socket) {
 
 
 void Server::OnMessageReceived(int client_socket, const char* message, int length) {
-    std::string jsonString = message;
-    JObject json = jsonString;
+    JObject json = JObject::parse(message);
 
-    // iterate the array
+    // Iterate the array
     for (JObject::iterator it = json.begin(); it != json.end(); ++it) {
-        std::cout << *it << '\n';
+        if (it.key() == "name")
+            std::cout << "Client: " << *it << " has connected!" << '\n';
     }
-
-    //std::cout << message << std::endl;
 }
