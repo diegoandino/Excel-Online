@@ -1,6 +1,5 @@
 #include "Server.h"
 
-
 int Server::Init() {
     // Initialize WinSock 
     WSADATA wsaData;
@@ -114,15 +113,23 @@ void Server::BroadcastToClients(int sending_client, const char* message, int len
 
 
 void Server::OnClientConnect(int client_socket) {
-
+    std::cout << client_socket << std::endl;
 }
 
 
 void Server::OnClientDisconnect(int client_socket) {
-
+    std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
 }
 
 
 void Server::OnMessageReceived(int client_socket, const char* message, int length) {
+    std::string jsonString = message;
+    JObject json = jsonString;
 
+    // iterate the array
+    for (JObject::iterator it = json.begin(); it != json.end(); ++it) {
+        std::cout << *it << '\n';
+    }
+
+    //std::cout << message << std::endl;
 }

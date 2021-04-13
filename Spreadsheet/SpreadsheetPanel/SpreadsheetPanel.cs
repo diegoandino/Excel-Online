@@ -94,11 +94,9 @@ namespace SS
         }
 
 
-
         /// <summary>
         /// Clears the display.
         /// </summary>
-
         public void Clear()
         {
             drawingPanel.Clear();
@@ -489,6 +487,7 @@ namespace SS
                         _ssp.SelectionChanged(_ssp);
                     }
                 }
+
                 Invalidate();
             }
 

@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.txt = README.txt
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkController", "NetworkController\NetworkController.csproj", "{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{FA926045-E690-4824-845C-EB76882747DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA926045-E690-4824-845C-EB76882747DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA926045-E690-4824-845C-EB76882747DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

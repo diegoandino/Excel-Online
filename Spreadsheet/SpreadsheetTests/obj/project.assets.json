@@ -5772,11 +5772,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\SpreadsheetTests\\SpreadsheetTests.csproj",
+      "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\SpreadsheetTests\\SpreadsheetTests.csproj",
       "projectName": "SpreadsheetTests",
-      "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\SpreadsheetTests\\SpreadsheetTests.csproj",
+      "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\SpreadsheetTests\\SpreadsheetTests.csproj",
       "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\SpreadsheetTests\\obj\\",
+      "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\SpreadsheetTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -5796,8 +5796,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj": {
-              "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj"
+            "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj": {
+              "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj"
             }
           }
         }
@@ -5843,7 +5843,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

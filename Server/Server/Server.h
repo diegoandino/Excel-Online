@@ -6,6 +6,11 @@
 #include <WS2tcpip.h>
 #include <winsock2.h>
 #include <stdio.h>
+#include <fstream>
+
+#include <nlohmann/json.hpp>
+// For convenience
+using JObject = nlohmann::json;
 
 #pragma comment (lib, "ws2_32.lib")
 

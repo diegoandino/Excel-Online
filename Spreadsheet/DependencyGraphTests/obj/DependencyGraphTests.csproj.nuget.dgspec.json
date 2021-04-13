@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj": {}
+    "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj": {
+    "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj",
+        "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj",
         "projectName": "DependencyGraphTests",
-        "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj",
+        "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraphTests\\DependencyGraphTests.csproj",
         "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraphTests\\obj\\",
+        "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraphTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -31,8 +31,8 @@
         "frameworks": {
           "netcoreapp3.0": {
             "projectReferences": {
-              "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj": {
-                "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj"
+              "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj": {
+                "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj"
               }
             }
           }
@@ -98,18 +98,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj": {
+    "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj",
+        "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj",
         "projectName": "DependencyGraph",
-        "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj",
+        "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraph\\DependencyGraph.csproj",
         "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\SOFTWARE_PRACTICE_1\\PS6-GUI\\ps6-de_surf_3500\\Spreadsheet\\DependencyGraph\\obj\\",
+        "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\DependencyGraph\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -157,7 +157,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -33,6 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NetworkController">
+      <HintPath>..\NetworkController\obj\Debug\netstandard2.0\NetworkController.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -66,6 +72,7 @@
     <EmbeddedResource Include="SpreadsheetForm.resx">
       <DependentUpon>SpreadsheetForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -83,6 +90,10 @@
     <ProjectReference Include="..\Formula\Formula.csproj">
       <Project>{398dfcf0-7870-4a27-94c8-45c14926be9e}</Project>
       <Name>Formula</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkController\NetworkController.csproj">
+      <Project>{d522f7a9-b369-422e-aeda-fbc716c2de4f}</Project>
+      <Name>NetworkController</Name>
     </ProjectReference>
     <ProjectReference Include="..\SpreadsheetPanel\SpreadsheetPanel.csproj">
       <Project>{FA926045-E690-4824-845C-EB76882747DB}</Project>

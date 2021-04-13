@@ -139,13 +139,60 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\jsoncpp-pypi\dist\jsoncpp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\jsoncpp-pypi\include\json\forwards.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\document.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\encodedstream.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\encodings.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\error\en.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\error\error.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\filereadstream.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\filewritestream.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\fwd.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\clzll.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\itoa.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\meta.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\pow10.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\regex.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\stack.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\strtod.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\internal\swap.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\memorybuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\memorystream.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\pointer.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\prettywriter.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\schema.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\stream.h" />
+    <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\stringbuffer.h" />
     <ClInclude Include="Server.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="I:\Microsoft Visual Studio\VC\Tools\MSVC\14.27.29110\include\deque" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.9.1\build\native\nlohmann.json.targets'))" />
+  </Target>
 </Project>

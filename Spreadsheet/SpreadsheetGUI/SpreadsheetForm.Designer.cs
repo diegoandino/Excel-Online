@@ -49,12 +49,17 @@
             this.printDocument = new System.Drawing.Printing.PrintDocument();
             this.TimeLabel = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.UserNameTextBox = new System.Windows.Forms.TextBox();
+            this.UsernameLabel = new System.Windows.Forms.Label();
+            this.ServerAddressLabel = new System.Windows.Forms.Label();
+            this.ServerTextBox = new System.Windows.Forms.TextBox();
+            this.ConnectButton = new System.Windows.Forms.Button();
             this.FileToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // CellNameBox
             // 
-            this.CellNameBox.Location = new System.Drawing.Point(92, 46);
+            this.CellNameBox.Location = new System.Drawing.Point(339, 61);
             this.CellNameBox.Name = "CellNameBox";
             this.CellNameBox.ReadOnly = true;
             this.CellNameBox.Size = new System.Drawing.Size(100, 20);
@@ -63,7 +68,7 @@
             // CellNameLabel
             // 
             this.CellNameLabel.AutoSize = true;
-            this.CellNameLabel.Location = new System.Drawing.Point(28, 49);
+            this.CellNameLabel.Location = new System.Drawing.Point(364, 45);
             this.CellNameLabel.Name = "CellNameLabel";
             this.CellNameLabel.Size = new System.Drawing.Size(58, 13);
             this.CellNameLabel.TabIndex = 2;
@@ -72,7 +77,7 @@
             // CellValueLabel
             // 
             this.CellValueLabel.AutoSize = true;
-            this.CellValueLabel.Location = new System.Drawing.Point(198, 49);
+            this.CellValueLabel.Location = new System.Drawing.Point(487, 45);
             this.CellValueLabel.Name = "CellValueLabel";
             this.CellValueLabel.Size = new System.Drawing.Size(37, 13);
             this.CellValueLabel.TabIndex = 3;
@@ -80,7 +85,7 @@
             // 
             // CellValueBox
             // 
-            this.CellValueBox.Location = new System.Drawing.Point(241, 46);
+            this.CellValueBox.Location = new System.Drawing.Point(455, 61);
             this.CellValueBox.Name = "CellValueBox";
             this.CellValueBox.ReadOnly = true;
             this.CellValueBox.Size = new System.Drawing.Size(100, 20);
@@ -89,7 +94,7 @@
             // CellContentsLabel
             // 
             this.CellContentsLabel.AutoSize = true;
-            this.CellContentsLabel.Location = new System.Drawing.Point(347, 49);
+            this.CellContentsLabel.Location = new System.Drawing.Point(593, 45);
             this.CellContentsLabel.Name = "CellContentsLabel";
             this.CellContentsLabel.Size = new System.Drawing.Size(52, 13);
             this.CellContentsLabel.TabIndex = 5;
@@ -97,7 +102,7 @@
             // 
             // CellContentsBox
             // 
-            this.CellContentsBox.Location = new System.Drawing.Point(405, 46);
+            this.CellContentsBox.Location = new System.Drawing.Point(570, 61);
             this.CellContentsBox.Name = "CellContentsBox";
             this.CellContentsBox.Size = new System.Drawing.Size(100, 20);
             this.CellContentsBox.TabIndex = 6;
@@ -189,9 +194,9 @@
             this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainPanel.Location = new System.Drawing.Point(0, 75);
+            this.MainPanel.Location = new System.Drawing.Point(0, 92);
             this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Size = new System.Drawing.Size(1146, 688);
+            this.MainPanel.Size = new System.Drawing.Size(1146, 671);
             this.MainPanel.TabIndex = 0;
             // 
             // TimeLabel
@@ -210,11 +215,57 @@
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // UserNameTextBox
+            // 
+            this.UserNameTextBox.Location = new System.Drawing.Point(111, 31);
+            this.UserNameTextBox.Name = "UserNameTextBox";
+            this.UserNameTextBox.Size = new System.Drawing.Size(100, 20);
+            this.UserNameTextBox.TabIndex = 10;
+            // 
+            // UsernameLabel
+            // 
+            this.UsernameLabel.AutoSize = true;
+            this.UsernameLabel.Location = new System.Drawing.Point(6, 34);
+            this.UsernameLabel.Name = "UsernameLabel";
+            this.UsernameLabel.Size = new System.Drawing.Size(58, 13);
+            this.UsernameLabel.TabIndex = 11;
+            this.UsernameLabel.Text = "Username:";
+            // 
+            // ServerAddressLabel
+            // 
+            this.ServerAddressLabel.AutoSize = true;
+            this.ServerAddressLabel.Location = new System.Drawing.Point(6, 64);
+            this.ServerAddressLabel.Name = "ServerAddressLabel";
+            this.ServerAddressLabel.Size = new System.Drawing.Size(82, 13);
+            this.ServerAddressLabel.TabIndex = 12;
+            this.ServerAddressLabel.Text = "Server Address:";
+            // 
+            // ServerTextBox
+            // 
+            this.ServerTextBox.Location = new System.Drawing.Point(111, 61);
+            this.ServerTextBox.Name = "ServerTextBox";
+            this.ServerTextBox.Size = new System.Drawing.Size(100, 20);
+            this.ServerTextBox.TabIndex = 13;
+            // 
+            // ConnectButton
+            // 
+            this.ConnectButton.Location = new System.Drawing.Point(225, 59);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(75, 23);
+            this.ConnectButton.TabIndex = 14;
+            this.ConnectButton.Text = "Connect";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            // 
             // SpreadsheetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1146, 764);
+            this.Controls.Add(this.ConnectButton);
+            this.Controls.Add(this.ServerTextBox);
+            this.Controls.Add(this.ServerAddressLabel);
+            this.Controls.Add(this.UsernameLabel);
+            this.Controls.Add(this.UserNameTextBox);
             this.Controls.Add(this.TimeLabel);
             this.Controls.Add(this.FileToolStrip);
             this.Controls.Add(this.CellContentsBox);
@@ -227,7 +278,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "SpreadsheetForm";
-            this.Text = "SpreadsheetForm de_surf_3500";
+            this.Text = "SpreadsheetForm: It should work now CS3505";
             this.Load += new System.EventHandler(this.SpreadsheetForm_Load);
             this.FileToolStrip.ResumeLayout(false);
             this.FileToolStrip.PerformLayout();
@@ -257,6 +308,11 @@
         private System.Drawing.Printing.PrintDocument printDocument;
         private System.Windows.Forms.Label TimeLabel;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.TextBox UserNameTextBox;
+        private System.Windows.Forms.Label UsernameLabel;
+        private System.Windows.Forms.Label ServerAddressLabel;
+        private System.Windows.Forms.TextBox ServerTextBox;
+        private System.Windows.Forms.Button ConnectButton;
     }
 }
 
