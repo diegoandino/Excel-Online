@@ -55,7 +55,7 @@ namespace SS
 
             // Connection based code:
             server = new Network();
-            server.Error += ShowError;
+            server.ConnectionError += ShowConnectionError;
             server.UpdateArrived += ProcessUpdate;
             server.Connected += HandleConnected;
 
@@ -74,9 +74,19 @@ namespace SS
         /// Method used to report any errors that occured.
         /// </summary>
         /// <param name="err">Error to be reported</param>
-        private void ShowError(string error)
+        private void ShowConnectionError(string error)
         {
             MessageBox.Show(error);
+            // Re-enable the controlls so the user can reconnect
+            this.Invoke(new MethodInvoker(
+                () =>
+                {
+                    ConnectButton.Text = "Connect";
+
+                    ConnectButton.Enabled = true;
+                    ServerTextBox.Enabled = true;
+                    UserNameTextBox.Enabled = true;
+                }));
         }
 
         /// <summary>
