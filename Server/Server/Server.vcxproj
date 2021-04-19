@@ -140,6 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\jsoncpp-pypi\dist\jsoncpp.cpp" />
+    <ClCompile Include="cell.cpp" />
+    <ClCompile Include="cell_value.cpp" />
+    <ClCompile Include="dependency_graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Spreadsheet.cpp" />

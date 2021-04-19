@@ -1,8 +1,0 @@
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\bin\Debug\netstandard2.0\Networking.deps.json
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\bin\Debug\netstandard2.0\Networking.dll
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\bin\Debug\netstandard2.0\Networking.pdb
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\obj\Debug\netstandard2.0\Networking.AssemblyInfoInputs.cache
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\obj\Debug\netstandard2.0\Networking.AssemblyInfo.cs
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\obj\Debug\netstandard2.0\Networking.csproj.CoreCompileInputs.cache
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\obj\Debug\netstandard2.0\Networking.dll
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\NetworkController\obj\Debug\netstandard2.0\Networking.pdb
