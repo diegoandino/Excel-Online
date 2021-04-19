@@ -8,24 +8,25 @@
     ".NETStandard,Version=v2.1": []
   },
   "packageFolders": {
-    "C:\\Users\\Tarik Vu\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Diego\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj",
+      "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj",
       "projectName": "FormulaEvaluator",
-      "projectPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj",
-      "packagesPath": "C:\\Users\\Tarik Vu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\obj\\",
+      "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj",
+      "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\Tarik Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Diego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.1"
@@ -36,7 +37,6 @@
       },
       "frameworks": {
         "netstandard2.1": {
-          "targetAlias": "netstandard2.1",
           "projectReferences": {}
         }
       },
@@ -48,7 +48,6 @@
     },
     "frameworks": {
       "netstandard2.1": {
-        "targetAlias": "netstandard2.1",
         "imports": [
           "net461",
           "net462",
@@ -64,7 +63,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

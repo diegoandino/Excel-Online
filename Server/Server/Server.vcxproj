@@ -142,6 +142,7 @@
     <ClCompile Include="..\..\..\..\..\..\jsoncpp-pypi\dist\jsoncpp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Spreadsheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\jsoncpp-pypi\include\json\forwards.h" />
@@ -178,7 +179,11 @@
     <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\schema.h" />
     <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\stream.h" />
     <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\stringbuffer.h" />
+    <ClInclude Include="cell.h" />
+    <ClInclude Include="cell_value.h" />
+    <ClInclude Include="dependency_graph.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Spreadsheet.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

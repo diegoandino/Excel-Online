@@ -282,7 +282,6 @@ namespace SS
 
         protected override IList<string> SetCellContents(string name, string text)
         {
-
             // Add new empty cell if needed
             if (!(Cells.ContainsKey(name)))
                 Cells.Add(name, new Cell(name, text));
@@ -307,7 +306,6 @@ namespace SS
 
         protected override IList<string> SetCellContents(string name, Formula formula)
         {
-
             foreach (string var in formula.GetVariables())
             {
 

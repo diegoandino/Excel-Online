@@ -100,11 +100,9 @@ namespace NetworkController
 		{
             if (state.ErrorOccured)
 			{
-                Error("Error while receiving data from server");
+                ConnectionError("Error while receiving data from server");
                 return; 
 			}
-
-
 		}
 
 
@@ -116,7 +114,7 @@ namespace NetworkController
 		{
             if (state.ErrorOccured)
             {
-                Error("Error while sending cell data to server");
+                ConnectionError("Error while sending cell data to server");
                 return;
             }
 

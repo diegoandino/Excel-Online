@@ -1,14 +1,19 @@
 #pragma once
 
 #include <iostream>
+#include <stdlib.h>
 #include <string>
 #include <sstream>
 #include <WS2tcpip.h>
 #include <winsock2.h>
 #include <stdio.h>
+#include <map>
 #include <fstream>
-
 #include <nlohmann/json.hpp>
+
+#include "Spreadsheet.h"
+
+
 // For convenience
 using JObject = nlohmann::json;
 
@@ -30,8 +35,10 @@ protected:
 	void BroadcastToClients(int sending_client, const char* message, int length);	// Handler to broadcast data to clients
 
 private:
-	const char* _ip_address;			// IP Address that the server will run on  
-	int			_port;					// Port number for server
-	int			_socket;				// Socket for listening
-	fd_set		_master;				// Master file descriptor set
+	const char* _ip_address;								// IP Address that the server will run on  
+	int			_port;										// Port number for server
+	int			_socket;									// Socket for listening
+	fd_set		_master;									// Master file descriptor set
+
+	std::map<int, Spreadsheet*> available_spreadsheets;	// Returns the available spreadsheets in the server
 };

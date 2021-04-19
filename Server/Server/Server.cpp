@@ -118,6 +118,7 @@ void Server::OnClientConnect(int client_socket) {
 
 
 void Server::OnClientDisconnect(int client_socket, const char* message, int length) {
+    available_spreadsheets.erase(client_socket);
     std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
 }
 
@@ -127,7 +128,13 @@ void Server::OnMessageReceived(int client_socket, const char* message, int lengt
 
     // Iterate the array
     for (JObject::iterator it = json.begin(); it != json.end(); ++it) {
-        if (it.key() == "name")
-            std::cout << "Client: " << *it << " has connected!" << '\n';
+        if (it.key() == "name") {
+            std::cout << "Client: " << it.value() << " has connected!" << '\n';
+
+            std::string name = it.value();
+            Spreadsheet* spreadsheet = new Spreadsheet(name);
+
+            available_spreadsheets.emplace(client_socket, spreadsheet);
+        }
     }
 }

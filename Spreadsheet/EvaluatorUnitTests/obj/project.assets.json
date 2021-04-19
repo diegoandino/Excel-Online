@@ -4641,24 +4641,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tarik Vu\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Diego\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\EvaluatorUnitTests\\EvaluatorUnitTests.csproj",
+      "projectUniqueName": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\EvaluatorUnitTests\\EvaluatorUnitTests.csproj",
       "projectName": "EvaluatorUnitTests",
-      "projectPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\EvaluatorUnitTests\\EvaluatorUnitTests.csproj",
-      "packagesPath": "C:\\Users\\Tarik Vu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\EvaluatorUnitTests\\obj\\",
+      "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\EvaluatorUnitTests\\EvaluatorUnitTests.csproj",
+      "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\EvaluatorUnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\Tarik Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Diego\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.0"
@@ -4669,10 +4670,9 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
-          "targetAlias": "netcoreapp3.0",
           "projectReferences": {
-            "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj": {
-              "projectPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj"
+            "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj": {
+              "projectPath": "C:\\Users\\Diego\\Desktop\\CODE\\CS_3505\\Final_Project\\cs3505-final-project\\Spreadsheet\\FormulaEvaluator\\FormulaEvaluator.csproj"
             }
           }
         }
@@ -4685,7 +4685,6 @@
     },
     "frameworks": {
       "netcoreapp3.0": {
-        "targetAlias": "netcoreapp3.0",
         "dependencies": {
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
@@ -4729,7 +4728,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

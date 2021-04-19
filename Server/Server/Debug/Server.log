@@ -1,3 +1,5 @@
 ﻿  Server.cpp
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Server\Server.cpp(106,23): warning C4018: '<': signed/unsigned mismatch
+  main.cpp
+  Generating Code...
   Server.vcxproj -> C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Debug\Server.exe

@@ -162,10 +162,6 @@ namespace SS
             catch
             {
                 MessageBox.Show("Connecting to server failed.");
-                ConnectButton.Enabled = true;
-                UserNameTextBox.Enabled = true;
-                ServerTextBox.Enabled = true;
-
                 return;
             }
 
