@@ -61,3 +61,5 @@ C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadshe
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetGUI\obj\Debug\SpreadsheetGUI.pdb
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetGUI\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetGUI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\SpreadsheetGUI\bin\Debug\Newtonsoft.Json.xml

@@ -25,8 +25,8 @@ namespace NetworkController
         public event ConnectedHandler Connected;
 
         // Event handling for Errors:
-        public delegate void ErrorHandler(string err);
-        public event ErrorHandler Error;
+        public delegate void ConnectionErrorHandler(string err);
+        public event ConnectionErrorHandler ConnectionError;
 
         // Event handling for updates:
         public delegate void ServerUpdateHandler();
@@ -70,7 +70,7 @@ namespace NetworkController
             // Private bool that determines if client is connected
             if (state.ErrorOccured)
             {
-                Error("Error while connecting to server");
+                ConnectionError("Error while connecting to server");
                 return;
             }
 
