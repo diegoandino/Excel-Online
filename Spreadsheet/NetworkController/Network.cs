@@ -67,6 +67,7 @@ namespace NetworkController
         /// <param name="obj"></param>
         private void OnConnect(SocketState state)
         {
+            // Private bool that determines if client is connected
             if (state.ErrorOccured)
             {
                 Error("Error while connecting to server");
@@ -82,10 +83,10 @@ namespace NetworkController
                 User user = new User() { ID = state.ID, name = UserName };
 
                 string userJson = JsonConvert.SerializeObject(user);
-				Networking.Send(state.TheSocket, userJson);
+                Networking.Send(state.TheSocket, userJson);
 
-				// Start an event loop to receive messages from the server
-				state.OnNetworkAction = OnReceive;
+                // Start an event loop to receive messages from the server
+                state.OnNetworkAction = OnReceive;
 				Networking.GetData(state);
 			}
 		}
@@ -97,7 +98,35 @@ namespace NetworkController
         /// <param name="obj"></param>
         private void OnReceive(SocketState state)
 		{
-            // ON Receive --> Get incomding JSON data from other users into Spreadsheet
+            if (state.ErrorOccured)
+			{
+                Error("Error while receiving data from server");
+                return; 
+			}
+
+
 		}
+
+
+        /// <summary>
+        /// Sends selected cell data to server
+        /// </summary>
+        /// <param name="state"></param>
+        private void OnCellSelected(SocketState state)
+		{
+            if (state.ErrorOccured)
+            {
+                Error("Error while sending cell data to server");
+                return;
+            }
+
+            // Grab our current state
+            /*theServer = state;
+
+            lock (state)
+			{
+                Networking.Send(state.TheSocket, cell);
+			}*/
+        }
     }
 }

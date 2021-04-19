@@ -21,6 +21,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetGUI", "SpreadsheetGUI\SpreadsheetGUI.csproj", "{45185A0F-8F18-4B1A-8A51-F572DB807E78}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetPanel", "SpreadsheetPanel\SpreadsheetPanel.csproj", "{FA926045-E690-4824-845C-EB76882747DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F} = {D522F7A9-B369-422E-AEDA-FBC716C2DE4F}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{99739C3B-4804-4DA3-8EE6-3C8DB7E64F3E}"
 	ProjectSection(SolutionItems) = preProject

@@ -403,6 +403,7 @@ namespace SS
             {
                 return depGraph.GetDependents(name);
             }
+
             // Otherwise we return a new empty list
             return new List<string>();
         }
@@ -495,7 +496,6 @@ namespace SS
             // Checking Cell name validity with our delegate:
             if (IsValid(name))
             {
-
                 // Null Check 
                 if (name is null || name.Equals(""))
                     throw new InvalidNameException();

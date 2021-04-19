@@ -23,7 +23,7 @@ public :
 
 protected:
 	void OnClientConnect(int client_socket);										// Handler for when client connect
-	void OnClientDisconnect(int client_socket);										// Handler for when client disconnects
+	void OnClientDisconnect(int client_socket, const char* message, int length);										// Handler for when client disconnects
 	void OnMessageReceived(int client_socket, const char* message, int length);		// Handler for when a message is received
 
 	void SendToClient(int client_socket, const char* message, int length);			// Handler to send data to clients

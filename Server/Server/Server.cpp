@@ -71,7 +71,7 @@ int Server::Run() {
                 int bytes_in = recv(current_socket, buffer, buffer_length, 0);
                 if (bytes_in <= 0) {
                     // Disconnect Client using Client Disconnected callback
-                    OnClientDisconnect(current_socket);
+                    OnClientDisconnect(current_socket, buffer, buffer_length);
                     closesocket(current_socket);
                     FD_CLR(current_socket, &_master);
                 }
@@ -117,7 +117,7 @@ void Server::OnClientConnect(int client_socket) {
 }
 
 
-void Server::OnClientDisconnect(int client_socket) {
+void Server::OnClientDisconnect(int client_socket, const char* message, int length) {
     std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
 }
 

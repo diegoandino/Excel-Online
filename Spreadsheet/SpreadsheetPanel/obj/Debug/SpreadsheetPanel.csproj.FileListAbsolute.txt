@@ -37,3 +37,5 @@ C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadshe
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.csproj.CopyComplete
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.dll
 C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetPanel\obj\Debug\SpreadsheetPanel.pdb
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\NetworkController.dll
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\SpreadsheetPanel\bin\Debug\NetworkController.pdb

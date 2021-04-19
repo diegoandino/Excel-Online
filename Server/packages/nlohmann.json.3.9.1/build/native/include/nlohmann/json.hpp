@@ -5447,6 +5447,7 @@ class json_sax_dom_parser
         {
             JSON_THROW(ex);
         }
+
         return false;
     }
 

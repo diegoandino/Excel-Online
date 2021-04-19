@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using NetworkController;
 using SS;
 
 namespace SS
@@ -16,7 +17,6 @@ namespace SS
     /// <param name="sender"></param>
 
     public delegate void SelectionChangedHandler(SpreadsheetPanel sender);
-
 
 
     /// <summary>
@@ -238,7 +238,6 @@ namespace SS
 
             // The containing panel
             private SpreadsheetPanel _ssp;
-
 
             public DrawingPanel(SpreadsheetPanel ss)
             {
