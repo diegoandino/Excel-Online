@@ -69,11 +69,6 @@ namespace SS
 
         private void PickASpreadSheet(string[] Spreadsheets)
         {
-           /* string temp = "";
-            foreach (string s in Spreadsheets)
-            {
-                temp += s;
-            }*/
             MessageBox.Show("pick a spreadsheet");
         }
 
