@@ -45,6 +45,8 @@ namespace SS
         /// <summary> Our connection to the server </summary>
         private Network server;
 
+       
+
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -58,8 +60,21 @@ namespace SS
             server.ConnectionError += ShowConnectionError;
             server.UpdateArrived += ProcessUpdate;
             server.Connected += HandleConnected;
+            server.SpreadSheetsArrived += PickASpreadSheet;
+
+        
 
             InitializeComponent();
+        }
+
+        private void PickASpreadSheet(string[] Spreadsheets)
+        {
+           /* string temp = "";
+            foreach (string s in Spreadsheets)
+            {
+                temp += s;
+            }*/
+            MessageBox.Show("pick a spreadsheet");
         }
 
         /// <summary>
