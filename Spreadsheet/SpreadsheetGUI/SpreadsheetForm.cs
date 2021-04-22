@@ -61,9 +61,7 @@ namespace SS
             server.UpdateArrived += ProcessUpdate;
             server.Connected += HandleConnected;
             server.SpreadSheetsArrived += PickASpreadSheet;
-
-        
-
+      
             InitializeComponent();
         }
 

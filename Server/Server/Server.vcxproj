@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractSpreadsheet.cpp" />
     <ClCompile Include="cell.cpp" />
     <ClCompile Include="cell_value.cpp" />
     <ClCompile Include="dependency_graph.cpp" />

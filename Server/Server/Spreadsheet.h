@@ -19,6 +19,6 @@ private:
 	std::map<std::string, Cell> cells; 
 	DependencyGraph deGraph; 
 
-	std::string spreadsheet_name; 
+	std::string spreadsheet_name;
 	bool changed; 
 };

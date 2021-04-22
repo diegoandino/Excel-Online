@@ -1,4 +1,5 @@
 #include "Server.h"
+#include <map>
 
 int Server::Init() {
 	// Initialize WinSock 
@@ -114,9 +115,21 @@ void Server::BroadcastToClients(int sending_client, const char* message, int len
 
 void Server::OnClientConnect(int client_socket) {
 	std::cout << client_socket << std::endl;
-	char t = 't';
-	SendToClient(client_socket, &t, (int)strlen(&t));
 
+	// Testing to see what happens when anything is sent to a client - Tarik
+	//std::string t = "t";
+
+	//SendToClient(client_socket, t.c_str(), (int)strlen(t.c_str()));
+
+	std::map<int, Spreadsheet*>::iterator it;
+	std::string SS_As_String;
+
+	for (it = available_spreadsheets.begin(); it != available_spreadsheets.end();it++)
+	{
+		//SS_As_String += it->spreadsheet_name;
+	}
+
+	JObject allSpreadsheets = JObject::parse(SS_As_String);
 }
 
 
