@@ -33,7 +33,7 @@ namespace SS
         /// <summary> Private helper dictionary to store cells and their index
         /// by rows and columns. </summary>
         private Dictionary<string, int[]> cells;
-  
+
         /// <summary> The name of our default cell. </summary>
         private static readonly string DefaultCell = "A1";
 
@@ -45,7 +45,6 @@ namespace SS
         /// <summary> Our connection to the server </summary>
         private Network server;
 
-       
 
         /// <summary>
         /// Public SpreadsheetForm constructor.
@@ -61,14 +60,134 @@ namespace SS
             server.UpdateArrived += ProcessUpdate;
             server.Connected += HandleConnected;
             server.SpreadSheetsArrived += PickASpreadSheet;
-      
+
             InitializeComponent();
         }
 
+        /// <summary>
+        /// This method is called upon successful connection from the Spreadsheet client to the server.
+        /// This method takes in an array of spreadsheet names, and sorts them out into a combo box. 
+        /// The user will be able to select a spreadsheet from the combo box to request for the server to
+        /// send, or send back to the server a request to create a new spreadsheet.
+        /// </summary>
+        /// <param name="Spreadsheets"></param>
         private void PickASpreadSheet(string[] Spreadsheets)
         {
-            MessageBox.Show("pick a spreadsheet");
+            this.Invoke(new MethodInvoker(
+                () =>
+                {
+                    // Testing a list of spreadsheets: DELETE WHEN DONE TESTING
+                    string[] test = new string[4];
+                    for (int i = 0; i < 4; i++)                
+                        test[i] = "Spreadsheet_" + i;                  
+
+                    // Create the popup:
+                    Form prompt = new Form();
+                    prompt.Size = new Size(300, 90);
+                    prompt.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+                    // 2 buttons: One to request making a spreadsheet, one to confirm selection
+                    Button confirm_SS = new Button();
+                    Button new_SS = new Button();
+                    confirm_SS.Location = new System.Drawing.Point(175, 0);
+                    new_SS.Location = new System.Drawing.Point(175, 25);
+                    confirm_SS.Text = "Confirm";
+                    new_SS.Text = "New";
+
+                    // Add availible spreadsheets into a combobox
+                    ComboBox selections = new ComboBox();
+                    selections.SelectedText = "--Select--";
+                    foreach(string s in test) // rename "test" to "spreadsheets" 
+                        selections.Items.Add(s);
+
+
+                    // Reposition & hook up buttons:
+                    new_SS.Click += RequestNew_SS;
+                    new_SS.Click += (sender, e) => ClosePrompt(prompt, sender, e);
+
+                    // If no selection was made, "" is sent to Reqest_SS, else we send the selection
+                    confirm_SS.Click += (sender,e) => Request_SS(selections.SelectedItem == null ? "": selections.SelectedItem.ToString(), sender, e);
+
+                    // Closes prompt when a selection was made
+                    confirm_SS.Click += (sender,e) => ClosePrompt(prompt,sender,e);
+                    new_SS.Click += (sender, e) => ClosePrompt(prompt, sender, e);
+
+                    // Adding controls:                  
+                    prompt.Controls.Add(confirm_SS);
+                    prompt.Controls.Add(new_SS);
+                    prompt.Controls.Add(selections);
+                    prompt.Text = "Pick a spreadsheet";
+                    prompt.ShowDialog();
+
+                }));
         }
+
+        /// <summary>
+        /// This method is invoked when the user requests a new Spreadsheet
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RequestNew_SS(object s, EventArgs evn)
+        {
+            // Create the popup:
+            Form prompt = new Form();
+            prompt.Text = "New Spreadsheet name";
+            prompt.Size = new Size(350, 63);
+            prompt.FormBorderStyle = FormBorderStyle.FixedSingle;
+            
+            // Textbox for inputting a new spreadsheet name
+            TextBox t = new TextBox();
+            t.Size = new Size(170,30);
+
+            // Buttons to confirm / cancel 
+            Button confirmButton = new Button();
+            Button cancelButton = new Button();
+            confirmButton.Location = new System.Drawing.Point(175, 0);
+            cancelButton.Location = new System.Drawing.Point(250, 0);
+            confirmButton.Text = "Confirm";
+            cancelButton.Text = "Cancel";
+
+            // Events for buttons:
+            cancelButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
+            confirmButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
+            confirmButton.Click += (sender, e) => Request_SS(t.Text, sender, e);
+
+            prompt.Controls.Add(t);
+            prompt.Controls.Add(confirmButton);
+            prompt.Controls.Add(cancelButton);
+            prompt.ShowDialog();
+
+        }
+
+        /// <summary>
+        /// This method is invoked when a user asks for an existing spreadsheet.
+        /// </summary>
+        /// <param name="selection"></param>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Request_SS(string selection, object sender, EventArgs e)
+        {
+            if (selection.Equals(""))
+            {
+                MessageBox.Show("Selection must be non-empty");
+                return;
+            }
+
+            MessageBox.Show(selection + " Was chosen");
+
+            // Send the name of the spreadsheet to server:
+        }
+
+        /// <summary>
+        /// Method to close prompt after a selection is made to request the server
+        /// to send a new spreadsheet or to send and existing one.-
+        /// </summary>
+        private void ClosePrompt(Form prompt, object sender, EventArgs e)
+        {
+            prompt.Close();   
+        }
+
+
 
         /// <summary>
         /// Upon connection, we setup our spreadsheet.
@@ -114,7 +233,7 @@ namespace SS
         private void SpreadsheetForm_Load(object sender, EventArgs e)
         {
             // Event handling for Selection changed (update textboxes)
-            MainPanel.SelectionChanged += controller.OnSelectionChanged;   
+            MainPanel.SelectionChanged += controller.OnSelectionChanged;
             controller.UpdateTextBoxes += UpdateTextBoxes;
 
             // Hooking up Enter button for CellContents
@@ -132,7 +251,7 @@ namespace SS
             ///// Added for 3505 Final /////
 
             // Hook up new Controls (connect button)
-            ConnectButton.Click+= ConnectClick;
+            ConnectButton.Click += ConnectClick;
 
             // convienence for connecting to a local server
             ServerTextBox.Text = "localhost";
@@ -204,7 +323,7 @@ namespace SS
             // Cell has not been added to spreadsheet yet, no contents or value to be found.
             catch (ArgumentException)
             {
-                 
+
             }
         }
 
@@ -248,19 +367,19 @@ namespace SS
                 {
                     if (!cells.ContainsKey(CellNameBox.Text))
                         cells.Add(CellNameBox.Text, new int[] { col, row });
-                    
+
                     RecalculateCells(CellsToRecalculate);
                     CellValueBox.Text = controller.GetCellValue(CellNameBox.Text).ToString();
                 }
             }
 
             // Create pop-up
-            catch(FormulaFormatException)
+            catch (FormulaFormatException)
             {
                 MessageBox.Show("Invalid Formula At Cell: " + CellNameBox.Text);
             }
 
-            catch(CircularException)
+            catch (CircularException)
             {
                 MessageBox.Show("Circular Exception At Cell: " + CellNameBox.Text);
             }
@@ -279,7 +398,7 @@ namespace SS
             }
         }
 
-        
+
         /// <summary>
         /// Creates a new blank spreadsheet.
         /// </summary>
@@ -352,7 +471,7 @@ namespace SS
                 }
             }
 
-            
+
             // Safety feature when loading spreadsheet
             try
             {

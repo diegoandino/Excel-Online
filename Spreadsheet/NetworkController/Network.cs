@@ -114,9 +114,10 @@ namespace NetworkController
                 return;
             }
 
-
-            ProcessMessages(state);
-
+            lock (state)
+            {
+                ProcessMessages(state);
+            }
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace NetworkController
                 // Ignore empty strings added by the regex splitter
                 if (p.Length == 0)
                     continue;
-             
+
 
                 // The regex splitter will include the last string even if it doesn't end with a '\n',
                 // So we need to ignore it if this happens. 
@@ -149,7 +150,6 @@ namespace NetworkController
                 // Pick a spreadsheet:
                 if (!SS_Chosen)
                 {
-                    //PickSS(totalData);
                     SpreadSheetsArrived(parts);
                     SS_Chosen = true;
                 }

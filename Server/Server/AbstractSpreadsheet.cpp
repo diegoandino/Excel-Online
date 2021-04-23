@@ -17,16 +17,3 @@ class InvalidNameException : public std::exception
 
 };
 
-/// <summary>
-/// Thrown to indicate that a read or write attempt has failed.
-/// </summary>
-class SpreadsheetReadWriteException : public std::exception
-{
-	/// <summary>
-	/// Creates the exception with a message
-	/// </summary>
-	public SpreadsheetReadWriteException(std::string msg)
-		: base(msg)
-	{
-	}
-};

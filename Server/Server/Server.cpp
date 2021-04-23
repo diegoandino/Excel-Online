@@ -117,20 +117,20 @@ void Server::OnClientConnect(int client_socket) {
 	std::cout << client_socket << std::endl;
 
 	// Testing to see what happens when anything is sent to a client - Tarik
-	//std::string t = "t";
+	std::string t = "t";
 
-	//SendToClient(client_socket, t.c_str(), (int)strlen(t.c_str()));
+	SendToClient(client_socket, t.c_str(), (int)strlen(t.c_str()));
 
-	std::map<int, Spreadsheet*>::iterator it;
-	std::string SS_As_String;
-
-	for (it = available_spreadsheets.begin(); it != available_spreadsheets.end();it++)
-	{
-		//SS_As_String += it->spreadsheet_name;
-	}
-
-	JObject allSpreadsheets = JObject::parse(SS_As_String);
-}
+//	std::map<int, Spreadsheet*>::iterator it;
+//	std::string SS_As_String;
+//
+//	for (it = available_spreadsheets.begin(); it != available_spreadsheets.end();it++)
+//	{
+//		//SS_As_String += it->spreadsheet_name;
+//	}
+//
+//	JObject allSpreadsheets = JObject::parse(SS_As_String);
+ }
 
 
 void Server::OnClientDisconnect(int client_socket, const char* message, int length) {

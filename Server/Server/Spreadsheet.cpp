@@ -13,11 +13,3 @@
 /// Edit: 4/21/2021 Modifed for C++ for 3505 final.
 /// @Author "It Should work now"
 /// </summary>
-
-
-// Default Constructor:
-Spreadsheet::Spreadsheet(std::string& name) {
-
-}
-
-
