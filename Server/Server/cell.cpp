@@ -1,18 +1,31 @@
 #include "cell.h"
 
-std::string Cell::get_cell_name()
+template<typename T>
+Cell<T>::Cell() : cell_name(""), cell_value()
+{
+}
+
+template<typename T>
+Cell<T>::Cell(std::string name, CellValue<T> value) : cell_name(name), cell_value(value)
+{
+}
+
+template<typename T>
+std::string Cell<T>::get_cell_name()
 {
 	return cell_name;
 }
 
-std::string Cell::get_cell_value()
+template<typename T>
+T Cell<T>::get_cell_value()
 {
-	return std::string();
+	return cell_value.get_value();
 }
 
-bool Cell::is_empty()
+template<typename T>
+bool Cell<T>::is_empty()
 {
-	return &value == NULL;
+	return cell_value.is_empty();
 }
 
 
