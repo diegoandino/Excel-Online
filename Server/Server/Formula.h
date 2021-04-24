@@ -5,6 +5,10 @@
 #include <stack>
 #include <iostream>
 #include <vector>
+#include <algorithm> 
+#include <cctype>
+#include <locale>
+#include <regex>
 #include "cell_value.h"
 
 class Formula
@@ -15,9 +19,9 @@ public:
 
 	bool is_valid(std::string& str);
 
-	bool look_up(std::string& str, double num);
+	double lookup(std::string& str);
 
-	CellValue Evaluate();
+	CellValue evaluate();
 
 	std::list<std::string> get_variables();
 
@@ -31,18 +35,31 @@ private:
 
 	std::vector<std::string> get_tokens(std::string& formula);
 
-	bool token_is_valid(std::string& formula);
+	bool token_is_valid(std::string& token);
 
 	bool op_par_follow_rule(std::string& s);
 
 	bool is_operator(std::string& s);
 
-	bool perform_div_mult(std::stack<double> values, std::stack<double> operators, double num);
+	bool perform_div_mult(std::stack<double> values, std::stack<std::string> operators, double num);
 
-	bool perform_add_subs(std::stack<double> values, std::stack<double> operators);
+	bool perform_add_subs(std::stack<double> values, std::stack<std::string> operators);
 
 	bool is_variable(std::string& s);
 
+	std::string to_string();
+
+	bool equals(Formula& other);
+
+	bool operator_is_on_top(std::stack<std::string>, std::string tkn);
+
 	std::vector<std::string> tokens;
+
+	//string operations
+	//these methods were static in SO
+	inline void ltrim(std::string& s);
+	inline void rtrim(std::string& s);
+	inline void trim(std::string& s);
+
 };
 
