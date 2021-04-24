@@ -25,11 +25,9 @@ public:
 
 	std::list<std::string> get_variables();
 
-	//bool equals() TODO
+	bool equals(Formula& other);
 
-	//TODO operator overload
-
-
+	std::string to_string();
 
 private:
 
@@ -46,10 +44,6 @@ private:
 	bool perform_add_subs(std::stack<double> values, std::stack<std::string> operators);
 
 	bool is_variable(std::string& s);
-
-	std::string to_string();
-
-	bool equals(Formula& other);
 
 	bool operator_is_on_top(std::stack<std::string>, std::string tkn);
 

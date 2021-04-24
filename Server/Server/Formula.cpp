@@ -409,6 +409,93 @@ bool Formula::is_operator(std::string& s)
 	return s == "+" || s == "-" || s == "*" || s == "/";
 }
 
+/// <summary>
+/// Performs either division or multiplication to the give number and pushes the result to the Value Stack
+/// </summary>
+/// <param name="Values"></param>
+/// <param name="Operators"></param>
+/// <param name="Num"></param>
+bool Formula::perform_div_mult(std::stack<double> values, std::stack<std::string> operators, double num)
+{
+	if (operator_is_on_top(operators, "/") || operator_is_on_top(operators, "*"))
+	{
+		double curr_num = values.top();
+		values.pop();
+		std::string op = operators.top();
+		operators.pop();
+
+		if (op == ("*"))
+		{
+			values.push(num * curr_num);
+		}
+		else if (op == ("/"))
+		{
+			if (num == 0)
+				return false;
+
+			values.push(curr_num / num);
+		}
+		else
+		{
+			values.push(num);
+		}
+	}
+
+	return true;
+}
+
+/// <summary>
+/// Performs either addition or substraction pushes the result to the Value Stack
+/// </summary>
+/// <param name="Values"></param>
+/// <param name="Operators"></param>
+/// <param name="Num"></param>
+bool Formula::perform_add_subs(std::stack<double> values, std::stack<std::string> operators)
+{
+	double first_num = values.top();
+	values.pop();
+	double second_num = values.top();
+	values.pop();
+	std::string curr_op = operators.top();
+	operators.top();
+
+	if (curr_op == ("+"))
+	{
+		values.push(first_num + second_num);
+	}
+	else if (curr_op == ("-"))
+	{
+		values.push(second_num - first_num);
+	}
+}
+
+
+/// <summary>
+/// checks if a given token is a varible
+/// </summary>
+/// <param name="s"></param>
+bool Formula::is_variable(std::string& s)
+{
+	std::string varPattern = "[a-zA-Z_](?: [a-zA-Z_]|\d)*";
+
+	return std::regex_match(s, std::regex(varPattern));
+}
+
+/// <summary>
+/// Peeks safely on a stack to see if a specific token is on top
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="stack"></param>
+/// <param name="component"></param>
+/// <returns>true if the desired component is on top</returns>
+bool Formula::operator_is_on_top(std::stack<std::string> stack, std::string tkn)
+{
+	if (stack.size() < 1)
+		return false;
+
+	return stack.top() == (tkn);
+}
+
 //from: https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
 
 // trim from start (in place)
