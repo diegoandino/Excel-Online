@@ -1,5 +1,4 @@
 #include "cell.h"
-
 template<typename T>
 Cell<T>::Cell() : cell_name(""), cell_value()
 {
