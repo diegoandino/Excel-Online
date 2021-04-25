@@ -39,7 +39,6 @@ int Server::Init() {
     return 0;
 }
 
-
 int Server::Run() {
     bool isConnected = true;
     while (isConnected) {
@@ -91,7 +90,6 @@ int Server::Run() {
     return 0;
 }
 
-
 // Send message to a client
 void Server::SendToClient(int client_socket, const char* message, int length) {
     send(client_socket, message, length, 0);
@@ -111,7 +109,6 @@ void Server::BroadcastToClients(int sending_client, const char* message, int len
     }
 }
 
-
 void Server::OnClientConnect(int client_socket) {
     std::cout << client_socket << std::endl;
 }
@@ -126,7 +123,7 @@ void Server::OnClientDisconnect(int client_socket, const char* message, int leng
 
 
 void Server::EraseFromServer(int client_socket) {
-    available_spreadsheets.erase(client_socket);
+    available_spreadsheets[client_socket] = NULL;
 
     for (int i = 0; i < _master.fd_count; i++) {
         if (_master.fd_array[i] == client_socket)
@@ -153,12 +150,12 @@ void Server::ProcessClientConnectedRequests(int client_socket, const char* messa
         if (it.key() == "name") {
             std::cout << "Client: " << it.value() << " has connected!" << '\n';
 
-            std::string name = it.value();
+            /*std::string name = it.value();
             Spreadsheet* spreadsheet = new Spreadsheet(name);
 
             spreadsheet_lock.lock();
             available_spreadsheets.emplace(client_socket, spreadsheet);
-            spreadsheet_lock.unlock();
+            spreadsheet_lock.unlock();*/
         }
 
         BroadcastToClients(client_socket, message, length);

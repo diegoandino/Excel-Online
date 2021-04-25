@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-<<<<<<< HEAD
-=======
 using System.Text.RegularExpressions;
-using NetworkUtil;
->>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
+//using NetworkUtil;
 using Newtonsoft.Json;
 
 namespace NetworkController
@@ -23,11 +20,7 @@ namespace NetworkController
     /// used for Diego and Tarik's Tankwars project in CS 3500.  This Class handles the networking
     /// and connectivity expected of The Spreadsheet when communicating with the server.  
     /// </summary>
-<<<<<<< HEAD
     public static class Network
-=======
-    public class Network
->>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
     {
         // Our event handling for connected:
         public delegate void ConnectedHandler();
@@ -44,10 +37,10 @@ namespace NetworkController
 
         // Event handling for picking a SS:
         public delegate void Pick_SS(string[] Spreadsheets);
-        public event Pick_SS SpreadSheetsArrived;
+        public static event Pick_SS SpreadSheetsArrived;
 
         /// <summary> Reports whether or not this client has selected a SS</summary>
-        public bool SS_Chosen { get; private set; }
+        public static bool SS_Chosen { get; private set; }
 
 
         /// <summary>
@@ -65,7 +58,7 @@ namespace NetworkController
         /// <summary>
         /// Queue to store recent issued commands by client
         /// </summary>
-        public static Queue<string> commandQueue = new Queue<string>(); 
+        public static Queue<string> commandQueue = new Queue<string>();
 
 
         /// <summary>
@@ -116,40 +109,28 @@ namespace NetworkController
         /// OnReceive callback for getting back data
         /// </summary>
         /// <param name="obj"></param>
-<<<<<<< HEAD
         private static void OnReceive(SocketState state)
-		{
-=======
-        private void OnReceive(SocketState state)
         {
->>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
             if (state.ErrorOccured)
             {
                 ConnectionError("Error while receiving data from server");
-<<<<<<< HEAD
-                return; 
-			}
+                return;
+            }
 
             /* Start Editing Loop */
             UpdateLoop(state);
 
             // Process incoming cell edit from Server
             ProcessCellEdit(state.data.ToString());
-        }
-=======
-                return;
-            }
-
-
             ProcessMessages(state);
-
         }
+
 
         /// <summary>
         /// Private helper method to parse and process messages sent from server.
         /// </summary>
         /// <param name="state"></param>
-		private void ProcessMessages(SocketState state)
+        private static void ProcessMessages(SocketState state)
         {
             string totalData = state.GetData();
 
@@ -164,7 +145,7 @@ namespace NetworkController
                 // Ignore empty strings added by the regex splitter
                 if (p.Length == 0)
                     continue;
-             
+
 
                 // The regex splitter will include the last string even if it doesn't end with a '\n',
                 // So we need to ignore it if this happens. 
@@ -195,43 +176,25 @@ namespace NetworkController
             }
         }
 
->>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
 
 
         /// <summary>
         /// Callback for OnReceive
         /// </summary>
         /// <param name="state"></param>
-<<<<<<< HEAD
         private static void UpdateLoop(SocketState state)
-		{
-=======
-        private void OnCellSelected(SocketState state)
         {
->>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
-            if (state.ErrorOccured)
-			{
-                ConnectionError("Error on update loop");
-                return;
-            }
 
-            while (true)
-			{
-                // Send to initial information to server
-                if (commandQueue.Count >= 1)
-                    Networking.Send(state.TheSocket, commandQueue.Dequeue());
-            }
         }
 
-        
         /// <summary>
         /// Processes incoming request from Server to update Spreadsheet
         /// from other client's input
         /// </summary>
         /// <param name="req"></param>
         private static void ProcessCellEdit(string req)
-		{
-            
-		}
+        {
+
+        }
     }
 }

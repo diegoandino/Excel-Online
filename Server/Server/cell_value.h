@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Formula.h"
+#include <string>
 
 /// <summary>
 /// cell value can be things:
@@ -8,22 +9,20 @@
 /// formula
 /// formula error
 /// </summary>
-template<typename T>
-class CellValue {
 
+class CellValue {
 public:
 	CellValue();
+	CellValue(std::string& cont);
 
-	CellValue(T& cont);
+	std::string get_value();
 
-	T get_content();
+	std::string get_content();
 
-	void set_content(T& cont);
+	void set_content(std::string& content);
 
 	bool is_empty();
 
 private:
-	
-	T& content;
-	
+	std::string content; 
 };

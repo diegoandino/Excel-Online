@@ -6,14 +6,13 @@
 
 #include "cell_value.h"
 
-template<typename T>
 class Cell {
-public :
+public:
 	Cell();
-	Cell(std::string name, CellValue<T> value);
+	Cell(std::string name, CellValue value);
 
 	std::string get_cell_name(); 
-	T get_cell_value(); 
+	std::string get_cell_value(); 
 	
 	bool is_empty(); 
 
