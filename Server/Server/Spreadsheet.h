@@ -6,19 +6,18 @@
 
 #include "cell.h"
 #include "dependency_graph.h"
-
+template<typename T>
 class Spreadsheet {
 public:
 	Spreadsheet() {}
 	Spreadsheet(std::string& name) : spreadsheet_name(name) {}
 	~Spreadsheet() {}
-
-	std::map<Cell, std::string> get_spreadsheet_contents(); 
+	std::map<Cell<T>, std::string> get_spreadsheet_contents(); 
 
 private:
-	std::map<std::string, Cell> cells; 
+	std::map<std::string, Cell<T>> cells; 
 	DependencyGraph deGraph; 
 
-	std::string spreadsheet_name; 
+	std::string spreadsheet_name;
 	bool changed; 
 };

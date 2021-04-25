@@ -42,6 +42,14 @@ namespace SS
 
         ////// Added for CS3505 Final: //////
 
+<<<<<<< HEAD
+=======
+        /// <summary> Our connection to the server </summary>
+        private Network server;
+
+       
+
+>>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -51,11 +59,25 @@ namespace SS
             cells = new Dictionary<string, int[]>();
 
             // Connection based code:
+<<<<<<< HEAD
             Network.ConnectionError += ShowConnectionError;
             Network.UpdateArrived += ProcessUpdate;
             Network.Connected += HandleConnected;
 
+=======
+            server = new Network();
+            server.ConnectionError += ShowConnectionError;
+            server.UpdateArrived += ProcessUpdate;
+            server.Connected += HandleConnected;
+            server.SpreadSheetsArrived += PickASpreadSheet;
+      
+>>>>>>> bccfba5f6a9cf332b71d2565a775cccd8e9c6e84
             InitializeComponent();
+        }
+
+        private void PickASpreadSheet(string[] Spreadsheets)
+        {
+            MessageBox.Show("pick a spreadsheet");
         }
 
         /// <summary>
