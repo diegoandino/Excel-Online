@@ -62,7 +62,6 @@ namespace SS
 
         public SpreadsheetPanel()
         {
-
             InitializeComponent();
 
             // The DrawingPanel is quite large, since it has 26 columns and 99 rows.  The

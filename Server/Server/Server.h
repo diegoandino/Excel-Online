@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <map>
 #include <fstream>
+#include <thread>
+#include <mutex>
 #include <nlohmann/json.hpp>
 
 #include "Spreadsheet.h"
@@ -40,5 +42,12 @@ private:
 	int			_socket;									// Socket for listening
 	fd_set		_master;									// Master file descriptor set
 
-	std::map<int, Spreadsheet*> available_spreadsheets;	// Returns the available spreadsheets in the server
+	std::map<int, Spreadsheet*> available_spreadsheets;		// Returns the available spreadsheets in the server
+	std::mutex spreadsheet_lock;							// Mutex for available_spreadsheets
+
+	void EraseFromServer				(int client_socket);
+	void ProcessClientConnectedRequests	(int client_socket, const char* message, int length, JObject req);
+	void ProcessCellSelectedRequests	(int client_socket, const char* message, int length, JObject req);
+	void ProcessCellEditedRequests		(int client_socket, const char* message, int length, JObject req);
+	void ProcessRequests				(int client_socket, const char* message, int length, JObject req);
 };

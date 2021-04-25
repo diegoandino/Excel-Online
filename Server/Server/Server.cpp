@@ -81,14 +81,13 @@ int Server::Run() {
                     OnMessageReceived(current_socket, buffer, bytes_in);
                 }
             }
-        }
+         }
     }
 
     // Remove listening socket from the master file descriptor set and close it
     FD_CLR(_socket, &_master);
     closesocket(_socket);
     WSACleanup();
-
     return 0;
 }
 
@@ -101,11 +100,12 @@ void Server::SendToClient(int client_socket, const char* message, int length) {
 }
 
 
+// Send Spreadsheet changes to other clients
 void Server::BroadcastToClients(int sending_client, const char* message, int length) {
     // Send message to other clients 
     for (int i = 0; i < _master.fd_count; i++) {
         SOCKET out_socket = _master.fd_array[i];
-        if (out_socket != _socket && out_socket != sending_client) {
+        if (out_socket == sending_client) {
             SendToClient(out_socket, message, length);
         }
     }
@@ -118,23 +118,94 @@ void Server::OnClientConnect(int client_socket) {
 
 
 void Server::OnClientDisconnect(int client_socket, const char* message, int length) {
-    available_spreadsheets.erase(client_socket);
+    // TODO: USE THREAD LOCK 
+    spreadsheet_lock.lock();
     std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
+    spreadsheet_lock.unlock();
+}
+
+
+void Server::EraseFromServer(int client_socket) {
+    available_spreadsheets.erase(client_socket);
+
+    for (int i = 0; i < _master.fd_count; i++) {
+        if (_master.fd_array[i] == client_socket)
+            _master.fd_array[i] = 0; 
+    }
 }
 
 
 void Server::OnMessageReceived(int client_socket, const char* message, int length) {
-    JObject json = JObject::parse(message);
+    JObject req = JObject::parse(message);
+    ProcessRequests(client_socket, message, length, req); 
+}
 
-    // Iterate the array
-    for (JObject::iterator it = json.begin(); it != json.end(); ++it) {
+
+void Server::ProcessRequests(int client_socket, const char* message, int length, JObject req) {
+    ProcessClientConnectedRequests(client_socket, message, length, req);
+    ProcessCellSelectedRequests(client_socket, message, length, req);
+    ProcessCellEditedRequests(client_socket, message, length, req);
+}
+
+
+void Server::ProcessClientConnectedRequests(int client_socket, const char* message, int length, JObject req) {
+    for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
         if (it.key() == "name") {
             std::cout << "Client: " << it.value() << " has connected!" << '\n';
 
             std::string name = it.value();
             Spreadsheet* spreadsheet = new Spreadsheet(name);
 
+            spreadsheet_lock.lock();
             available_spreadsheets.emplace(client_socket, spreadsheet);
+            spreadsheet_lock.unlock();
         }
+
+        BroadcastToClients(client_socket, message, length);
     }
 }
+
+
+void Server::ProcessCellSelectedRequests(int client_socket, const char* message, int length, JObject req) {
+    // Iterate the array
+    std::string cellName = "";
+    for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
+        if (it.key() == "cellName") {
+            cellName = it.value();
+        }
+
+        if (it.key() == "requestType") {
+            if (it.value() == "selectCell") {
+                std::cout << "Client: " << client_socket << " Has Selected Cell: " << cellName << '\n';        
+            }
+        }
+        
+        BroadcastToClients(client_socket, message, length);
+    }
+}
+
+
+void Server::ProcessCellEditedRequests(int client_socket, const char* message, int length, JObject req) {
+    // Iterate the array
+    std::string content = "";
+    std::string cellName = "";
+    for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
+        if (it.key() == "contents") {
+            content = it.value();
+        }
+
+        if (it.key() == "cellName") {
+            cellName = it.value();
+        }
+
+        if (it.key() == "requestType") {
+            if (it.value() == "editCell") {
+                std::cout   << "Client: " << client_socket << " Has Requested Edit: " << content 
+                            << " On Cell: "<< cellName << '\n';
+            }
+        }
+
+        BroadcastToClients(client_socket, message, length);
+    }
+}
+

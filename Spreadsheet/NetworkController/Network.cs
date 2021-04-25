@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NetworkUtil;
 using Newtonsoft.Json;
 
 namespace NetworkController
@@ -13,40 +12,43 @@ namespace NetworkController
         public string name {get; set;}
 	}
 
+
     /// <summary>
     /// This Network class takes form similar to the "GameController" class
     /// used for Diego and Tarik's Tankwars project in CS 3500.  This Class handles the networking
     /// and connectivity expected of The Spreadsheet when communicating with the server.  
     /// </summary>
-   public class Network
+    public static class Network
     {
         // Our event handling for connected:
         public delegate void ConnectedHandler();
-        public event ConnectedHandler Connected;
+        public static event ConnectedHandler Connected;
 
         // Event handling for Errors:
         public delegate void ConnectionErrorHandler(string err);
-        public event ConnectionErrorHandler ConnectionError;
+        public static event ConnectionErrorHandler ConnectionError;
 
         // Event handling for updates:
         public delegate void ServerUpdateHandler();
-        public event ServerUpdateHandler UpdateArrived;
+        public static event ServerUpdateHandler UpdateArrived;
+
 
         /// <summary>
         /// State representing the connection with the server
         /// </summary>
-        SocketState theServer = null;
+        static SocketState theServer = null;
+
 
         /// <summary>
         /// Our User's name
         /// </summary>
-        private string UserName;
+        private static string UserName;
 
-        // Default constructor
-        public Network()
-        {
 
-        }
+        /// <summary>
+        /// Queue to store recent issued commands by client
+        /// </summary>
+        public static Queue<string> commandQueue = new Queue<string>(); 
 
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace NetworkController
         /// </summary>
         /// <param name="address">Address to connect to</param>
         /// <param name="userName">User name of this spreadsheet.</param>
-        public void Connect(string address, string userName)
+        public static void Connect(string address, string userName)
         {
             UserName = userName;
             Networking.ConnectToServer(OnConnect, address, 1100);
@@ -65,7 +67,7 @@ namespace NetworkController
         /// OnConnect callback for Connect
         /// </summary>
         /// <param name="obj"></param>
-        private void OnConnect(SocketState state)
+        private static void OnConnect(SocketState state)
         {
             // Private bool that determines if client is connected
             if (state.ErrorOccured)
@@ -96,35 +98,51 @@ namespace NetworkController
         /// OnReceive callback for getting back data
         /// </summary>
         /// <param name="obj"></param>
-        private void OnReceive(SocketState state)
+        private static void OnReceive(SocketState state)
 		{
             if (state.ErrorOccured)
 			{
                 ConnectionError("Error while receiving data from server");
                 return; 
 			}
-		}
+
+            /* Start Editing Loop */
+            UpdateLoop(state);
+
+            // Process incoming cell edit from Server
+            ProcessCellEdit(state.data.ToString());
+        }
 
 
         /// <summary>
-        /// Sends selected cell data to server
+        /// Callback for OnReceive
         /// </summary>
         /// <param name="state"></param>
-        private void OnCellSelected(SocketState state)
+        private static void UpdateLoop(SocketState state)
 		{
             if (state.ErrorOccured)
-            {
-                ConnectionError("Error while sending cell data to server");
+			{
+                ConnectionError("Error on update loop");
                 return;
             }
 
-            // Grab our current state
-            /*theServer = state;
-
-            lock (state)
+            while (true)
 			{
-                Networking.Send(state.TheSocket, cell);
-			}*/
+                // Send to initial information to server
+                if (commandQueue.Count >= 1)
+                    Networking.Send(state.TheSocket, commandQueue.Dequeue());
+            }
         }
+
+        
+        /// <summary>
+        /// Processes incoming request from Server to update Spreadsheet
+        /// from other client's input
+        /// </summary>
+        /// <param name="req"></param>
+        private static void ProcessCellEdit(string req)
+		{
+            
+		}
     }
 }

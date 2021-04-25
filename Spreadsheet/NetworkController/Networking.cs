@@ -7,7 +7,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 
-namespace NetworkUtil
+namespace NetworkController
 {
     /// <summary>
     /// This class encapsulates methods that deal with TCP Listeners, Sockets, and SocketStates to initialize connections
@@ -389,7 +389,6 @@ namespace NetworkUtil
         /// <returns>True if the send process was started, false if an error occurs or the socket is already closed</returns>
         public static bool Send(Socket socket, string data)
         {
-
             if (socket.Connected)
             {
                 try

@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -63,6 +64,10 @@ namespace SS
             UpdateTextBoxes(GetCellName(col, row));
             this.col = col;
             this.row = row;
+
+            // Send to server
+            string json = @"{""requestType"": ""selectCell"", ""cellName"":" + @" "" " + GetCellName(col, row) + @" "" " + "}";
+            Network.commandQueue.Enqueue(json);
         }
 
 
@@ -95,7 +100,16 @@ namespace SS
         /// <returns></returns>
         public IEnumerable<string> SetCellContents(string contents)
         {
-            return s.SetContentsOfCell(GetCellName(col, row), contents);
+            IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
+
+            // Send to server
+            string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" + 
+                            GetCellName(col, row) + @"""," + @"""contents"": " + 
+                            @"""" + contents + @"""" + "}";
+
+            Network.commandQueue.Enqueue(json);
+
+            return res;
         }
 
 

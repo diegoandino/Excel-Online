@@ -42,9 +42,6 @@ namespace SS
 
         ////// Added for CS3505 Final: //////
 
-        /// <summary> Our connection to the server </summary>
-        private Network server;
-
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -54,10 +51,9 @@ namespace SS
             cells = new Dictionary<string, int[]>();
 
             // Connection based code:
-            server = new Network();
-            server.ConnectionError += ShowConnectionError;
-            server.UpdateArrived += ProcessUpdate;
-            server.Connected += HandleConnected;
+            Network.ConnectionError += ShowConnectionError;
+            Network.UpdateArrived += ProcessUpdate;
+            Network.Connected += HandleConnected;
 
             InitializeComponent();
         }
@@ -154,7 +150,7 @@ namespace SS
             // Try to connect to Server
             try
             {
-                server.Connect(ServerTextBox.Text, UserNameTextBox.Text);
+                Network.Connect(ServerTextBox.Text, UserNameTextBox.Text);
                 ConnectButton.Text = "Connected!";
             }
 
