@@ -4,7 +4,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 //using NetworkUtil;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
+using SpreadsheetModel;
 namespace NetworkController
 {
     // Quick User object to send with JSON
@@ -42,13 +43,14 @@ namespace NetworkController
         /// <summary> Reports whether or not this client has selected a SS</summary>
         public static bool SS_Chosen { get; private set; }
 
+        private static ServerSpreadsheet spreadsheet = new ServerSpreadsheet();
 
         /// <summary>
         /// State representing the connection with the server
         /// </summary>
         static SocketState theServer = null;
 
-
+       
         /// <summary>
         /// Our User's name
         /// </summary>
@@ -132,6 +134,11 @@ namespace NetworkController
         /// <param name="state"></param>
         private static void ProcessMessages(SocketState state)
         {
+            if (state.ErrorOccured)
+            {
+                ConnectionError("Error while receiving data from server");
+                return;
+            }
             string totalData = state.GetData();
 
 
@@ -174,6 +181,8 @@ namespace NetworkController
                 // Then remove it from the SocketState's growable buffer
                 state.RemoveData(0, p.Length);
             }
+            state.OnNetworkAction = UpdateLoop;
+            state.GetData();
         }
 
 
@@ -184,9 +193,122 @@ namespace NetworkController
         /// <param name="state"></param>
         private static void UpdateLoop(SocketState state)
         {
+            if (state.ErrorOccured == true)
+            {
+                ConnectionError("Error while connecting to server");
+                return;
+            }
+            string info;
+            lock (state.GetData())
+            {
+                info = state.GetData();
+            }
+            string[] jobjects = Regex.Split(info, @"(?<=[\n])");
+            lock (spreadsheet)
+            {
+                foreach (string s in jobjects)
+                {
+                    if (s.Length == 0)
+                        continue;
+                    if (s[s.Length - 1] != '\n')
+                    {
+                        continue;
+                    }
 
+                    JObject jObject = JObject.Parse(s);
+
+                    JToken tokenUpdate = jObject["cellUpdate"];
+                    JToken tokenSelect = jObject["cellSelected"];
+
+                    if (tokenUpdate != null)
+                    {
+                        UpdateCell update = JsonConvert.DeserializeObject<UpdateCell>(s);
+                        spreadsheet.EditCellToSpreadsheet(update.cellName, update.contents);
+
+                    }
+                    if (tokenSelect != null)
+                    {
+                        SelectCell select = JsonConvert.DeserializeObject<SelectCell>(s);
+
+                    }
+                    state.RemoveData(0, s.Length);
+                }
+
+                UpdateArrived();
+
+            }
+            state.OnNetworkAction = UpdateSpreadsheet;
+            Networking.GetData(state);
         }
 
+        /// <summary>
+        /// UpdateSpreadsheet callback for updating the spreadsheet's data
+        /// </summary>
+        /// <param name="state"></param>
+        private static void UpdateSpreadsheet(SocketState state)
+        {
+            if (state.ErrorOccured == true)
+            {
+                ConnectionError("Error while connecting to server");
+                return;
+            }
+            string info;
+            lock (state.GetData())
+            {
+                info = state.GetData();
+            }
+            string[] jobjects = Regex.Split(info, @"(?<=[\n])");
+            lock (spreadsheet)
+            {
+                foreach (string s in jobjects)
+                {
+                    if (s.Length == 0)
+                        continue;
+                    if (s[s.Length - 1] != '\n')
+                        continue;
+                    JObject jObject = JObject.Parse(s);
+
+                    JToken tokenUpdate = jObject["cellUpdate"];
+                    JToken tokenSelect = jObject["cellSelected"];
+                    JToken tokenDisconnect = jObject["disconnect"];
+                    JToken tokenInvalid = jObject["requestError"];
+                    JToken tokenShutdown = jObject["serverError"];
+                    if (tokenUpdate != null)
+                    {
+                        UpdateCell update = JsonConvert.DeserializeObject<UpdateCell>(s);
+                        spreadsheet.EditCellToSpreadsheet(update.cellName, update.contents);
+
+                    }
+                    if (tokenSelect != null)
+                    {
+                        SelectCell select = JsonConvert.DeserializeObject<SelectCell>(s);
+
+                    }
+
+                    if (tokenDisconnect != null)
+                    {
+                        Disconnect disconnect = JsonConvert.DeserializeObject<Disconnect>(s);
+                    }
+                    if (tokenInvalid != null)
+                    {
+                        InvalidRequest invalid = JsonConvert.DeserializeObject<InvalidRequest>(s);
+                      //  Error(invalid.message);
+                    }
+                    if (tokenShutdown != null)
+                    {
+                        Shutdown shutdown = JsonConvert.DeserializeObject<Shutdown>(s);
+                        //  Error(shutdown.message);
+                    }
+
+                    state.RemoveData(0, s.Length);
+                }
+               // ProcessInput(state);
+                UpdateArrived();
+
+            }
+
+            Networking.GetData(state);
+        }
         /// <summary>
         /// Processes incoming request from Server to update Spreadsheet
         /// from other client's input

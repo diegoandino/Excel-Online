@@ -8,7 +8,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
 using NetworkController;
-
+using SpreadsheetModel;
 namespace SS
 {
 
@@ -40,6 +40,7 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
+        private ServerSpreadsheet sheet;
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -159,7 +160,7 @@ namespace SS
             if (selection.Equals(""))
             {
                 MessageBox.Show("Selection must be non-empty");
-                
+
                 ServerTextBox.Enabled = true;
                 UserNameTextBox.Enabled = true;
                 ConnectButton.Enabled = true;
@@ -222,8 +223,42 @@ namespace SS
         private void ProcessUpdate()
         {
             MessageBox.Show("In process update");
+            Invoke(new MethodInvoker(() => this.LoadSpreadsheet(sheet.GetSpreadsheet())));
         }
 
+        /// <summary>
+        /// Load a Spreadsheet
+        /// </summary>
+        /// <param name="s">spreadsheet</param>
+        private void LoadSpreadsheet(Spreadsheet s)
+        {
+            try
+            {
+                // Updating cell dictionary and setting the new spreadsheet cells.
+                foreach (string cell in s.GetNamesOfAllNonemptyCells())
+                {
+                    if (!cells.ContainsKey(cell))
+                    {
+                        CellNameToColAndRow(out int col, out int row, cell);
+                        cells.Add(cell, new int[] { col, row });
+                        MainPanel.SetValue(cells[cell][0], cells[cell][1], controller.GetCellValue(cell).ToString());
+                    }
+                    else
+                    {
+                        MainPanel.GetValue(cells[cell][0], cells[cell][1], out string value);
+                        if (controller.GetCellValue(cell).ToString() != value)
+                        {
+                            MainPanel.SetValue(cells[cell][0], cells[cell][1], controller.GetCellValue(cell).ToString());
+                        }
+                    }
+                }
+            }
+            catch (SpreadsheetReadWriteException err)
+            {
+                MessageBox.Show("Could Not Load Spreadsheet \nError: " + err, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+        }
 
         /// <summary>
         /// This Method is called after InitializeComponent is called.

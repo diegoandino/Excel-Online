@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkController", "NetworkController\NetworkController.csproj", "{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetModel", "SpreadsheetModel\SpreadsheetModel.csproj", "{D6A7E256-200B-424C-A408-5FA620EB3C84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,10 @@ Global
 		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D522F7A9-B369-422E-AEDA-FBC716C2DE4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A7E256-200B-424C-A408-5FA620EB3C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A7E256-200B-424C-A408-5FA620EB3C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A7E256-200B-424C-A408-5FA620EB3C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A7E256-200B-424C-A408-5FA620EB3C84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

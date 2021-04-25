@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NetworkController">
-      <HintPath>..\NetworkController\obj\Debug\netstandard2.0\NetworkController.dll</HintPath>
+      <HintPath>..\NetworkController\obj\Debug\netstandard2.1\NetworkController.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -94,6 +94,10 @@
     <ProjectReference Include="..\NetworkController\NetworkController.csproj">
       <Project>{d522f7a9-b369-422e-aeda-fbc716c2de4f}</Project>
       <Name>NetworkController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpreadsheetModel\SpreadsheetModel.csproj">
+      <Project>{d6a7e256-200b-424c-a408-5fa620eb3c84}</Project>
+      <Name>SpreadsheetModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\SpreadsheetPanel\SpreadsheetPanel.csproj">
       <Project>{FA926045-E690-4824-845C-EB76882747DB}</Project>

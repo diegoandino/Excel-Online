@@ -25,6 +25,40 @@
         "build": {
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
+      },
+      "DependencyGraph/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/DependencyGraph.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DependencyGraph.dll": {}
+        }
+      },
+      "Formula/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/Formula.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Formula.dll": {}
+        }
+      },
+      "Spreadsheet/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "DependencyGraph": "1.0.0",
+          "Formula": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Spreadsheet.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Spreadsheet.dll": {}
+        }
       }
     }
   },
@@ -172,11 +206,27 @@
         "netstandard.library.2.0.3.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
+    },
+    "DependencyGraph/1.0.0": {
+      "type": "project",
+      "path": "../DependencyGraph/DependencyGraph.csproj",
+      "msbuildProject": "../DependencyGraph/DependencyGraph.csproj"
+    },
+    "Formula/1.0.0": {
+      "type": "project",
+      "path": "../Formula/Formula.csproj",
+      "msbuildProject": "../Formula/Formula.csproj"
+    },
+    "Spreadsheet/1.0.0": {
+      "type": "project",
+      "path": "../Spreadsheet/Spreadsheet.csproj",
+      "msbuildProject": "../Spreadsheet/Spreadsheet.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "NETStandard.Library >= 2.0.3"
+      "NETStandard.Library >= 2.0.3",
+      "Spreadsheet >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -185,11 +235,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
-      "projectName": "Formula",
-      "projectPath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
+      "projectUniqueName": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\SpreadsheetModel\\SpreadsheetModel.csproj",
+      "projectName": "SpreadsheetModel",
+      "projectPath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\SpreadsheetModel\\SpreadsheetModel.csproj",
       "packagesPath": "C:\\Users\\mydat\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\Formula\\obj\\",
+      "outputPath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\SpreadsheetModel\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mydat\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -205,7 +255,11 @@
       "frameworks": {
         "netstandard2.0": {
           "targetAlias": "netstandard2.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj": {
+              "projectPath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\Spreadsheet\\Spreadsheet.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

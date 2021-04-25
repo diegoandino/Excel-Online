@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2+ziySmHMGVk5xaAY3batmH0lJMLgPAf7SYh1S5GLZ/d11c824GOCIssb5oi5R15xluotKwa6o4SkNR3UlmrEQ==",
+  "dgSpecHash": "aNDngspPJ+f75GBheFiUgr/T2tQwnTDx/tYzpa/gW84nlR0BJhr+2291WSRvcZQvJR9j6aBN16CAst0IgGFFiA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
+  "projectFilePath": "C:\\Users\\mydat\\OneDrive\\Documents\\FinalProject\\DiegoServer\\cs3505-final-project\\Spreadsheet\\SpreadsheetModel\\SpreadsheetModel.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mydat\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\mydat\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
