@@ -16,8 +16,16 @@
 
 
 // Default Constructor:
-Spreadsheet::Spreadsheet(std::string& name) {
+template<typename T>
+Spreadsheet<T>::Spreadsheet() : spreadsheet_name("default"),changed(false) {
 
+}
+template<typename T>
+Spreadsheet<T>::Spreadsheet(std::string& name) : changed(false) {
+}
+template<typename T>
+std::map<Cell<T>, std::string> Spreadsheet<T>::get_spreadsheet_contents() {
+	
 }
 
 
