@@ -152,6 +152,7 @@ namespace SS
             confirmButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
             confirmButton.Click += (sender, e) => Request_SS(t.Text, sender, e);
 
+            // Add to the prompt:
             prompt.Controls.Add(t);
             prompt.Controls.Add(confirmButton);
             prompt.Controls.Add(cancelButton);
@@ -269,7 +270,7 @@ namespace SS
             // User must input a name
             if (UserNameTextBox.Text.Length == 0)
             {
-                MessageBox.Show("Name Cannot Exceed 16 Characters Or Be Empty");
+                MessageBox.Show("Name Cannot Be Empty");
                 return;
             }
 
