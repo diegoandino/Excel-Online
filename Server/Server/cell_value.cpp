@@ -1,31 +1,29 @@
 #include "cell_value.h"
 
-template<typename T>
-inline CellValue<T>::CellValue() : content(NULL)
+CellValue::CellValue()
 {
 }
 
-template<typename T>
-CellValue<T>::CellValue(T& cont)  : content(cont)
+CellValue::CellValue(std::string& cont)
 {
+	
 }
 
-template<typename T>
-T CellValue<T>::get_content()
+std::string CellValue::get_content()
 {
-	return content;
+	return ""; 
 }
 
-template<typename T>
-void CellValue<T>::set_content(T& cont)
-{
-	content = cont;
+std::string CellValue::get_value() {
+	return "";
 }
 
-template<typename T>
-bool CellValue<T>::is_empty()
+void CellValue::set_content(std::string& cont)
 {
-	return content == NULL;
+	
 }
 
-
+bool CellValue::is_empty()
+{
+	return false; 
+}

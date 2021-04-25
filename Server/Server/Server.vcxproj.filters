@@ -33,7 +33,7 @@
     <ClCompile Include="dependency_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AbstractSpreadsheet.cpp">
+    <ClCompile Include="Formula.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependency_graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Formula.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

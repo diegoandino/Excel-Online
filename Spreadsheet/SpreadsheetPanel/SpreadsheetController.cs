@@ -108,7 +108,6 @@ namespace SS
                             @"""" + contents + @"""" + "}";
 
             Network.commandQueue.Enqueue(json);
-
             return res;
         }
 

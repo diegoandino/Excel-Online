@@ -1,5 +1,8 @@
 #include "Formula.h"
 
+/*Formula::Formula() : formula("") {}
+
+
 Formula::Formula(std::string& formula)
 {
 
@@ -112,7 +115,8 @@ Formula::Formula(std::string& formula)
 	}
 }
 
-CellValue Formula::evaluate()
+template<typename T>
+CellValue<T> Formula::evaluate()
 {
 	//creates the two stacks, for operators and for values
 	std::stack<std::string> operator_stack;
@@ -134,6 +138,7 @@ CellValue Formula::evaluate()
 			}
 
 		}
+
 		catch (const std::exception&)
 		{
 			//t is a variable
@@ -155,6 +160,7 @@ CellValue Formula::evaluate()
 					return CellValue();
 				}
 			}
+
 			//t is + or -
 			else if (t == ("+") || t == ("-"))
 			{
@@ -181,7 +187,7 @@ CellValue Formula::evaluate()
 				//this should be an '('
 				std::string next_operator = operator_stack.top();
 				operator_stack.pop(); // if you're wondering why, it's because in c++ pop() deletes but doens't return anything....
-				
+
 				if (operator_is_on_top(operator_stack, "*") || operator_is_on_top(operator_stack, "/"))
 				{
 					double firs_num = value_stack.top();
@@ -195,7 +201,7 @@ CellValue Formula::evaluate()
 					{
 						value_stack.push(firs_num * second_num);
 					}
-					else if(curr_operator == "/")
+					else if (curr_operator == "/")
 					{
 						if (firs_num == 0)
 						{
@@ -205,7 +211,6 @@ CellValue Formula::evaluate()
 
 						value_stack.push(second_num / firs_num);
 					}
-					
 				}
 			}
 		}
@@ -241,8 +246,8 @@ CellValue Formula::evaluate()
 		}
 	}
 
-	/*ValueStack.Clear();
-	OperatorStack.Clear();*/
+	//ValueStack.Clear();
+	//OperatorStack.Clear();
 
 	//TODO this cell value must return ret
 	return CellValue();
@@ -298,8 +303,8 @@ std::string Formula::to_string()
 bool Formula::equals(Formula& other)
 {
 	//check for null
-	/*if (other == null)
-		return false;*/
+	if (other == null)
+		return false;
 
 	return this->to_string() == other.to_string();
 }
@@ -317,7 +322,7 @@ std::vector<std::string> Formula::get_tokens(std::string& formula)
 	//I'm unsure if we need escaping 
 	std::string lpPattern = "\(";
 	std::string rpPattern = "\)";
-	std::string opPattern = "[\+\-*/]";
+	std::string opPattern = "[\+\-]";
 	std::string varPattern = "[a-zA-Z_](?: [a-zA-Z_]|\d)*";
 	std::string doublePattern = "(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
 	std::string spacePattern = "\s+";
@@ -502,18 +507,18 @@ bool Formula::operator_is_on_top(std::stack<std::string> stack, std::string tkn)
 inline void Formula::ltrim(std::string& s)
 {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch)
-	{
-		return !std::isspace(ch);
-	}));
+		{
+			return !std::isspace(ch);
+		}));
 }
 
 // trim from end (in place)
 inline void Formula::rtrim(std::string& s)
 {
 	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch)
-	{
-		return !std::isspace(ch);
-	}).base(), s.end());
+		{
+			return !std::isspace(ch);
+		}).base(), s.end());
 }
 
 // trim from both ends (in place)
@@ -522,3 +527,4 @@ inline void Formula::trim(std::string& s)
 	ltrim(s);
 	rtrim(s);
 }
+*/

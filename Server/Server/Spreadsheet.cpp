@@ -14,18 +14,8 @@
 /// @Author "It Should work now"
 /// </summary>
 
+std::map<Cell, std::string> Spreadsheet::get_spreadsheet_contents() {
+	std::map<Cell, std::string> content; 
 
-// Default Constructor:
-template<typename T>
-Spreadsheet<T>::Spreadsheet() : spreadsheet_name("default"),changed(false) {
-
+	return content; 
 }
-template<typename T>
-Spreadsheet<T>::Spreadsheet(std::string& name) : changed(false) {
-}
-template<typename T>
-std::map<Cell<T>, std::string> Spreadsheet<T>::get_spreadsheet_contents() {
-	
-}
-
-

@@ -141,10 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AbstractSpreadsheet.cpp" />
     <ClCompile Include="cell.cpp" />
     <ClCompile Include="cell_value.cpp" />
     <ClCompile Include="dependency_graph.cpp" />
+    <ClCompile Include="Formula.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Spreadsheet.cpp" />
@@ -187,6 +187,7 @@
     <ClInclude Include="cell.h" />
     <ClInclude Include="cell_value.h" />
     <ClInclude Include="dependency_graph.h" />
+    <ClInclude Include="Formula.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Spreadsheet.h" />
   </ItemGroup>

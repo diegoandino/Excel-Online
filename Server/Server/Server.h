@@ -15,7 +15,6 @@
 
 #include "Spreadsheet.h"
 
-
 // For convenience
 using JObject = nlohmann::json;
 
@@ -40,10 +39,10 @@ private:
 	const char* _ip_address;								// IP Address that the server will run on  
 	int			_port;										// Port number for server
 	int			_socket;									// Socket for listening
-	fd_set		_master;									// Master file descriptor set
+	fd_set		_master;										// Master file descriptor set
 
 	std::map<int, Spreadsheet*> available_spreadsheets;		// Returns the available spreadsheets in the server
-	std::mutex spreadsheet_lock;							// Mutex for available_spreadsheets
+	std::mutex spreadsheet_lock;								// Mutex for available_spreadsheets
 
 	void EraseFromServer				(int client_socket);
 	void ProcessClientConnectedRequests	(int client_socket, const char* message, int length, JObject req);

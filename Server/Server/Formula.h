@@ -11,17 +11,17 @@
 #include <regex>
 #include "cell_value.h"
 
-class Formula
-{
-
+class Formula {
 public:
+	Formula();
 	Formula(std::string& formula);
 
 	bool is_valid(std::string& str);
 
 	double lookup(std::string& str);
 
-	CellValue evaluate();
+	//template<typename T>
+	//CellValue<T> evaluate();
 
 	std::list<std::string> get_variables();
 
@@ -30,7 +30,7 @@ public:
 	std::string to_string();
 
 private:
-
+	std::string formula;
 	std::vector<std::string> get_tokens(std::string& formula);
 
 	bool token_is_valid(std::string& token);
@@ -54,6 +54,4 @@ private:
 	inline void ltrim(std::string& s);
 	inline void rtrim(std::string& s);
 	inline void trim(std::string& s);
-
 };
-
