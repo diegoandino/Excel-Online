@@ -1,6 +1,6 @@
 #include "Formula.h"
 
-/*Formula::Formula() : formula("") {}
+Formula::Formula() : formula("") {}
 
 
 Formula::Formula(std::string& formula)
@@ -22,12 +22,14 @@ Formula::Formula(std::string& formula)
 	if (tokens.size() == 0)
 	{
 		std::cout << "Formula is empty" << std::endl;
+		set_error();
 		return;
 	}
 
 	if (!op_par_follow_rule(tokens[0]))
 	{
 		std::cout << "Invalid token at the beginning of the expression" << std::endl;
+		set_error();
 		return;
 	}
 
@@ -40,6 +42,7 @@ Formula::Formula(std::string& formula)
 		if (!token_is_valid(tokens[i]))
 		{
 			std::cout << "Invalid token at the beginning of the expression" << std::endl;
+			set_error();
 			return;
 		}
 
@@ -50,6 +53,7 @@ Formula::Formula(std::string& formula)
 			if (!op_par_follow_rule(tokens[i]))
 			{
 				std::cout << "Invalid token at the beginning of the expression" << std::endl;
+				set_error();
 				return;
 			}
 
@@ -66,6 +70,7 @@ Formula::Formula(std::string& formula)
 			if (!(is_operator(tokens[i]) || tokens[i] == ")") && i != 0)
 			{
 				std::cout << "a token is not valid" << std::endl;
+				set_error();
 				return;
 			}
 		}
@@ -84,6 +89,7 @@ Formula::Formula(std::string& formula)
 			if (rightParCount > leftParCount)
 			{
 				std::cout << "\')\' misssing " << std::endl;
+				set_error();
 				return;
 			}
 		}
@@ -106,25 +112,53 @@ Formula::Formula(std::string& formula)
 				if (!is_valid(tokens[i]))
 				{
 					std::cout << "a token is not valid" << std::endl;
+					set_error();
 					return;
 				}
 			}
 		}
+	}
+
+	//last checks
+
+	try
+	{
+		std::string::size_type sz;
+		double d = std::stod(tokens[tokens.size() - 1], &sz);
+	}
+	catch (const std::exception&)
+	{
+		if (!(is_variable(tokens[tokens.size() - 1]) || tokens[tokens.size() - 1] == ")"))
+		{
+			std::cout << "Invalid token at the end of the expression" << std::endl;
+			set_error();
+			return;
+		}
+	}
 
 
+	if (rightParCount != leftParCount)
+	{
+		std::cout << "parantheses missing" << std::endl;
+		set_error();
+		return;
 	}
 }
 
-template<typename T>
-CellValue<T> Formula::evaluate()
+CellValue Formula::evaluate()
 {
 	//creates the two stacks, for operators and for values
 	std::stack<std::string> operator_stack;
 	std::stack<double> value_stack;
+	
+	std::string add("+");
+	std::string sub("-");
+	std::string mult("*");
+	std::string div("/");
 
 	for (std::string t : tokens)
 	{
-		trim(t);
+		//trim(t);
 
 		try
 		{
@@ -134,7 +168,9 @@ CellValue<T> Formula::evaluate()
 			if (!perform_div_mult(value_stack, operator_stack, d))
 			{
 				std::cout << "Division by zero ocurred" << std::endl;
-				return CellValue();
+				CellValue c;
+				c.set_error();
+				return c;
 			}
 
 		}
@@ -151,20 +187,24 @@ CellValue<T> Formula::evaluate()
 					if (!perform_div_mult(value_stack, operator_stack, CurrVar))
 					{
 						std::cout << "Division by zero ocurred" << std::endl;
-						return CellValue();
+						CellValue c;
+						c.set_error();
+						return c;
 					}
 				}
 				catch (const std::exception&)
 				{
 					std::cout << "Invalid Variable" << std::endl;
-					return CellValue();
+					CellValue c;
+					c.set_error();
+					return c;
 				}
 			}
 
 			//t is + or -
 			else if (t == ("+") || t == ("-"))
 			{
-				if (operator_is_on_top(operator_stack, "+") || operator_is_on_top(operator_stack, "-"))
+				if (operator_is_on_top(operator_stack, add) || operator_is_on_top(operator_stack, sub))
 				{
 					perform_add_subs(value_stack, operator_stack);
 				}
@@ -179,16 +219,15 @@ CellValue<T> Formula::evaluate()
 			//t is )
 			else if (t == ")")
 			{
-				if (operator_is_on_top(operator_stack, "+") || operator_is_on_top(operator_stack, "-"))
+				if (operator_is_on_top(operator_stack, add) || operator_is_on_top(operator_stack, sub))
 				{
 					perform_add_subs(value_stack, operator_stack);
 				}
 
 				//this should be an '('
-				std::string next_operator = operator_stack.top();
 				operator_stack.pop(); // if you're wondering why, it's because in c++ pop() deletes but doens't return anything....
 
-				if (operator_is_on_top(operator_stack, "*") || operator_is_on_top(operator_stack, "/"))
+				if (operator_is_on_top(operator_stack, mult) || operator_is_on_top(operator_stack, div))
 				{
 					double firs_num = value_stack.top();
 					value_stack.pop();
@@ -206,7 +245,9 @@ CellValue<T> Formula::evaluate()
 						if (firs_num == 0)
 						{
 							std::cout << "Division by zero occured" << std::endl;
-							return CellValue();
+							CellValue c;
+							c.set_error();
+							return c;
 						}
 
 						value_stack.push(second_num / firs_num);
@@ -246,11 +287,9 @@ CellValue<T> Formula::evaluate()
 		}
 	}
 
-	//ValueStack.Clear();
-	//OperatorStack.Clear();
-
-	//TODO this cell value must return ret
-	return CellValue();
+	std::string s = std::to_string(ret);
+	CellValue cell_value(s);
+	return cell_value;
 }
 
 /// <summary>
@@ -264,9 +303,9 @@ CellValue<T> Formula::evaluate()
 /// new Formula("x+X*z", N, s => true).GetVariables() should enumerate "X" and "Z".
 /// new Formula("x+X*z").GetVariables() should enumerate "x", "X", and "z".
 /// </summary>
-std::list<std::string> Formula::get_variables()
+std::vector<std::string> Formula::get_variables()
 {
-	std::list<std::string> variables;
+	std::vector<std::string> variables;
 
 	for (std::string s : tokens)
 	{
@@ -303,8 +342,8 @@ std::string Formula::to_string()
 bool Formula::equals(Formula& other)
 {
 	//check for null
-	if (other == null)
-		return false;
+	/*if (other == NULL)
+		return false;*/
 
 	return this->to_string() == other.to_string();
 }
@@ -317,27 +356,20 @@ bool Formula::equals(Formula& other)
 /// </summary>
 std::vector<std::string> Formula::get_tokens(std::string& formula)
 {
-	// Patterns for individual tokens
-	//all these has an '@' in the original
-	//I'm unsure if we need escaping 
-	std::string lpPattern = "\(";
-	std::string rpPattern = "\)";
-	std::string opPattern = "[\+\-]";
-	std::string varPattern = "[a-zA-Z_](?: [a-zA-Z_]|\d)*";
-	std::string doublePattern = "(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
-	std::string spacePattern = "\s+";
 
-	std::string pattern = "(" + lpPattern + ") | (" + rpPattern + ") | (" + opPattern + ") | (" + varPattern + ") | (" + doublePattern + ") | (" + spacePattern + ")";
-
-	//std::string s = str(format("%2% %2% %1%\n") % "world" % "hello");
-
-	std::smatch sm;
-	std::regex_match(formula, sm, std::regex(pattern));
+	std::string pattern = "([\\+\\-])|(\\()|(\\))|([0-9]+\\.?[0-9]*)|([\\*\\/])|[a-zA-Z]?[0-9]*";
+	std::regex rgx(pattern);
 
 	std::vector<std::string> ret;
-	for (std::string s : sm)
+
+	std::regex_iterator<std::string::iterator> rit(formula.begin(), formula.end(), rgx);
+	std::regex_iterator<std::string::iterator> rend;
+
+	while (rit != rend)
 	{
-		ret.push_back(s);
+		if(rit->str() != "")
+			ret.push_back(rit->str());
+		++rit;
 	}
 
 	return ret;
@@ -398,10 +430,9 @@ bool Formula::op_par_follow_rule(std::string& s)
 	}
 	catch (const std::exception&)
 	{
-		return false;
+		return is_variable(s) || s == "(";
 	}
-
-	return is_variable(s) || s == "(";
+	
 }
 
 /// <summary>
@@ -420,9 +451,11 @@ bool Formula::is_operator(std::string& s)
 /// <param name="Values"></param>
 /// <param name="Operators"></param>
 /// <param name="Num"></param>
-bool Formula::perform_div_mult(std::stack<double> values, std::stack<std::string> operators, double num)
+bool Formula::perform_div_mult(std::stack<double>& values, std::stack<std::string>& operators, double num)
 {
-	if (operator_is_on_top(operators, "/") || operator_is_on_top(operators, "*"))
+	std::string div("/");
+	std::string mult("*");
+	if (operator_is_on_top(operators, div) || operator_is_on_top(operators, mult))
 	{
 		double curr_num = values.top();
 		values.pop();
@@ -440,10 +473,10 @@ bool Formula::perform_div_mult(std::stack<double> values, std::stack<std::string
 
 			values.push(curr_num / num);
 		}
-		else
-		{
-			values.push(num);
-		}
+	}
+	else
+	{
+		values.push(num);
 	}
 
 	return true;
@@ -455,14 +488,14 @@ bool Formula::perform_div_mult(std::stack<double> values, std::stack<std::string
 /// <param name="Values"></param>
 /// <param name="Operators"></param>
 /// <param name="Num"></param>
-bool Formula::perform_add_subs(std::stack<double> values, std::stack<std::string> operators)
+void Formula::perform_add_subs(std::stack<double>& values, std::stack<std::string>& operators)
 {
 	double first_num = values.top();
 	values.pop();
 	double second_num = values.top();
 	values.pop();
 	std::string curr_op = operators.top();
-	operators.top();
+	operators.pop();
 
 	if (curr_op == ("+"))
 	{
@@ -481,7 +514,7 @@ bool Formula::perform_add_subs(std::stack<double> values, std::stack<std::string
 /// <param name="s"></param>
 bool Formula::is_variable(std::string& s)
 {
-	std::string varPattern = "[a-zA-Z_](?: [a-zA-Z_]|\d)*";
+	std::string varPattern = "[a-zA-Z]?[0-9]*";
 
 	return std::regex_match(s, std::regex(varPattern));
 }
@@ -493,13 +526,30 @@ bool Formula::is_variable(std::string& s)
 /// <param name="stack"></param>
 /// <param name="component"></param>
 /// <returns>true if the desired component is on top</returns>
-bool Formula::operator_is_on_top(std::stack<std::string> stack, std::string tkn)
+bool Formula::operator_is_on_top(std::stack<std::string>& stack, std::string& tkn)
 {
 	if (stack.size() < 1)
 		return false;
 
 	return stack.top() == (tkn);
 }
+
+void Formula::set_error()
+{
+	tokens.clear();
+	tokens.push_back("FORMULA::ERROR");
+}
+
+bool Formula::is_valid(std::string& str)
+{
+	return true;
+}
+
+double Formula::lookup(std::string& str)
+{
+	return 0.0;
+}
+
 
 //from: https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
 
@@ -527,4 +577,3 @@ inline void Formula::trim(std::string& s)
 	ltrim(s);
 	rtrim(s);
 }
-*/

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <list>
 #include <stack>
 #include <iostream>
 #include <vector>
@@ -20,10 +19,9 @@ public:
 
 	double lookup(std::string& str);
 
-	//template<typename T>
-	//CellValue<T> evaluate();
+	CellValue evaluate();
 
-	std::list<std::string> get_variables();
+	std::vector<std::string> get_variables();
 
 	bool equals(Formula& other);
 
@@ -39,15 +37,17 @@ private:
 
 	bool is_operator(std::string& s);
 
-	bool perform_div_mult(std::stack<double> values, std::stack<std::string> operators, double num);
+	bool perform_div_mult(std::stack<double>& values, std::stack<std::string>& operators, double num);
 
-	bool perform_add_subs(std::stack<double> values, std::stack<std::string> operators);
+	void perform_add_subs(std::stack<double>& values, std::stack<std::string>& operators);
 
 	bool is_variable(std::string& s);
 
-	bool operator_is_on_top(std::stack<std::string>, std::string tkn);
+	bool operator_is_on_top(std::stack<std::string>& op, std::string& tkn);
 
 	std::vector<std::string> tokens;
+
+	void set_error();
 
 	//string operations
 	//these methods were static in SO

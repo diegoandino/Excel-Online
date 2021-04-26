@@ -1,8 +1,4 @@
-﻿  Server.cpp
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(13,18): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(62,21): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(74,25): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(81,24): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(106,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(109,17): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-  Server.vcxproj -> C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\x64\Debug\Server.exe
+﻿  Formula.cpp
+D:\GitHub\cs3505-final-project\Server\Server\Formula.cpp(386,9): warning C4101: 'd': unreferenced local variable
+D:\GitHub\cs3505-final-project\Server\Server\Formula.cpp(422,9): warning C4101: 'check': unreferenced local variable
+  Server.vcxproj -> D:\GitHub\cs3505-final-project\Server\x64\Debug\Server.exe

@@ -1,0 +1,4 @@
+﻿  test.cpp
+D:\GitHub\cs3505-final-project\Server\Server\Formula.cpp(386,9): warning C4101: 'd': unreferenced local variable
+D:\GitHub\cs3505-final-project\Server\Server\Formula.cpp(422,9): warning C4101: 'check': unreferenced local variable
+  SSTester.vcxproj -> D:\GitHub\cs3505-final-project\Server\x64\Debug\SSTester.exe
