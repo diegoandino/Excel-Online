@@ -51,3 +51,5 @@ RUN apt-get -y update && apt-get -y install \
   wget \
   yasm \
   zlib1g-dev 
+  
+COPY .
