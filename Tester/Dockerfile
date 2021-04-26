@@ -51,3 +51,6 @@ RUN apt-get -y update && apt-get -y install \
   wget \
   yasm \
   zlib1g-dev 
+COPY .
+
+RUN g++ Test.cpp 
