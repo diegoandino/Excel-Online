@@ -10,9 +10,10 @@ class Cell {
 public:
 	Cell();
 	Cell(std::string name, CellValue value);
+	//~Cell();
 
 	std::string get_cell_name(); 
-	std::string get_cell_value(); 
+	std::string get_cell_content(); 
 	
 	bool is_empty(); 
 
