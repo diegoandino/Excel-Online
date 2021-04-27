@@ -418,7 +418,6 @@ bool Formula::token_is_valid(std::string& token)
 /// <returns>true if the token is either of the three</returns>
 bool Formula::op_par_follow_rule(std::string& s)
 {
-	double check;
 
 	try
 	{
