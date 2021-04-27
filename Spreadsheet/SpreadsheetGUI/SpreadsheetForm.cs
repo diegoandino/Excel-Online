@@ -55,6 +55,11 @@ namespace SS
             Network.SpreadSheetsArrived += PickASpreadSheet;
 
             InitializeComponent();
+
+            // Disable cells until connection is made
+            MainPanel.Enabled = false;
+            CellContentsBox.Enabled = false;
+
         }
 
         /// <summary>
@@ -88,7 +93,6 @@ namespace SS
                     foreach (string s in Spreadsheets) // rename "test" to "spreadsheets" 
                         selections.Items.Add(s);
 
-
                     // Reposition & hook up buttons:
                     new_SS.Click += RequestNew_SS;
                     new_SS.Click += (sender, e) => ClosePrompt(prompt, sender, e);
@@ -105,7 +109,17 @@ namespace SS
                     prompt.Controls.Add(new_SS);
                     prompt.Controls.Add(selections);
                     prompt.Text = "Pick a spreadsheet";
+
+                    // If there are spreadsheets availible, show them:
+                    if(Spreadsheets.Length > 0)
                     prompt.ShowDialog();
+
+                    else
+                    {
+                        object s = new object();
+                        EventArgs e = new EventArgs();
+                        RequestNew_SS(s,e);
+                    }
 
                 }));
         }
@@ -148,6 +162,7 @@ namespace SS
 
         }
 
+
         /// <summary>
         /// This method is invoked when a user asks for an existing spreadsheet.
         /// </summary>
@@ -171,7 +186,10 @@ namespace SS
             MessageBox.Show(selection + " Was chosen");
 
             // Send the name of the spreadsheet to server:
+            string json = @"{""spreadsheet_name"": " + @"""" + selection.TrimEnd('\n') + @"""" + "}";
+            Network.spreadsheetNameQueue.Enqueue(json);
         }
+
 
         /// <summary>
         /// Method to close prompt after a selection is made to request the server
@@ -188,14 +206,20 @@ namespace SS
         }
 
 
-
         /// <summary>
         /// Upon connection, we setup our spreadsheet.
         /// </summary>
         private void HandleConnected()
         {
-            MessageBox.Show("Connected");
+            this.Invoke(new MethodInvoker(
+                () =>
+                {
+                    MessageBox.Show("Connected");
+                    MainPanel.Enabled = true;
+                    CellContentsBox.Enabled = true;
+                }));
         }
+
 
         /// <summary>
         /// Method used to report any errors that occured.
@@ -204,6 +228,7 @@ namespace SS
         private void ShowConnectionError(string error)
         {
             MessageBox.Show(error);
+
             // Re-enable the controlls so the user can reconnect
             this.Invoke(new MethodInvoker(
                 () =>
@@ -215,6 +240,7 @@ namespace SS
                     UserNameTextBox.Enabled = true;
                 }));
         }
+
 
         /// <summary>
         /// Where we process updates
@@ -280,6 +306,7 @@ namespace SS
 
             // Try to connect to Server
             try
+
             {
                 Network.Connect(ServerTextBox.Text, UserNameTextBox.Text);
                 ConnectButton.Text = "Connected!";
@@ -340,8 +367,6 @@ namespace SS
         /// <param name="e"></param>
         private void UpdateContentsOfCell(object sender, EventArgs e)
         {
-
-            // NOTE: IF !CONNECTED POPUP CANT EDIT
 
             try
             {
@@ -638,9 +663,25 @@ namespace SS
             TimeLabel.Text = DateTime.Now.ToLongTimeString();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+ 
+        /// <summary>
+        /// When clicked, our client sends a request to the server to undo the most recent change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UndoButton_Click(object sender, EventArgs e)
         {
+            controller.SendUndo();
+        }
 
+        /// <summary>
+        /// When clicked, our client sends a request to the server to revert a specific cell. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RevertButton_Click(object sender, EventArgs e)
+        {
+            controller.SendRevert();
         }
     }
 }

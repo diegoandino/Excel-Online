@@ -1,1 +1,2 @@
 D:\GitHub\cs3505-final-project\Server\SSTester\x64\Debug\SSTester.vcxproj.CopyComplete
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\SSTester\x64\Debug\SSTester.vcxproj.CopyComplete

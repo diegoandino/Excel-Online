@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,16 @@ namespace SS
 
             // Send to server
             string json = @"{""requestType"": ""selectCell"", ""cellName"":" + @" "" " + GetCellName(col, row) + @" "" " + "}";
-            Network.commandQueue.Enqueue(json);
+            //Network.commandQueue.Enqueue(json);
+
+            if (Network.server != null)
+            {
+                Networking.Send(Network.server.TheSocket, json);
+            }
+            else
+            {
+                return;
+            }
         }
 
 
@@ -103,12 +113,17 @@ namespace SS
             IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
 
             // Send to server
-            string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" + 
-                            GetCellName(col, row) + @"""," + @"""contents"": " + 
+            string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" +
+                            GetCellName(col, row) + @"""," + @"""contents"": " +
                             @"""" + contents + @"""" + "}";
 
-            Network.commandQueue.Enqueue(json);
+            //Network.commandQueue.Enqueue(json);
+            if (Network.server != null)
+
+                Networking.Send(Network.server.TheSocket, json);
+
             return res;
+
         }
 
 
@@ -153,7 +168,7 @@ namespace SS
         {
             string columnString = "";
             decimal columnNumber = col;
-            
+
             // Loops while the column number is greater than or equal to zero 
             // and gets the current cell name from the column and the row.
             while (columnNumber >= 0)
@@ -172,6 +187,8 @@ namespace SS
 
             return columnString + row;
         }
+
+
 
 
         /// <summary>
@@ -193,6 +210,46 @@ namespace SS
         private string Normalize(string s)
         {
             return s.ToUpper();
+        }
+
+        /// <summary>
+        /// This method sends an undo request to the server in the format of
+        ///     - {requestType: "undo"}
+        /// </summary>
+        public void SendUndo()
+        {
+
+            string json = @"{""requestType"": ""undo"" }";
+
+            if (Network.server != null)
+            {
+                Networking.Send(Network.server.TheSocket, json);
+            }
+
+            else
+            {
+                return;
+            }
+        }
+
+        /// <summary>
+        /// This method sends a revert request to the server in the format of
+        /// - { requestType: "revertCell", cellName: "<cellname>"}
+        /// </summary>
+        public void SendRevert()
+        {
+            string json = @"{""requestType"": ""revertCell"",""cellName"":" + @"""" +
+                            GetCellName(col, row) + @""" }";
+
+            if (Network.server != null)
+            {
+                Networking.Send(Network.server.TheSocket, json);
+            }
+
+            else
+            {
+                return;
+            }
         }
     }
 }

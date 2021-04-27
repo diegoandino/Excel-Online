@@ -89,7 +89,6 @@ namespace SS
             // Arrange for the drawing panel to be notified when it needs to scroll itself.
             hScroll.Scroll += drawingPanel.HandleHScroll;
             vScroll.Scroll += drawingPanel.HandleVScroll;
-
         }
 
 

@@ -25,7 +25,7 @@ namespace NetworkController
         /// <summary>
         /// HashSet representing our clients connected.
         /// </summary>
-        private static HashSet<Socket> clients = new HashSet<Socket>();
+        public static HashSet<Socket> clients = new HashSet<Socket>();
         
         /// <summary>
         /// The TcpListener to be used in StartServer.
@@ -41,7 +41,6 @@ namespace NetworkController
         /// <param name="port">The the port to listen on</param>
         public static TcpListener StartServer(Action<SocketState> toCall, int port)
         {
-
             listener = new TcpListener(IPAddress.Any, port);
 
             // Start the listener
@@ -84,7 +83,6 @@ namespace NetworkController
         /// 1) a delegate so the user can take action (a SocketState Action), and 2) the TcpListener</param>
         private static void AcceptNewClient(IAsyncResult ar)
         {
-
             Console.WriteLine("contact from client");
 
             // Grabbing Tuple that has the Action<SocketState> and TCPListener from StartServer method.		
