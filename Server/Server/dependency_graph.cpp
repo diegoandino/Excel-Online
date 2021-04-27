@@ -18,7 +18,7 @@ int DependencyGraph::get_size()
 /// </summary>
 /// <param name="s">string to search for</param>
 /// <returns>if a key has dependents</returns>
-bool DependencyGraph::has_dependents(std::string s)
+bool DependencyGraph::has_dependents(std::string& s)
 {
 	try
 	{
@@ -38,7 +38,7 @@ bool DependencyGraph::has_dependents(std::string s)
 /// </summary>
 /// <param name="s">string to search for</param>
 /// <returns>if a key has dependees</returns>
-bool DependencyGraph::has_dependees(std::string s)
+bool DependencyGraph::has_dependees(std::string& s)
 {
 	try
 	{
@@ -55,9 +55,9 @@ bool DependencyGraph::has_dependees(std::string s)
 /// <summary>
 /// Enumerates dependents(s).
 /// </summary>
-std::list<std::string> DependencyGraph::get_dependents(std::string s)
+std::vector<std::string> DependencyGraph::get_dependents(std::string& s)
 {
-	std::list<std::string> ret;
+	std::vector<std::string> ret;
 
 	if (has_dependents(s))
 	{
@@ -71,9 +71,9 @@ std::list<std::string> DependencyGraph::get_dependents(std::string s)
 }
 
 
-std::list<std::string> DependencyGraph::get_dependees(std::string s)
+std::vector<std::string> DependencyGraph::get_dependees(std::string& s)
 {
-	std::list<std::string> ret;
+	std::vector<std::string> ret;
 
 	if (has_dependees(s))
 	{
@@ -96,7 +96,7 @@ std::list<std::string> DependencyGraph::get_dependees(std::string s)
 /// </summary>
 /// <param name="s"> s must be evaluated first. T depends on S</param>
 /// <param name="t"> t cannot be evaluated until s is</param>        /// 
-void DependencyGraph::add_dependency(std::string s, std::string t)
+void DependencyGraph::add_dependency(std::string& s, std::string& t)
 {
 	bool ee = false;
 	bool ent = false;
@@ -107,7 +107,8 @@ void DependencyGraph::add_dependency(std::string s, std::string t)
 		int ent_size = dependents.size();
 		dependents.at(s).insert(t);
 
-		ent = ent_size != dependents.size();
+		//ent = ent_size != dependents.size();
+		ent = true;
 	}
 	else
 	{
@@ -125,7 +126,8 @@ void DependencyGraph::add_dependency(std::string s, std::string t)
 		int ee_size = dependees.size();
 		dependees.at(t).insert(s);
 
-		ee = dependees.at(t).size() != ee_size;
+		//ee = dependees.at(t).size() != ee_size;
+		ee = true;
 	}
 	else
 	{
@@ -145,7 +147,7 @@ void DependencyGraph::add_dependency(std::string s, std::string t)
 /// </summary>
 /// <param name="s"></param>
 /// <param name="t"></param>
-void DependencyGraph::remove_dependency(std::string s, std::string t)
+void DependencyGraph::remove_dependency(std::string& s, std::string& t)
 {
 
 	if (dependents.contains(s) && dependees.contains(t))
@@ -171,7 +173,7 @@ void DependencyGraph::remove_dependency(std::string s, std::string t)
 	//size--;
 }
 
-void DependencyGraph::replace_dependents(std::string s, std::list<std::string> new_dependents)
+void DependencyGraph::replace_dependents(std::string& s, std::vector<std::string>& new_dependents)
 {
 	//removes all the dependcies related to s' dependents
 	for (std::string str : get_dependents(s))
@@ -184,4 +186,16 @@ void DependencyGraph::replace_dependents(std::string s, std::list<std::string> n
 	{
 		add_dependency(s, str);
 	}
+}
+
+/// <summary>
+/// The size of dependees(s).
+/// This property is an example of an indexer.  If dg is a DependencyGraph, you would
+/// invoke it like this:
+/// dg["a"]
+/// It should return the size of dependees("a")
+/// </summary>
+int DependencyGraph::operator[](std::string s)
+{
+	return get_dependees(s).size();
 }

@@ -383,7 +383,6 @@ std::vector<std::string> Formula::get_tokens(std::string& formula)
 /// <returns></returns>
 bool Formula::token_is_valid(std::string& token)
 {
-	double d;
 
 	//if it is not any of the allowed character returns false
 	if (token == "(" ||
@@ -419,7 +418,6 @@ bool Formula::token_is_valid(std::string& token)
 /// <returns>true if the token is either of the three</returns>
 bool Formula::op_par_follow_rule(std::string& s)
 {
-	double check;
 
 	try
 	{
