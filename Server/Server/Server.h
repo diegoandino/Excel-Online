@@ -46,7 +46,7 @@ private:
 
 	std::string get_available_spreadsheets();
 	
-	std::vector<Spreadsheet>available_spreadsheets();
+	std::vector<Spreadsheet> available_spreadsheets;
 
 	Spreadsheet* find_selected_spreadsheet(std::string name);
 
