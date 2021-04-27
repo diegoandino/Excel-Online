@@ -3,21 +3,22 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
-#include <list>
+#include <vector>;
 
 class DependencyGraph {
 
 public:
 	DependencyGraph();
 	int get_size();
-	bool has_dependents(std::string s);
-	bool has_dependees(std::string s);
-	std::list<std::string> get_dependents(std::string s);
-	std::list<std::string> get_dependees(std::string s);
+	bool has_dependents(std::string& s);
+	bool has_dependees(std::string& s);
+	std::vector<std::string> get_dependents(std::string& s);
+	std::vector<std::string> get_dependees(std::string& s);
 
-	void add_dependency(std::string s, std::string t);
-	void remove_dependency(std::string s, std::string t);
-	void replace_dependents(std::string s, std::list<std::string> new_dependents);
+	void add_dependency(std::string& s, std::string& t);
+	void remove_dependency(std::string& s, std::string& t);
+	void replace_dependents(std::string& s, std::vector<std::string>& new_dependents);
+	int operator[](std::string s);
 
 
 private:
