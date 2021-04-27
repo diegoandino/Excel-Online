@@ -105,6 +105,9 @@ namespace NetworkController
 
             lock (state)
             {
+
+                Connected();
+
                 // Send the player name to the server 
                 User user = new User() { ID = state.ID, name = UserName };
 

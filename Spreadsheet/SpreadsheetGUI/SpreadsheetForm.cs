@@ -55,6 +55,11 @@ namespace SS
             Network.SpreadSheetsArrived += PickASpreadSheet;
 
             InitializeComponent();
+
+            // Disable cells until connection is made
+            MainPanel.Enabled = false;
+            CellContentsBox.Enabled = false;
+
         }
 
         /// <summary>
@@ -207,6 +212,8 @@ namespace SS
         private void HandleConnected()
         {
             MessageBox.Show("Connected");
+            MainPanel.Enabled = true;
+            CellContentsBox.Enabled = true;
         }
 
 
