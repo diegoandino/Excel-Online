@@ -18,6 +18,7 @@ public:
 	std::string get_spreadsheet_name(); 
 
 	void set_cell_content(std::string cellName, std::string content); 
+	void set_spreadsheet_name(std::string name); 
 
 private:
 	std::map<std::string, Cell> cells; 

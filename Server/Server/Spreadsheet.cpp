@@ -25,3 +25,7 @@ std::string Spreadsheet::get_spreadsheet_name() { return spreadsheet_name;  }
 void Spreadsheet::set_cell_content(std::string cellName, std::string content) {
 	cells[cellName] = Cell(cellName, CellValue(content));
 }
+
+void Spreadsheet::set_spreadsheet_name(std::string new_name) {
+	spreadsheet_name = new_name;
+}

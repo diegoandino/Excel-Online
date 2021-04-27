@@ -150,8 +150,8 @@ void Server::ProcessRequests(int client_socket, std::string message, int length,
 std::string Server::get_available_spreadsheets() {
 	std::string res;
 
-	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
-		std::string name = it->second->get_spreadsheet_name();
+	for (int i = 0; i < available_spreadsheets.size(); i++) {
+		std::string name = available_spreadsheets[i].get_spreadsheet_name();
 		res += name + "\n";
 	}
 
@@ -174,28 +174,38 @@ void Server::ProcessClientConnectedRequests(int client_socket, std::string messa
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
 
 		// If there are no SS availible
-		if (available_clients[client_socket] == NULL) 
+		/*if (available_clients[client_socket] == NULL) 
 		{	
-
 			std::string ss = get_available_spreadsheets();
 			
 			lock.lock();
 			available_clients.emplace(client_socket, ss);
 			lock.unlock();
 
-		}
+		}*/
 
 		if (it.key() == "name") {
 			std::cout << "Client: " << it.value() << " has connected!" << '\n';
 
-			std::string name = it.value();
+			std::string username = it.value();
 
-			Spreadsheet* spreadsheet = new Spreadsheet(name);
+			// Send Available Spreadsheets to Client
+			// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
+			std::string spreadsheets = get_available_spreadsheets();
+			if (spreadsheets == "")
+				SendToClient(client_socket, spreadsheets.c_str(), length);
 
-			lock.lock();
+			for (int i = 0; i < spreadsheets.size(); i++) {
+				SendToClient(client_socket, spreadsheets.c_str(), length);
+			}
 
-			available_clients.emplace(client_socket, spreadsheet);
-			lock.unlock();
+			if (spreadsheets == "") {
+				Spreadsheet* spreadsheet = new Spreadsheet(); 
+				
+				lock.lock();
+				available_clients.emplace(client_socket, spreadsheet);
+				lock.unlock();
+			}
 		}
 
 		if (it.key() == "spreadsheet_name") {
@@ -203,16 +213,12 @@ void Server::ProcessClientConnectedRequests(int client_socket, std::string messa
 
 			// Point to chosen spreadsheet
 			Spreadsheet* spreadsheet = find_selected_spreadsheet(it.value());
+			spreadsheet->set_spreadsheet_name(it.value()); 
 
 			lock.lock();
 			available_clients[client_socket] = spreadsheet;
 			lock.unlock();
 		}
-	}
-
-	std::string spreadsheets = get_available_spreadsheets();
-	for (int i = 0; i < spreadsheets.size(); i++) {
-		BroadcastToClients(client_socket, spreadsheets.c_str(), length);
 	}
 
 	initial_handshake_approved = true;

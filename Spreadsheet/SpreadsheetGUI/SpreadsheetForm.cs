@@ -211,9 +211,13 @@ namespace SS
         /// </summary>
         private void HandleConnected()
         {
-            MessageBox.Show("Connected");
-            MainPanel.Enabled = true;
-            CellContentsBox.Enabled = true;
+            this.Invoke(new MethodInvoker(
+                () =>
+                {
+                    MessageBox.Show("Connected");
+                    MainPanel.Enabled = true;
+                    CellContentsBox.Enabled = true;
+                }));
         }
 
 
@@ -224,6 +228,7 @@ namespace SS
         private void ShowConnectionError(string error)
         {
             MessageBox.Show(error);
+
             // Re-enable the controlls so the user can reconnect
             this.Invoke(new MethodInvoker(
                 () =>

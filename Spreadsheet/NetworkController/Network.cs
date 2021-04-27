@@ -135,13 +135,13 @@ namespace NetworkController
                 return;
             }
 
-            Thread t = new Thread(UpdateLoop);
+            //Thread t = new Thread(UpdateLoop);
             lock (state)
 			{
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
-                t.Start();
+                UpdateLoop();
             }
 
             Networking.GetData(server);
