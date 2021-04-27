@@ -658,9 +658,25 @@ namespace SS
             TimeLabel.Text = DateTime.Now.ToLongTimeString();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+ 
+        /// <summary>
+        /// When clicked, our client sends a request to the server to undo the most recent change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UndoButton_Click(object sender, EventArgs e)
         {
+            controller.SendUndo();
+        }
 
+        /// <summary>
+        /// When clicked, our client sends a request to the server to revert a specific cell. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RevertButton_Click(object sender, EventArgs e)
+        {
+            controller.SendRevert();
         }
     }
 }

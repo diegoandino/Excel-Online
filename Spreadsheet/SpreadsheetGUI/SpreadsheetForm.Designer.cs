@@ -54,6 +54,8 @@
             this.ServerAddressLabel = new System.Windows.Forms.Label();
             this.ServerTextBox = new System.Windows.Forms.TextBox();
             this.ConnectButton = new System.Windows.Forms.Button();
+            this.UndoButton = new System.Windows.Forms.Button();
+            this.RevertButton = new System.Windows.Forms.Button();
             this.FileToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -256,11 +258,33 @@
             this.ConnectButton.Text = "Connect";
             this.ConnectButton.UseVisualStyleBackColor = true;
             // 
+            // UndoButton
+            // 
+            this.UndoButton.Location = new System.Drawing.Point(711, 59);
+            this.UndoButton.Name = "UndoButton";
+            this.UndoButton.Size = new System.Drawing.Size(75, 23);
+            this.UndoButton.TabIndex = 15;
+            this.UndoButton.Text = "Undo";
+            this.UndoButton.UseVisualStyleBackColor = true;
+            this.UndoButton.Click += new System.EventHandler(this.UndoButton_Click);
+            // 
+            // RevertButton
+            // 
+            this.RevertButton.Location = new System.Drawing.Point(802, 59);
+            this.RevertButton.Name = "RevertButton";
+            this.RevertButton.Size = new System.Drawing.Size(75, 23);
+            this.RevertButton.TabIndex = 16;
+            this.RevertButton.Text = "Revert";
+            this.RevertButton.UseVisualStyleBackColor = true;
+            this.RevertButton.Click += new System.EventHandler(this.RevertButton_Click);
+            // 
             // SpreadsheetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1146, 764);
+            this.Controls.Add(this.RevertButton);
+            this.Controls.Add(this.UndoButton);
             this.Controls.Add(this.ConnectButton);
             this.Controls.Add(this.ServerTextBox);
             this.Controls.Add(this.ServerAddressLabel);
@@ -313,6 +337,8 @@
         private System.Windows.Forms.Label ServerAddressLabel;
         private System.Windows.Forms.TextBox ServerTextBox;
         private System.Windows.Forms.Button ConnectButton;
+        private System.Windows.Forms.Button UndoButton;
+        private System.Windows.Forms.Button RevertButton;
     }
 }
 

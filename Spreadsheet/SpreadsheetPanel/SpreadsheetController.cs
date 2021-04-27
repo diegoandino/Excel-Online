@@ -189,6 +189,8 @@ namespace SS
         }
 
 
+
+
         /// <summary>
         /// Is valid delegate for the Spreadsheet constructor.
         /// </summary>
@@ -208,6 +210,46 @@ namespace SS
         private string Normalize(string s)
         {
             return s.ToUpper();
+        }
+
+        /// <summary>
+        /// This method sends an undo request to the server in the format of
+        ///     - {requestType: "undo"}
+        /// </summary>
+        public void SendUndo()
+        {
+
+            string json = @"{""requestType"": ""undo"" }";
+
+            if (Network.server != null)
+            {
+                Networking.Send(Network.server.TheSocket, json);
+            }
+
+            else
+            {
+                return;
+            }
+        }
+
+        /// <summary>
+        /// This method sends a revert request to the server in the format of
+        /// - { requestType: "revertCell", cellName: "<cellname>"}
+        /// </summary>
+        public void SendRevert()
+        {
+            string json = @"{""requestType"": ""revertCell"",""cellName"":" + @"""" +
+                            GetCellName(col, row) + @""" }";
+
+            if (Network.server != null)
+            {
+                Networking.Send(Network.server.TheSocket, json);
+            }
+
+            else
+            {
+                return;
+            }
         }
     }
 }
