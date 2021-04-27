@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,9 @@ namespace SS
 
             // Send to server
             string json = @"{""requestType"": ""selectCell"", ""cellName"":" + @" "" " + GetCellName(col, row) + @" "" " + "}";
-            Network.commandQueue.Enqueue(json);
+            //Network.commandQueue.Enqueue(json);
+
+            Networking.Send(Network.server.TheSocket, json);
         }
 
 
@@ -107,7 +110,9 @@ namespace SS
                             GetCellName(col, row) + @"""," + @"""contents"": " + 
                             @"""" + contents + @"""" + "}";
 
-            Network.commandQueue.Enqueue(json);
+            //Network.commandQueue.Enqueue(json);
+            Networking.Send(Network.server.TheSocket, json);
+
             return res;
         }
 

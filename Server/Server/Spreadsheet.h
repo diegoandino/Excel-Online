@@ -15,6 +15,10 @@ public:
 
 	std::map<Cell, std::string> get_spreadsheet_contents(); 
 
+	std::string get_spreadsheet_name(); 
+
+	void set_cell_content(std::string cellName, std::string content); 
+
 private:
 	std::map<std::string, Cell> cells; 
 	DependencyGraph deGraph; 

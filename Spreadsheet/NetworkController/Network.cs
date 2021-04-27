@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-//using NetworkUtil;
 using Newtonsoft.Json;
+using System.Threading; 
 
 namespace NetworkController
 {
@@ -62,6 +63,18 @@ namespace NetworkController
 
 
         /// <summary>
+        /// Available Spreadsheets to send
+        /// </summary>
+        public static Queue<string> spreadsheetNameQueue = new Queue<string>();
+
+
+        /// <summary>
+        /// Access to the Server SocketState
+        /// </summary>
+        public static SocketState server; 
+
+
+        /// <summary>
         /// Begins handshake.
         /// </summary>
         /// <param name="address">Address to connect to</param>
@@ -98,6 +111,8 @@ namespace NetworkController
                 string userJson = JsonConvert.SerializeObject(user);
                 Networking.Send(state.TheSocket, userJson);
 
+                server = state;
+
                 // Start an event loop to receive messages from the server
                 state.OnNetworkAction = OnReceive;
                 Networking.GetData(state);
@@ -117,12 +132,16 @@ namespace NetworkController
                 return;
             }
 
-            /* Start Editing Loop */
-            UpdateLoop(state);
+            Thread t = new Thread(UpdateLoop);
+            lock (state)
+			{
+                ProcessMessages(state);
 
-            // Process incoming cell edit from Server
-            ProcessCellEdit(state.data.ToString());
-            ProcessMessages(state);
+                /* Start Editing Loop */
+                t.Start();
+            }
+
+            Networking.GetData(server);
         }
 
 
@@ -134,14 +153,12 @@ namespace NetworkController
         {
             string totalData = state.GetData();
 
-
             string[] parts = Regex.Split(totalData, @"(?<=[\n])");
 
             // Loop until we have processed all messages.
             // We may have received more than one.
             foreach (string p in parts)
             {
-
                 // Ignore empty strings added by the regex splitter
                 if (p.Length == 0)
                     continue;
@@ -177,24 +194,25 @@ namespace NetworkController
         }
 
 
-
         /// <summary>
         /// Callback for OnReceive
         /// </summary>
         /// <param name="state"></param>
-        private static void UpdateLoop(SocketState state)
+        private static void UpdateLoop()
         {
+            lock (server)
+			{
+                if (server.ErrorOccured)
+                {
+                    ConnectionError("Error on update loop");
+                    return;
+                }
 
-        }
+                if (spreadsheetNameQueue.Count >= 1)
+                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
 
-        /// <summary>
-        /// Processes incoming request from Server to update Spreadsheet
-        /// from other client's input
-        /// </summary>
-        /// <param name="req"></param>
-        private static void ProcessCellEdit(string req)
-        {
-
+                string json = server.GetData();
+            }
         }
     }
 }

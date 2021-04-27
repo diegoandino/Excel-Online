@@ -88,7 +88,6 @@ namespace SS
                     foreach (string s in Spreadsheets) // rename "test" to "spreadsheets" 
                         selections.Items.Add(s);
 
-
                     // Reposition & hook up buttons:
                     new_SS.Click += RequestNew_SS;
                     new_SS.Click += (sender, e) => ClosePrompt(prompt, sender, e);
@@ -106,7 +105,6 @@ namespace SS
                     prompt.Controls.Add(selections);
                     prompt.Text = "Pick a spreadsheet";
                     prompt.ShowDialog();
-
                 }));
         }
 
@@ -148,6 +146,7 @@ namespace SS
 
         }
 
+
         /// <summary>
         /// This method is invoked when a user asks for an existing spreadsheet.
         /// </summary>
@@ -171,7 +170,10 @@ namespace SS
             MessageBox.Show(selection + " Was chosen");
 
             // Send the name of the spreadsheet to server:
+            string json = @"{""spreadsheet_name"": " + @"""" + selection.TrimEnd('\n') + @"""" + "}";
+            Network.spreadsheetNameQueue.Enqueue(json);
         }
+
 
         /// <summary>
         /// Method to close prompt after a selection is made to request the server
@@ -188,7 +190,6 @@ namespace SS
         }
 
 
-
         /// <summary>
         /// Upon connection, we setup our spreadsheet.
         /// </summary>
@@ -196,6 +197,7 @@ namespace SS
         {
             MessageBox.Show("Connected");
         }
+
 
         /// <summary>
         /// Method used to report any errors that occured.
@@ -215,6 +217,7 @@ namespace SS
                     UserNameTextBox.Enabled = true;
                 }));
         }
+
 
         /// <summary>
         /// Where we process updates

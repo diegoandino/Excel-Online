@@ -40,8 +40,8 @@ int Server::Init() {
 }
 
 int Server::Run() {
-    bool isConnected = true;
-    while (isConnected) {
+    bool is_connected = true;
+    while (is_connected) {
         fd_set copy = _master; 
 
         int socket_count = select(0, &copy, nullptr, nullptr, nullptr);
@@ -91,19 +91,19 @@ int Server::Run() {
 }
 
 // Send message to a client
-void Server::SendToClient(int client_socket, const char* message, int length) {
-    send(client_socket, message, length, 0);
-
-    // TODO: SEND WITH JSON
+void Server::SendToClient(int client_socket, std::string message, int length) {
+    send(client_socket, message.c_str(), length, 0);
 }
 
 
 // Send Spreadsheet changes to other clients
-void Server::BroadcastToClients(int sending_client, const char* message, int length) {
+void Server::BroadcastToClients(int sending_client, std::string message, int length) {
     // Send message to other clients 
     for (int i = 0; i < _master.fd_count; i++) {
         SOCKET out_socket = _master.fd_array[i];
         if (out_socket == sending_client) {
+
+            // It should be sending Spreadsheet Cell Value Changes 
             SendToClient(out_socket, message, length);
         }
     }
@@ -114,56 +114,93 @@ void Server::OnClientConnect(int client_socket) {
 }
 
 
-void Server::OnClientDisconnect(int client_socket, const char* message, int length) {
-    // TODO: USE THREAD LOCK 
-    spreadsheet_lock.lock();
+void Server::OnClientDisconnect(int client_socket, std::string message, int length) {
+    lock.lock();
     std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
-    spreadsheet_lock.unlock();
+    lock.unlock();
 }
 
 
 void Server::EraseFromServer(int client_socket) {
-    available_spreadsheets[client_socket] = NULL;
-
-    for (int i = 0; i < _master.fd_count; i++) {
-        if (_master.fd_array[i] == client_socket)
-            _master.fd_array[i] = 0; 
-    }
+    lock.lock();
+    available_spreadsheets.erase(client_socket);
+    lock.unlock();
 }
 
 
-void Server::OnMessageReceived(int client_socket, const char* message, int length) {
+void Server::OnMessageReceived(int client_socket, std::string message, int length) {
     JObject req = JObject::parse(message);
     ProcessRequests(client_socket, message, length, req); 
 }
 
 
-void Server::ProcessRequests(int client_socket, const char* message, int length, JObject req) {
-    ProcessClientConnectedRequests(client_socket, message, length, req);
+void Server::ProcessRequests(int client_socket, std::string message, int length, JObject req) {
+    if (!initial_handshake_approved)
+        ProcessClientConnectedRequests(client_socket, message, length, req);
+
+    // Else Update Loop
     ProcessCellSelectedRequests(client_socket, message, length, req);
     ProcessCellEditedRequests(client_socket, message, length, req);
 }
 
 
-void Server::ProcessClientConnectedRequests(int client_socket, const char* message, int length, JObject req) {
+std::string Server::get_available_spreadsheets() {
+    std::string res;
+    for (std::map<int, Spreadsheet*>::iterator it = available_spreadsheets.begin(); it != available_spreadsheets.end(); ++it) {
+        std::string name = it->second->get_spreadsheet_name();
+        res += name + "\n";
+    }
+
+    return res; 
+}
+
+
+Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
+    for (std::map<int, Spreadsheet*>::iterator it = available_spreadsheets.begin(); it != available_spreadsheets.end(); ++it) {
+        if (name == it->second->get_spreadsheet_name())
+            return it->second; 
+    }
+
+    return NULL;
+}
+
+
+
+void Server::ProcessClientConnectedRequests(int client_socket, std::string message, int length, JObject req) { 
     for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
         if (it.key() == "name") {
             std::cout << "Client: " << it.value() << " has connected!" << '\n';
 
-            /*std::string name = it.value();
+            std::string name = it.value();
             Spreadsheet* spreadsheet = new Spreadsheet(name);
 
-            spreadsheet_lock.lock();
+            lock.lock();
             available_spreadsheets.emplace(client_socket, spreadsheet);
-            spreadsheet_lock.unlock();*/
+            lock.unlock();
         }
 
-        BroadcastToClients(client_socket, message, length);
+        if (it.key() == "spreadsheet_name") {
+            std::cout << "Spreadsheet Name Selected: " << it.value() << '\n';
+
+            // Point to chosen spreadsheet
+            Spreadsheet* spreadsheet = find_selected_spreadsheet(it.value());
+
+            lock.lock();
+            available_spreadsheets[client_socket] = spreadsheet;
+            lock.unlock();
+        }
     }
+
+    std::string spreadsheets = get_available_spreadsheets();
+    for (int i = 0; i < spreadsheets.size(); i++) {
+        BroadcastToClients(client_socket, spreadsheets.c_str(), length);
+    }
+
+    initial_handshake_approved = true;
 }
 
 
-void Server::ProcessCellSelectedRequests(int client_socket, const char* message, int length, JObject req) {
+void Server::ProcessCellSelectedRequests(int client_socket, std::string message, int length, JObject req) {
     // Iterate the array
     std::string cellName = "";
     for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
@@ -173,16 +210,22 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 
         if (it.key() == "requestType") {
             if (it.value() == "selectCell") {
-                std::cout << "Client: " << client_socket << " Has Selected Cell: " << cellName << '\n';        
+                std::cout   << "Client: " << client_socket << " Has Selected Cell: " << cellName 
+                            << " On Spreadsheet: " << available_spreadsheets[client_socket] << '\n';
+
+                std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "selected"
+                    "\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
+                    "\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}"
+                );
+
+                BroadcastToClients(client_socket, json.c_str(), length);
             }
         }
-        
-        BroadcastToClients(client_socket, message, length);
     }
 }
 
 
-void Server::ProcessCellEditedRequests(int client_socket, const char* message, int length, JObject req) {
+void Server::ProcessCellEditedRequests(int client_socket, std::string message, int length, JObject req) {
     // Iterate the array
     std::string content = "";
     std::string cellName = "";
@@ -196,13 +239,27 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
         }
 
         if (it.key() == "requestType") {
-            if (it.value() == "editCell") {
-                std::cout   << "Client: " << client_socket << " Has Requested Edit: " << content 
-                            << " On Cell: "<< cellName << '\n';
-            }
-        }
 
-        BroadcastToClients(client_socket, message, length);
+            // TODO :: Process and send back to client GUI to display changes
+            if (it.value() == "editCell") {
+                std::cout << "Client: " << client_socket << " Has Requested Edit: " << content
+                    << " On Cell: " << cellName << " On Spreadsheet: " <<
+                     available_spreadsheets[client_socket] << '\n';
+
+                // Store data in server Spreadsheet
+                lock.lock();
+                available_spreadsheets[client_socket]->set_cell_content(cellName, content);
+                lock.unlock();
+
+                // Send data over to client to display on GUI
+                std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated " 
+                                                "\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
+                                                "\"" "contents" "\"" ": " "\"" + content + "\"" "}"
+                );
+
+                BroadcastToClients(client_socket, json.c_str(), length);
+             }
+        }
     }
 }
 

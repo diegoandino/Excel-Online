@@ -6,7 +6,7 @@ CellValue::CellValue()
 
 CellValue::CellValue(std::string& cont)
 {
-	
+	content = cont;
 }
 
 std::string CellValue::get_content()

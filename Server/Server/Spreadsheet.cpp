@@ -19,3 +19,9 @@ std::map<Cell, std::string> Spreadsheet::get_spreadsheet_contents() {
 
 	return content; 
 }
+
+std::string Spreadsheet::get_spreadsheet_name() { return spreadsheet_name;  }
+
+void Spreadsheet::set_cell_content(std::string cellName, std::string content) {
+	cells[cellName] = Cell(cellName, CellValue(content));
+}
