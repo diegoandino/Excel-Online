@@ -104,7 +104,18 @@ namespace SS
                     prompt.Controls.Add(new_SS);
                     prompt.Controls.Add(selections);
                     prompt.Text = "Pick a spreadsheet";
+
+                    // If there are spreadsheets availible, show them:
+                    if(Spreadsheets.Length > 0)
                     prompt.ShowDialog();
+
+                    else
+                    {
+                        object s = new object();
+                        EventArgs e = new EventArgs();
+                        RequestNew_SS(s,e);
+                    }
+
                 }));
         }
 
@@ -283,6 +294,7 @@ namespace SS
 
             // Try to connect to Server
             try
+
             {
                 Network.Connect(ServerTextBox.Text, UserNameTextBox.Text);
                 ConnectButton.Text = "Connected!";
@@ -343,8 +355,6 @@ namespace SS
         /// <param name="e"></param>
         private void UpdateContentsOfCell(object sender, EventArgs e)
         {
-
-            // NOTE: IF !CONNECTED POPUP CANT EDIT
 
             try
             {

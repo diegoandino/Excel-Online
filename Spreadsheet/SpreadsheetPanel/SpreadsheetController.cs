@@ -70,7 +70,14 @@ namespace SS
             string json = @"{""requestType"": ""selectCell"", ""cellName"":" + @" "" " + GetCellName(col, row) + @" "" " + "}";
             //Network.commandQueue.Enqueue(json);
 
-            Networking.Send(Network.server.TheSocket, json);
+            if (Network.server != null)
+            {
+                Networking.Send(Network.server.TheSocket, json);
+            }
+            else
+            {
+                return;
+            }
         }
 
 
@@ -106,14 +113,17 @@ namespace SS
             IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
 
             // Send to server
-            string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" + 
-                            GetCellName(col, row) + @"""," + @"""contents"": " + 
+            string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" +
+                            GetCellName(col, row) + @"""," + @"""contents"": " +
                             @"""" + contents + @"""" + "}";
 
             //Network.commandQueue.Enqueue(json);
-            Networking.Send(Network.server.TheSocket, json);
+            if (Network.server != null)
+
+                Networking.Send(Network.server.TheSocket, json);
 
             return res;
+
         }
 
 
@@ -158,7 +168,7 @@ namespace SS
         {
             string columnString = "";
             decimal columnNumber = col;
-            
+
             // Loops while the column number is greater than or equal to zero 
             // and gets the current cell name from the column and the row.
             while (columnNumber >= 0)
