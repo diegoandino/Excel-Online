@@ -30,3 +30,11 @@ Final notes:
 	As our team steadily worked on this assignment over the course of 3 weeks, we practiced alot of pair programming in groups of two, split between the client and the server.
 	Server-sided code was mainly spearheaded by one group member.  As for client-side design the main changes made were to add compatibility for server connections.
 	
+
+Resources:
+	- GUI
+	https://stackoverflow.com/questions/3171640/dropdown-menu-with-scrollbar-in-net
+	- Trimming strings in c++
+	https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+	- Delegates in c++
+	https://stackoverflow.com/questions/23973914/c-like-delegates-in-c
