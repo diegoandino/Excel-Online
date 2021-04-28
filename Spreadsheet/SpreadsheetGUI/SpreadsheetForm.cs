@@ -38,6 +38,9 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
+        /// <summary> true if the client has chosen a spreadsheet already </summary>
+        private bool CanShowNewSPForm = true;
+
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -69,6 +72,7 @@ namespace SS
         /// <param name="Spreadsheets"></param>
         private void PickASpreadSheet(string[] Spreadsheets)
         {
+
             this.Invoke(new MethodInvoker(
                 () =>
                 {
@@ -109,23 +113,24 @@ namespace SS
                     prompt.Controls.Add(selections);
                     prompt.Text = "Pick a spreadsheet";
 
-                    // If there are spreadsheets availible, show them:
-                    string sub = Spreadsheets[0].Substring(0, 1);
-                    if (sub.Equals("\0"))
-                    {
-                        object s = new object();
-                        EventArgs e = new EventArgs();
-                        RequestNew_SS(s, e);
-                    }
+                    prompt.ShowDialog();
 
-
-                    else
-                    {
-                        object s = new object();
-                        EventArgs e = new EventArgs();
-                        RequestNew_SS(s, e);
-                        prompt.ShowDialog();
-                    }
+                    //// If there are spreadsheets availible, show them:
+                    //string sub = Spreadsheets[0].Substring(0, 1);
+                    //if (sub.Equals("\0"))
+                    //{
+                    //    object s = new object();
+                    //    EventArgs e = new EventArgs();
+                    //    //RequestNew_SS(s, e);
+                    //    prompt.ShowDialog();
+                    //}
+                    //else
+                    //{
+                    //    object s = new object();
+                    //    EventArgs e = new EventArgs();
+                    //    //RequestNew_SS(s, e);
+                    //    prompt.ShowDialog();
+                    //}
 
                 }));
         }
@@ -158,6 +163,7 @@ namespace SS
 
             // Events for buttons:
             cancelButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
+            //cancelButton.Click += (sender, e) => SetCanShowSpreadSheets();
             confirmButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
             confirmButton.Click += (sender, e) => Request_SS(t.Text, sender, e);
 
@@ -169,6 +175,10 @@ namespace SS
 
         }
 
+        private void SetCanShowSpreadSheets()
+        {
+           CanShowNewSPForm = false;
+        }
 
         /// <summary>
         /// This method is invoked when a user asks for an existing spreadsheet.
@@ -246,6 +256,7 @@ namespace SS
                     ConnectButton.Enabled = true;
                     ServerTextBox.Enabled = true;
                     UserNameTextBox.Enabled = true;
+                    CanShowNewSPForm = true;
                 }));
         }
 
