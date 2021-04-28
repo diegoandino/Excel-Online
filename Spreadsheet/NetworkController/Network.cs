@@ -109,11 +109,12 @@ namespace NetworkController
                 Connected();
 
                 // Send the player name to the server 
-                User user = new User() { ID = state.ID, name = UserName };
+                /* User user = new User() { ID = state.ID, name = UserName };
 
-                string userJson = JsonConvert.SerializeObject(user);
-                Networking.Send(state.TheSocket, userJson);
+                 string userJson = JsonConvert.SerializeObject(user);
+                 Networking.Send(state.TheSocket, userJson);*/
 
+                Networking.Send(state.TheSocket, UserName);
                 server = state;
 
                 // Start an event loop to receive messages from the server

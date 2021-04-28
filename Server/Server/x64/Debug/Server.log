@@ -1,10 +1,9 @@
 ﻿  Server.cpp
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(13,18): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(61,21): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(73,25): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(80,24): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(103,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(109,17): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
-  main.cpp
-  Generating Code...
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(17,18): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(69,21): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(81,25): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(88,24): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(121,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(127,17): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
+C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(175,12): warning C4101: 'x': unreferenced local variable
   Server.vcxproj -> C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\x64\Debug\Server.exe

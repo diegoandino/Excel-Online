@@ -1,5 +1,9 @@
 #include "Server.h"
 
+/// <summary>
+/// Initialize the server and establish means for network communication
+/// </summary>
+/// <returns></returns>
 int Server::Init() {
 	// Initialize WinSock 
 	WSADATA wsaData;
@@ -39,6 +43,10 @@ int Server::Init() {
 	return 0;
 }
 
+/// <summary>
+/// Run the server
+/// </summary>
+/// <returns></returns>
 int Server::Run() {
 	bool is_connected = true;
 	while (is_connected) {
@@ -90,13 +98,23 @@ int Server::Run() {
 	return 0;
 }
 
-// Send message to a client
+/// <summary>
+/// send message to client
+/// </summary>
+/// <param name="client_socket"> The socket (int) corresponding with that client </param>
+/// <param name="message"> Message to send to the client </param>
+/// <param name="length"></param>
 void Server::SendToClient(int client_socket, std::string message, int length) {
 	send(client_socket, message.c_str(), length, 0);
 }
 
 
-// Send Spreadsheet changes to other clients
+/// <summary>
+/// Send (broadcast) changes to all clients
+/// </summary>
+/// <param name="sending_client"></param>
+/// <param name="message"></param>
+/// <param name="length"></param>
 void Server::BroadcastToClients(int sending_client, std::string message, int length) {
 
 	// Send message to other clients
@@ -111,40 +129,66 @@ void Server::BroadcastToClients(int sending_client, std::string message, int len
 	}
 }
 
-// Method Called Upon client Connection
+/// <summary>
+/// method called upon client connection
+/// </summary>
 void Server::OnClientConnect(int client_socket) {
 	std::cout << client_socket << std::endl;
 
 	// Upon connection, this client hasnt been initialized.
-	isClientSetup.insert({client_socket, false});
+	isClientSetup.insert({ client_socket, false });
 }
 
-
+/// <summary>
+/// This method is called when a client disconnects
+/// </summary>
 void Server::OnClientDisconnect(int client_socket, std::string message, int length) {
 	lock.lock();
 	std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
 	lock.unlock();
 }
 
-
+/// <summary>
+/// @@@@@@@@@@@@@@@@@@@@@@@@note when to use?
+/// </summary>
+/// <param name="client_socket"></param>
 void Server::EraseFromServer(int client_socket) {
 	lock.lock();
 	available_clients.erase(client_socket);
 	lock.unlock();
 }
 
-
-void Server::OnMessageReceived(int client_socket, std::string message, int length) {
+/// <summary>
+/// Called when a client sends a message to the server
+/// If message was a regular string, we understand that the client has sent a name.
+/// If message parses into a JObject we understand it as a Request. (JSON)
+/// </summary>
+void Server::OnMessageReceived(int client_socket, std::string message, int length)
+{
+ 
 	JObject req = JObject::parse(message);
 	ProcessRequests(client_socket, message, length, req);
+
+
+
+	std::cout << message << std::endl;
+
 }
 
+/// <summary>
+/// Method called from OnMessageReceived.
+/// When a request is sent from the client to the server here we digest that request and process it.
+/// Requests range from setting up a spreadsheet, to requesting the server make a new spreadsheet to be used. 
+/// </summary>
+void Server::ProcessRequests(int client_socket, const std::string& message, int length, JObject req)
+{
 
-void Server::ProcessRequests(int client_socket, const std::string& message, int length, JObject req) {
+	// Setting up a client if needed
 	if (!isClientSetup[client_socket]) {
 		ProcessClientConnectedRequests(client_socket, message, length, req);
 	}
 
+	// Client sent a name of a nonexistent spreadsheet; create a new one.
 	if (request_new_ss) {
 		CreateNewSpreadsheet(client_socket, message);
 		request_new_ss = false;
@@ -155,47 +199,32 @@ void Server::ProcessRequests(int client_socket, const std::string& message, int 
 	ProcessCellEditedRequests(client_socket, message, length, req);
 }
 
-
-void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
-	Spreadsheet* s = new Spreadsheet(name);
-	available_spreadsheets.push_back(s);
-	available_clients[client_socket] = s;
-}
-
-
-std::string Server::get_available_spreadsheets() {
-	std::string res;
-	for (int i = 0; i < available_spreadsheets.size(); i++) {
-		std::string name = available_spreadsheets[i]->get_spreadsheet_name();
-		res += name + "\n";
-	}
-
-	return res;
-}
-
-
-Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
-	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
-		if (name == it->second->get_spreadsheet_name())
-			return it->second;
-	}
-
-	return NULL;
-}
-
-
-void Server::ProcessClientConnectedRequests(int client_socket, const std::string& message, int length, JObject req) {
-	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
-		if (it.key() == "name") {
+/// <summary>
+/// This method is called from ProcessRequests.
+/// Here We use an iterator to look at our req based off of the key of that request.
+/// 
+/// Case:
+/// -	"name" : printout to console this user has connected. Send a string of available spreadsheets to client.   
+/// </summary>
+/// <param name="client_socket"></param>
+/// <param name="message"></param>
+/// <param name="length"></param>
+/// <param name="req"></param>
+void Server::ProcessClientConnectedRequests(int client_socket, const std::string& message, int length, JObject req)
+{
+	for (JObject::iterator it = req.begin(); it != req.end(); ++it)
+	{
+		if (it.key() == "name")
+		{
 			std::cout << "Client: " << it.value() << " has connected!" << '\n';
 
 			std::string username = it.value();
 
 			// Send Available Spreadsheets to Client
 			std::string spreadsheets = get_available_spreadsheets();
-			for (int i = 0; i < spreadsheets.size(); i++) {
+			for (int i = 0; i < spreadsheets.size(); i++)
 				SendToClient(client_socket, spreadsheets.c_str(), length);
-			}
+
 
 			// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
 			// Also create a new (empty) Spreadsheet for the client
@@ -203,6 +232,7 @@ void Server::ProcessClientConnectedRequests(int client_socket, const std::string
 				SendToClient(client_socket, spreadsheets.c_str(), length);
 				//request_new_ss = true;
 
+				// Add this new spreadsheet to available spreadsheet 
 				Spreadsheet* spreadsheet = new Spreadsheet();
 				lock.lock();
 				available_clients.emplace(client_socket, spreadsheet);
@@ -210,13 +240,15 @@ void Server::ProcessClientConnectedRequests(int client_socket, const std::string
 			}
 		}
 
-		if (it.key() == "spreadsheet_name") {
+		if (it.key() == "spreadsheet_name")
+		{
 			std::cout << "Spreadsheet Name Selected: " << it.value() << '\n';
 
 			std::string str = it.value();
 
 			// If the requested spreadsheet is present send it
-			for (int index = 0; index < available_spreadsheets.size(); index++) {
+			for (int index = 0; index < available_spreadsheets.size(); index++)
+			{
 				std::string temp = available_spreadsheets[index]->get_spreadsheet_name();
 
 				if (temp == str) {
@@ -246,6 +278,44 @@ void Server::ProcessClientConnectedRequests(int client_socket, const std::string
 
 	initial_handshake_approved = true;
 }
+
+
+/// <summary>
+/// This method is called when the client had requested a new spreadsheet.
+/// </summary>
+void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
+	Spreadsheet* s = new Spreadsheet(name);
+	available_spreadsheets.push_back(s);
+	available_clients[client_socket] = s;
+}
+
+/// <summary>
+/// Returns a string of currently available spreadsheets separated by new lines.
+/// </summary>
+std::string Server::get_available_spreadsheets() {
+	std::string res;
+	for (int i = 0; i < available_spreadsheets.size(); i++) {
+		std::string name = available_spreadsheets[i]->get_spreadsheet_name();
+		res += name + "\n";
+	}
+
+	return res;
+}
+
+/// <summary>
+/// Returns a spreadsheet pointer to a spreadsheet name "name"
+/// Returns NULL if said spreadsheet could not be found.
+/// </summary>
+Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
+	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
+		if (name == it->second->get_spreadsheet_name())
+			return it->second;
+	}
+
+	return NULL;
+}
+
+
 
 
 void Server::ProcessCellSelectedRequests(int client_socket, const std::string& message, int length, JObject req) {
