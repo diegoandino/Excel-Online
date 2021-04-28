@@ -129,6 +129,7 @@ void Server::BroadcastToClients(int sending_client, std::string message, int len
 	}
 }
 
+
 /// <summary>
 /// method called upon client connection
 /// </summary>
@@ -139,17 +140,19 @@ void Server::OnClientConnect(int client_socket) {
 	isClientSetup.insert({ client_socket, false });
 }
 
+
 /// <summary>
 /// This method is called when a client disconnects
 /// </summary>
 void Server::OnClientDisconnect(int client_socket, std::string message, int length) {
 	lock.lock();
 	std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
+	isClientSetup.erase(client_socket);
 	lock.unlock();
 }
 
+
 /// <summary>
-/// @@@@@@@@@@@@@@@@@@@@@@@@note when to use?
 /// </summary>
 /// <param name="client_socket"></param>
 void Server::EraseFromServer(int client_socket) {

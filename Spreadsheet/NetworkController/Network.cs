@@ -136,17 +136,15 @@ namespace NetworkController
                 return;
             }
 
-            //Thread t = new Thread(UpdateLoop);
             lock (state)
 			{
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
                 UpdateLoop();
-                //t.Start();
             }
 
-            Networking.GetData(server);
+            Networking.GetData(state);
         }
 
 
@@ -157,7 +155,6 @@ namespace NetworkController
         private static void ProcessMessages(SocketState state)
         {
             string totalData = state.GetData();
-
             string[] parts = Regex.Split(totalData, @"(?<=[\n])");
 
             // Loop until we have processed all messages.

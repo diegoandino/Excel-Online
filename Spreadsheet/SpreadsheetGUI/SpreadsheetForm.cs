@@ -61,6 +61,7 @@ namespace SS
 
         }
 
+
         /// <summary>
         /// This method is called upon successful connection from the Spreadsheet client to the server.
         /// This method takes in an array of spreadsheet names, and sorts them out into a combo box. 
@@ -70,11 +71,9 @@ namespace SS
         /// <param name="Spreadsheets"></param>
         private void PickASpreadSheet(string[] Spreadsheets)
         {
-
             this.Invoke(new MethodInvoker(
                 () =>
                 {
-
                     // Create the popup:
                     Form prompt = new Form();
                     prompt.Size = new Size(300, 90);
@@ -112,23 +111,6 @@ namespace SS
                     prompt.Text = "Pick a spreadsheet";
 
                     prompt.ShowDialog();
-                    //// If there are spreadsheets availible, show them:
-                    //string sub = Spreadsheets[0].Substring(0, 1);
-                    //if (sub.Equals("\0"))
-                    //{
-                    //    object s = new object();
-                    //    EventArgs e = new EventArgs();
-                    //    //RequestNew_SS(s, e);
-                    //    prompt.ShowDialog();
-                    //}
-                    //else
-                    //{
-                    //    object s = new object();
-                    //    EventArgs e = new EventArgs();
-                    //    //RequestNew_SS(s, e);
-                    //    prompt.ShowDialog();
-                    //}
-
                 }));
         }
 
@@ -139,7 +121,6 @@ namespace SS
         /// <param name="e"></param>
         private void RequestNew_SS(object s, EventArgs evn)
         {
-
             // Create the popup:
             Form prompt = new Form();
             prompt.Text = "New Spreadsheet name";
@@ -194,8 +175,7 @@ namespace SS
             MessageBox.Show(selection + " Was chosen");
 
             // Send the name of the spreadsheet to server:
-            string json = @"{""spreadsheet_name"": " + @"""" + selection.TrimEnd('\n') + @"""" + "}";
-            Network.spreadsheetNameQueue.Enqueue(json);
+            Network.spreadsheetNameQueue.Enqueue(selection);
         }
 
 
