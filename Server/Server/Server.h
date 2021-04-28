@@ -52,12 +52,12 @@ private:
 
 	Spreadsheet* find_selected_spreadsheet(std::string name);
 
-	void EraseFromServer				(int client_socket);
-	void ProcessClientConnectedRequests	(int client_socket, const std::string &message, int length, JObject req);
-	void ProcessCellSelectedRequests	(int client_socket, const std::string &message, int length, JObject req);
-	void ProcessCellEditedRequests		(int client_socket, const std::string &message, int length, JObject req);
-	void ProcessRequests				(int client_socket, const std::string &message, int length, JObject req);
-	void CreateNewSpreadsheet			(int client_socket, std::string name);
+	void EraseFromServer						(int client_socket);
+	void ProcessClientConnectedRequests			(int client_socket, const std::string &message, int length, JObject req);
+	void ProcessCellSelectedRequests			(int client_socket, const std::string &message, int length, JObject req);
+	void ProcessCellEditedRequests				(int client_socket, const std::string &message, int length, JObject req);
+	void ProcessRequests						(int client_socket, const std::string &message, int length, JObject req);
+	void CreateNewSpreadsheet					(int client_socket, std::string name);
 
 	bool initial_handshake_approved = false;
 };

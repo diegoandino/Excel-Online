@@ -135,14 +135,14 @@ namespace NetworkController
                 return;
             }
 
-            Thread t = new Thread(UpdateLoop);
+            //Thread t = new Thread(UpdateLoop);
             lock (state)
 			{
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
-                //UpdateLoop();
-                t.Start();
+                UpdateLoop();
+                //t.Start();
             }
 
             Networking.GetData(server);
@@ -214,7 +214,6 @@ namespace NetworkController
 
                 if (spreadsheetNameQueue.Count >= 1)
                     Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
-
             }
         }
     }
