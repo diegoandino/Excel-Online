@@ -23,8 +23,6 @@ namespace SS
     /// 
     /// </summary>
     /// Testing push for networking
-
-
     public partial class SpreadsheetForm : Form
     {
         /// <summary> Private Controller to manage Spreadsheet.</summary>
@@ -74,7 +72,6 @@ namespace SS
             this.Invoke(new MethodInvoker(
                 () =>
                 {
-
                     // Create the popup:
                     Form prompt = new Form();
                     prompt.Size = new Size(300, 90);
@@ -91,8 +88,9 @@ namespace SS
                     // Add availible spreadsheets into a combobox
                     ComboBox selections = new ComboBox();
                     selections.SelectedText = "--Select--";
-                    foreach (string s in Spreadsheets) // rename "test" to "spreadsheets" 
-                        selections.Items.Add(s);
+
+                    foreach (string s in Spreadsheets)
+                       selections.Items.Add(s);
 
                     // Reposition & hook up buttons:
                     new_SS.Click += RequestNew_SS;
@@ -112,23 +110,7 @@ namespace SS
                     prompt.Text = "Pick a spreadsheet";
 
                     // If there are spreadsheets availible, show them:
-                    string sub = Spreadsheets[0].Substring(0, 1);
-                    if (sub.Equals("\0"))
-                    {
-                        object s = new object();
-                        EventArgs e = new EventArgs();
-                        RequestNew_SS(s, e);
-                    }
-
-
-                    else
-                    {
-                        object s = new object();
-                        EventArgs e = new EventArgs();
-                        RequestNew_SS(s, e);
-                        prompt.ShowDialog();
-                    }
-
+                    prompt.ShowDialog();
                 }));
         }
 
@@ -167,7 +149,6 @@ namespace SS
             prompt.Controls.Add(confirmButton);
             prompt.Controls.Add(cancelButton);
             prompt.ShowDialog();
-
         }
 
 
@@ -194,8 +175,7 @@ namespace SS
             MessageBox.Show(selection + " Was chosen");
 
             // Send the name of the spreadsheet to server:
-            string json = @"{""spreadsheet_name"": " + @"""" + selection.TrimEnd('\n') + @"""" + "}";
-            Network.spreadsheetNameQueue.Enqueue(json);
+            Network.spreadsheetNameQueue.Enqueue(selection);
         }
 
 
@@ -326,7 +306,6 @@ namespace SS
                 MessageBox.Show("Connecting to server failed.");
                 return;
             }
-
         }
 
 
@@ -339,7 +318,6 @@ namespace SS
         private void UpdateTextBoxes(string cellName)
         {
             CellNameBox.Text = cellName;
-
             CellValueBox.Clear();
             CellContentsBox.Clear();
 
@@ -375,7 +353,6 @@ namespace SS
         /// <param name="e"></param>
         private void UpdateContentsOfCell(object sender, EventArgs e)
         {
-
             try
             {
                 IEnumerable<string> CellsToRecalculate = controller.SetCellContents(CellContentsBox.Text);

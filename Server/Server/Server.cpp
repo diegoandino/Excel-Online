@@ -165,7 +165,6 @@ void Server::EraseFromServer(int client_socket) {
 /// </summary>
 void Server::OnMessageReceived(int client_socket, std::string message, int length)
 {
- 
 	try
 	{
 		JObject req = JObject::parse(message);
@@ -173,11 +172,8 @@ void Server::OnMessageReceived(int client_socket, std::string message, int lengt
 	}
 	catch (std::exception e)
 	{
-		ProcessRequests(client_socket, message, length, NULL);//or "\0"
+		ProcessRequests(client_socket, message, length, NULL); //or "\0"
 	}
-
-	std::cout << message << std::endl;
-
 }
 
 /// <summary>
@@ -192,19 +188,21 @@ void Server::ProcessRequests(int client_socket, const std::string& message, int 
 	{
 		ProcessClientUsername(client_socket, message, length);
 	}
+
 	//or if the client sent a spreadsheet name
 	else if (isClientSetup[client_socket] == 1)
 	{
 		ProcessClientFilename(client_socket, message);
 	}
+
 	else
 	{
 		// Else Update Loop
 		ProcessCellSelectedRequests(client_socket, message, length, req);
 		ProcessCellEditedRequests(client_socket, message, length, req);
 	}
-
 }
+
 
 /// <summary>
 /// This method is called from ProcessRequests.
@@ -401,8 +399,6 @@ Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
 }
 
 
-
-
 void Server::ProcessCellSelectedRequests(int client_socket, const std::string& message, int length, JObject req) {
 	// Iterate the array
 	std::string cellName = "";
@@ -414,7 +410,7 @@ void Server::ProcessCellSelectedRequests(int client_socket, const std::string& m
 		if (it.key() == "requestType") {
 			if (it.value() == "selectCell") {
 				std::cout << "Client: " << client_socket << " Has Selected Cell: " << cellName
-					<< " On Spreadsheet: " << available_clients[client_socket] << '\n';
+					<< " On Spreadsheet: " << available_clients[client_socket]->get_spreadsheet_name() << '\n';
 
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "selected"
 					"\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
