@@ -93,7 +93,7 @@ class TestClient:
             except:
                 print("Fail" + messageterminator)
                 exit()
-           #        received= ""
+            #        received= ""
             #       while "\n" not in received:
 
   

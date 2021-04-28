@@ -44,7 +44,7 @@ private:
 
 	std::map<int, Spreadsheet*> available_clients;			// Returns the available spreadsheets in the server
 	std::mutex lock;										// Mutex for available_spreadsheets
-	std::map<int, bool> isClientSetup;						// maps each Client and reports whether or not their initial setup is done.
+	std::map<int, int> isClientSetup;						// maps each Client and reports whether or not their initial setup is done.
 
 	std::string get_available_spreadsheets();
 	
@@ -58,6 +58,9 @@ private:
 	void ProcessCellEditedRequests				(int client_socket, const std::string &message, int length, JObject req);
 	void ProcessRequests						(int client_socket, const std::string &message, int length, JObject req);
 	void CreateNewSpreadsheet					(int client_socket, std::string name);
+	void ProcessClientUsername					(int client_socket, const std::string& message, int length);
+	void ProcessClientFilename					(int client_socket, const std::string& message);
+
 
 	bool initial_handshake_approved = false;
 };

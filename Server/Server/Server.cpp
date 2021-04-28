@@ -158,18 +158,23 @@ void Server::EraseFromServer(int client_socket) {
 	lock.unlock();
 }
 
+
 /// <summary>
 /// Called when a client sends a message to the server
-/// If message was a regular string, we understand that the client has sent a name.
 /// If message parses into a JObject we understand it as a Request. (JSON)
 /// </summary>
 void Server::OnMessageReceived(int client_socket, std::string message, int length)
 {
  
-	JObject req = JObject::parse(message);
-	ProcessRequests(client_socket, message, length, req);
-
-
+	try
+	{
+		JObject req = JObject::parse(message);
+		ProcessRequests(client_socket, message, length, req);
+	}
+	catch (std::exception e)
+	{
+		ProcessRequests(client_socket, message, length, NULL);//or "\0"
+	}
 
 	std::cout << message << std::endl;
 
@@ -182,21 +187,23 @@ void Server::OnMessageReceived(int client_socket, std::string message, int lengt
 /// </summary>
 void Server::ProcessRequests(int client_socket, const std::string& message, int length, JObject req)
 {
-
-	// Setting up a client if needed
-	if (!isClientSetup[client_socket]) {
-		ProcessClientConnectedRequests(client_socket, message, length, req);
+	//if the client is sending their username
+	if (isClientSetup[client_socket] == 0)
+	{
+		ProcessClientUsername(client_socket, message, length);
+	}
+	//or if the client sent a spreadsheet name
+	else if (isClientSetup[client_socket] == 1)
+	{
+		ProcessClientFilename(client_socket, message);
+	}
+	else
+	{
+		// Else Update Loop
+		ProcessCellSelectedRequests(client_socket, message, length, req);
+		ProcessCellEditedRequests(client_socket, message, length, req);
 	}
 
-	// Client sent a name of a nonexistent spreadsheet; create a new one.
-	if (request_new_ss) {
-		CreateNewSpreadsheet(client_socket, message);
-		request_new_ss = false;
-	}
-
-	// Else Update Loop
-	ProcessCellSelectedRequests(client_socket, message, length, req);
-	ProcessCellEditedRequests(client_socket, message, length, req);
 }
 
 /// <summary>
@@ -279,6 +286,84 @@ void Server::ProcessClientConnectedRequests(int client_socket, const std::string
 	initial_handshake_approved = true;
 }
 
+/// <summary>
+/// Processes the client's username request and sends a list of spreadsheets back
+/// </summary>
+/// <param name="client_socket">connected socket</param>
+/// <param name="message">username</param>
+/// <param name="length"></param>
+void Server::ProcessClientUsername(int client_socket, const std::string& message, int length)
+{
+	std::cout << "Client: " << message << " has connected!" << '\n';
+
+	std::string username = message;
+
+	// Send Available Spreadsheets to Client
+	std::string spreadsheets = get_available_spreadsheets();
+	for (int i = 0; i < spreadsheets.size(); i++)
+		SendToClient(client_socket, spreadsheets.c_str(), length);
+
+	// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
+	// Also create a new (empty) Spreadsheet for the client
+	if (spreadsheets == "")
+	{
+		SendToClient(client_socket, spreadsheets.c_str(), length);
+		//request_new_ss = true;
+
+		// Add this new spreadsheet to available spreadsheet 
+		Spreadsheet* spreadsheet = new Spreadsheet();
+		lock.lock();
+		available_clients.emplace(client_socket, spreadsheet);
+		lock.unlock();
+	}
+
+	isClientSetup[client_socket] = 1;
+}
+
+/// <summary>
+/// Processes the client's filename request
+/// </summary>
+/// <param name="client_socket">connected socket</param>
+/// <param name="message">filename</param>
+void Server::ProcessClientFilename(int client_socket, const std::string& message)
+{
+	std::cout << "Spreadsheet filename Selected: " << message << '\n';
+
+	//advances the client in the handshake
+	isClientSetup[client_socket] = 2;
+
+	std::string str = message;
+
+	// If the requested spreadsheet is present send it
+	for (int index = 0; index < available_spreadsheets.size(); index++)
+	{
+		std::string temp = available_spreadsheets[index]->get_spreadsheet_name();
+
+		if (temp == str)
+		{
+			Spreadsheet* spreadsheet = find_selected_spreadsheet(message);
+			spreadsheet->set_spreadsheet_name(message);
+
+			lock.lock();
+			available_clients[client_socket] = spreadsheet;
+			lock.unlock();
+
+			return;
+		}
+	}
+
+	// Spreadsheet name was not found, it did not exists yet, create it and send it
+	Spreadsheet* s = new Spreadsheet(str);
+	available_spreadsheets.push_back(s);
+
+	s->set_spreadsheet_name(str);
+
+	lock.lock();
+	available_clients[client_socket] = s;
+	lock.unlock();
+
+	initial_handshake_approved = true;
+}
 
 /// <summary>
 /// This method is called when the client had requested a new spreadsheet.
