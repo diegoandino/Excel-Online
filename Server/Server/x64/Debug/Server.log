@@ -5,4 +5,6 @@ C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(73,
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(80,24): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(103,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\Server\Server.cpp(109,17): warning C4244: 'argument': conversion from 'SOCKET' to 'int', possible loss of data
+  main.cpp
+  Generating Code...
   Server.vcxproj -> C:\Users\Tarik Vu\source\repos\cs3505-final-project\Server\x64\Debug\Server.exe

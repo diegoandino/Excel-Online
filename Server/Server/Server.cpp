@@ -112,8 +112,12 @@ void Server::BroadcastToClients(int sending_client, std::string message, int len
 
 }
 
+// Method Called Upon client Connection
 void Server::OnClientConnect(int client_socket) {
 	std::cout << client_socket << std::endl;
+
+	// Upon connection, this client hasnt been initialized.
+	isClientSetup.insert({client_socket,false});
 }
 
 
@@ -139,8 +143,9 @@ void Server::OnMessageReceived(int client_socket, std::string message, int lengt
 
 void Server::ProcessRequests(int client_socket, const std::string& message, int length, JObject req) {
 
-	if (!initial_handshake_approved) {
+	if (!isClientSetup[client_socket]) {
 		ProcessClientConnectedRequests(client_socket, message, length, req);
+		isClientSetup[client_socket] = true;
 	}
 
 	if (request_new_ss) {
@@ -187,16 +192,6 @@ Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
 void Server::ProcessClientConnectedRequests(int client_socket, const std::string& message, int length, JObject req) {
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
 
-		// If there are no SS availible
-		/*if (available_clients[client_socket] == NULL)
-		{
-			std::string ss = get_available_spreadsheets();
-
-			lock.lock();
-			available_clients.emplace(client_socket, ss);
-			lock.unlock();
-
-		}*/
 
 		if (it.key() == "name") {
 			std::cout << "Client: " << it.value() << " has connected!" << '\n';
