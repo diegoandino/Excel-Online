@@ -23,8 +23,6 @@ namespace SS
     /// 
     /// </summary>
     /// Testing push for networking
-
-
     public partial class SpreadsheetForm : Form
     {
         /// <summary> Private Controller to manage Spreadsheet.</summary>
@@ -139,6 +137,7 @@ namespace SS
         /// <param name="e"></param>
         private void RequestNew_SS(object s, EventArgs evn)
         {
+
             // Create the popup:
             Form prompt = new Form();
             prompt.Text = "New Spreadsheet name";
@@ -191,6 +190,7 @@ namespace SS
                 return;
             }
 
+            DisableConnectInputFields();
             MessageBox.Show(selection + " Was chosen");
 
             // Send the name of the spreadsheet to server:
@@ -314,9 +314,9 @@ namespace SS
 
             // Try to connect to Server
             try
-
             {
                 Network.Connect(ServerTextBox.Text, UserNameTextBox.Text);
+                DisableConnectInputFields();
                 ConnectButton.Text = "Connected!";
             }
 
@@ -362,6 +362,15 @@ namespace SS
             }
         }
 
+        /// <summary>
+        /// disables the UserNameTextBox, ServerTextBox and ConnectButton
+        /// </summary>
+        private void DisableConnectInputFields()
+        {
+            UserNameTextBox.Enabled = false;
+            ServerTextBox.Enabled = false;
+            ConnectButton.Enabled = false;
+        }
 
         /// <summary>
         /// This method is called whenever our user enters contents into
