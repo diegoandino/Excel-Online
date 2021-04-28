@@ -38,6 +38,7 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
+
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -69,9 +70,11 @@ namespace SS
         /// <param name="Spreadsheets"></param>
         private void PickASpreadSheet(string[] Spreadsheets)
         {
+
             this.Invoke(new MethodInvoker(
                 () =>
                 {
+
                     // Create the popup:
                     Form prompt = new Form();
                     prompt.Size = new Size(300, 90);
@@ -88,9 +91,8 @@ namespace SS
                     // Add availible spreadsheets into a combobox
                     ComboBox selections = new ComboBox();
                     selections.SelectedText = "--Select--";
-
-                    foreach (string s in Spreadsheets)
-                       selections.Items.Add(s);
+                    foreach (string s in Spreadsheets) // rename "test" to "spreadsheets" 
+                        selections.Items.Add(s);
 
                     // Reposition & hook up buttons:
                     new_SS.Click += RequestNew_SS;
@@ -109,8 +111,24 @@ namespace SS
                     prompt.Controls.Add(selections);
                     prompt.Text = "Pick a spreadsheet";
 
-                    // If there are spreadsheets availible, show them:
                     prompt.ShowDialog();
+                    //// If there are spreadsheets availible, show them:
+                    //string sub = Spreadsheets[0].Substring(0, 1);
+                    //if (sub.Equals("\0"))
+                    //{
+                    //    object s = new object();
+                    //    EventArgs e = new EventArgs();
+                    //    //RequestNew_SS(s, e);
+                    //    prompt.ShowDialog();
+                    //}
+                    //else
+                    //{
+                    //    object s = new object();
+                    //    EventArgs e = new EventArgs();
+                    //    //RequestNew_SS(s, e);
+                    //    prompt.ShowDialog();
+                    //}
+
                 }));
         }
 
@@ -121,6 +139,7 @@ namespace SS
         /// <param name="e"></param>
         private void RequestNew_SS(object s, EventArgs evn)
         {
+
             // Create the popup:
             Form prompt = new Form();
             prompt.Text = "New Spreadsheet name";
@@ -141,6 +160,7 @@ namespace SS
 
             // Events for buttons:
             cancelButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
+            //cancelButton.Click += (sender, e) => SetCanShowSpreadSheets();
             confirmButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
             confirmButton.Click += (sender, e) => Request_SS(t.Text, sender, e);
 
@@ -149,8 +169,8 @@ namespace SS
             prompt.Controls.Add(confirmButton);
             prompt.Controls.Add(cancelButton);
             prompt.ShowDialog();
-        }
 
+        }
 
         /// <summary>
         /// This method is invoked when a user asks for an existing spreadsheet.
@@ -164,18 +184,18 @@ namespace SS
             {
                 MessageBox.Show("Selection must be non-empty");
 
-                ServerTextBox.Enabled = true;
-                UserNameTextBox.Enabled = true;
-                ConnectButton.Enabled = true;
+                EnableConnectInputFields();
                 ConnectButton.Text = "Connect";
 
                 return;
             }
 
+            DisableConnectInputFields();
             MessageBox.Show(selection + " Was chosen");
 
             // Send the name of the spreadsheet to server:
-            Network.spreadsheetNameQueue.Enqueue(selection);
+            string json = @"{""spreadsheet_name"": " + @"""" + selection.TrimEnd('\n') + @"""" + "}";
+            Network.spreadsheetNameQueue.Enqueue(json);
         }
 
 
@@ -185,9 +205,7 @@ namespace SS
         /// </summary>
         private void ClosePrompt(Form prompt, object sender, EventArgs e)
         {
-            ServerTextBox.Enabled = true;
-            UserNameTextBox.Enabled = true;
-            ConnectButton.Enabled = true;
+            //EnableConnectInputFields();
             ConnectButton.Text = "Connect";
 
             prompt.Close();
@@ -223,9 +241,7 @@ namespace SS
                 {
                     ConnectButton.Text = "Connect";
 
-                    ConnectButton.Enabled = true;
-                    ServerTextBox.Enabled = true;
-                    UserNameTextBox.Enabled = true;
+                    EnableConnectInputFields();
                 }));
         }
 
@@ -294,9 +310,9 @@ namespace SS
 
             // Try to connect to Server
             try
-
             {
                 Network.Connect(ServerTextBox.Text, UserNameTextBox.Text);
+                DisableConnectInputFields();
                 ConnectButton.Text = "Connected!";
             }
 
@@ -306,6 +322,7 @@ namespace SS
                 MessageBox.Show("Connecting to server failed.");
                 return;
             }
+
         }
 
 
@@ -318,6 +335,7 @@ namespace SS
         private void UpdateTextBoxes(string cellName)
         {
             CellNameBox.Text = cellName;
+
             CellValueBox.Clear();
             CellContentsBox.Clear();
 
@@ -340,6 +358,25 @@ namespace SS
             }
         }
 
+        /// <summary>
+        /// disables the UserNameTextBox, ServerTextBox and ConnectButton
+        /// </summary>
+        private void DisableConnectInputFields()
+        {
+            UserNameTextBox.Enabled = false;
+            ServerTextBox.Enabled = false;
+            ConnectButton.Enabled = false;
+        }
+
+        /// <summary>
+        /// enables the UserNameTextBox, ServerTextBox and ConnectButton
+        /// </summary>
+        private void EnableConnectInputFields()
+        {
+            UserNameTextBox.Enabled = true;
+            ServerTextBox.Enabled = true;
+            ConnectButton.Enabled = true;
+        }
 
         /// <summary>
         /// This method is called whenever our user enters contents into
@@ -353,6 +390,7 @@ namespace SS
         /// <param name="e"></param>
         private void UpdateContentsOfCell(object sender, EventArgs e)
         {
+
             try
             {
                 IEnumerable<string> CellsToRecalculate = controller.SetCellContents(CellContentsBox.Text);
