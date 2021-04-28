@@ -1,6 +1,5 @@
-#import  json
 import socket
-import threading
+import sys
 
 terminator = "\n"
 
@@ -11,7 +10,7 @@ max_test_time = 10
 cell_name = "a1"
 cell_contents = "yo"
 ID = "42"
-name = "heyo"
+user_name = "heyo"
 error_message = "error"
 filename1 = "file1"
 filename2 = "file2"
@@ -20,26 +19,25 @@ filename3 = "file3"
 #got these from the doc but some seem to be missing ','
 
 #client -> server 
-client_disconnected = "{messageType: \"disconnected\", user: \"" + ID + "\"}"
 
-client_select_cell = "{requestType: \"selectCell\", cellName: " + cell_name + " }"
-client_request_edit = "{requestType: \"editCell\", cellName: " + cell_name + ", contents: " + cell_contents + " }"
+client_handshake_username = ("\"{0}\"" + terminator).format(user_name)
+client_handshake_filename = ("\"{0}\"" + terminator).format(filename1)
+
+client_edit_cell = "{{requestType: \"editCell\", cellName: \"{0}\", contents: \"{1}\" }}".format(cell_name, cell_contents)
+client_revert = "{{\"requestType\": \"revertCell\", \"cellName\": \"{0}\"}}".format(cell_name)
+client_select_cell = "{{requestType: \"selectCell\", cellName: \"{0}\" }}".format(cell_name)
+
 client_undo = "{\"requestType\": \"undo\"}"
-client_revert = "{\"requestType\": \"revertCell\", \"cellName\": \"A1\"}"
-
-client_handshake_username = "\"" + name + "\"" + terminator
-client_handshake_filename = "\"" + filename1 + "\"" + terminator
 
 #server -> client
-server_handshake_files = "\"" + filename1 + "\"" + terminator + "\"" + \
-    filename2 + "\"" + terminator + "\"" + \
-    filename1 + "\"" + terminator + terminator
+client_disconnected = "{{messageType: \"disconnected\", user: \"{0}\"}}".format(ID)
+server_handshake_files = "{1}{0}{2}{0}{3}{0}{0}".format(terminator, filename1, filename2, filename3)
 
-error_invalid_request = "{ messageType: \"requestError\", cellName: " + cell_name + ",message: " + error_message + " }"
-error_shutdown_server = "{ messageType: \"serverError\", message: " + error_message + " }"
+error_invalid_request = "{{ messageType: \"requestError\", cellName: {0},message: {1} }}".format(cell_name, error_message)
+error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".format(error_message)
 
-server_cell_selected = "{messageType: \"cellSelected\", + cellName: " + cell_name + " selector: " + ID + ", selectorName: " + name + " }"
-server_cell_changed = "{ messageType: \"cellUpdated\", cellName: " + cell_name + ", contents: " + cell_contents + "}"
+server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
+server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
 
 #methods defs
 def send_message(msg):
@@ -60,7 +58,6 @@ def run_input(num, address):
         print("no such test")
     elif(num == 1):
         test_1(address)
-        #print("not implemented yet")
     elif(num == 2):
         print("not implemented yet")
 
@@ -71,12 +68,10 @@ def set_connection(ip, port):
         sckt.settimeout(None)
 
     except socket.timeout:
-        print("test failed")
-        exit()
+        sys.exit("socket timeout")
 
     except socket.error:
-        print("test failed")
-        exit()
+        sys.exit("socket error")
 
 def receive_test():
     try:
@@ -85,41 +80,49 @@ def receive_test():
         sckt.settimeout(None)
 
     except socket.timeout:
-        print("failed connection timed out")
-        exit()
+        sys.exit("failed connection timed out")
 
     except socket.error:
-        print("connection failed")
-        exit()
+        sys.exit("connection failed")
 
     return received
 
-
-def test_1(address):
-
+def set_up_test(test_name, message, address):
     print(max_test_time)
-    print("test select cell #1")
+    print(test_name)
 
     ip_ad = address.split(':')
-    set_connection(ip_ad[0], int(ip_ad[1]) )
-    send_message(client_select_cell)
+    set_connection(ip_ad[0], int(ip_ad[1]))
 
+    send_message(message)
+
+def test_1(address):
+    set_up_test("test select cell #1", client_select_cell, address)
     receive_test()
 
     print("passed")
 
-#from https://www.geeksforgeeks.org/socket-programming-python/
+def test_send_filename():
+    print("not implemented yet")
 
+#from https://www.geeksforgeeks.org/socket-programming-python/
 
 sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-user_input = input("input test to run ")
-
-if user_input == "":
+if(len(sys.argv) < 1):
+    print("unh something went wrong, too *few* arguments?")
+elif len(sys.argv) == 1:
     print(test_num)
+elif len(sys.argv) == 3:
+
+    try:
+        arg1 = int(sys.argv[1])
+    except ValueError:
+        sys.exit("wrong first parameter inputed")
+
+    run_input(arg1, sys.argv[2])
+
 else:
-    intput = int(user_input)
-    run_input(intput, "localhost:1100")
+    print("unh something went wrong, too *many* arguments?")
 
 close_connection()
-exit()
