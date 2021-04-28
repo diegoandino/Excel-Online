@@ -38,8 +38,6 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
-        /// <summary> true if the client has chosen a spreadsheet already </summary>
-        private bool CanShowNewSPForm = true;
 
         /// <summary>
         /// Public SpreadsheetForm constructor.
@@ -114,7 +112,6 @@ namespace SS
                     prompt.Text = "Pick a spreadsheet";
 
                     prompt.ShowDialog();
-
                     //// If there are spreadsheets availible, show them:
                     //string sub = Spreadsheets[0].Substring(0, 1);
                     //if (sub.Equals("\0"))
@@ -175,11 +172,6 @@ namespace SS
 
         }
 
-        private void SetCanShowSpreadSheets()
-        {
-           CanShowNewSPForm = false;
-        }
-
         /// <summary>
         /// This method is invoked when a user asks for an existing spreadsheet.
         /// </summary>
@@ -192,9 +184,7 @@ namespace SS
             {
                 MessageBox.Show("Selection must be non-empty");
 
-                ServerTextBox.Enabled = true;
-                UserNameTextBox.Enabled = true;
-                ConnectButton.Enabled = true;
+                EnableConnectInputFields();
                 ConnectButton.Text = "Connect";
 
                 return;
@@ -215,9 +205,7 @@ namespace SS
         /// </summary>
         private void ClosePrompt(Form prompt, object sender, EventArgs e)
         {
-            ServerTextBox.Enabled = true;
-            UserNameTextBox.Enabled = true;
-            ConnectButton.Enabled = true;
+            //EnableConnectInputFields();
             ConnectButton.Text = "Connect";
 
             prompt.Close();
@@ -253,10 +241,7 @@ namespace SS
                 {
                     ConnectButton.Text = "Connect";
 
-                    ConnectButton.Enabled = true;
-                    ServerTextBox.Enabled = true;
-                    UserNameTextBox.Enabled = true;
-                    CanShowNewSPForm = true;
+                    EnableConnectInputFields();
                 }));
         }
 
@@ -381,6 +366,16 @@ namespace SS
             UserNameTextBox.Enabled = false;
             ServerTextBox.Enabled = false;
             ConnectButton.Enabled = false;
+        }
+
+        /// <summary>
+        /// enables the UserNameTextBox, ServerTextBox and ConnectButton
+        /// </summary>
+        private void EnableConnectInputFields()
+        {
+            UserNameTextBox.Enabled = true;
+            ServerTextBox.Enabled = true;
+            ConnectButton.Enabled = true;
         }
 
         /// <summary>
