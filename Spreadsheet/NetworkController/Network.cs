@@ -114,7 +114,7 @@ namespace NetworkController
                  string userJson = JsonConvert.SerializeObject(user);
                  Networking.Send(state.TheSocket, userJson);*/
 
-                Networking.Send(state.TheSocket, UserName);
+                Networking.Send(state.TheSocket, UserName + "\n");
                 server = state;
 
                 // Start an event loop to receive messages from the server
