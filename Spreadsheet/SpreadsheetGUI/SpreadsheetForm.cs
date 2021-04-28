@@ -74,6 +74,7 @@ namespace SS
             this.Invoke(new MethodInvoker(
                 () =>
                 {
+
                     // Create the popup:
                     Form prompt = new Form();
                     prompt.Size = new Size(300, 90);
@@ -111,14 +112,21 @@ namespace SS
                     prompt.Text = "Pick a spreadsheet";
 
                     // If there are spreadsheets availible, show them:
-                    if(Spreadsheets.Length > 0)
-                    prompt.ShowDialog();
+                    string sub = Spreadsheets[0].Substring(0, 1);
+                    if (sub.Equals("\0"))
+                    {
+                        object s = new object();
+                        EventArgs e = new EventArgs();
+                        RequestNew_SS(s, e);
+                    }
+
 
                     else
                     {
                         object s = new object();
                         EventArgs e = new EventArgs();
-                        RequestNew_SS(s,e);
+                        RequestNew_SS(s, e);
+                        prompt.ShowDialog();
                     }
 
                 }));
@@ -174,7 +182,7 @@ namespace SS
             if (selection.Equals(""))
             {
                 MessageBox.Show("Selection must be non-empty");
-                
+
                 ServerTextBox.Enabled = true;
                 UserNameTextBox.Enabled = true;
                 ConnectButton.Enabled = true;
@@ -663,7 +671,7 @@ namespace SS
             TimeLabel.Text = DateTime.Now.ToLongTimeString();
         }
 
- 
+
         /// <summary>
         /// When clicked, our client sends a request to the server to undo the most recent change.
         /// </summary>

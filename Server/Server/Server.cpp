@@ -137,21 +137,35 @@ void Server::OnMessageReceived(int client_socket, std::string message, int lengt
 }
 
 
-void Server::ProcessRequests(int client_socket, std::string message, int length, JObject req) {
-	if (!initial_handshake_approved)
+void Server::ProcessRequests(int client_socket, const std::string& message, int length, JObject req) {
+
+	if (!initial_handshake_approved) {
 		ProcessClientConnectedRequests(client_socket, message, length, req);
+	}
+
+	if (request_new_ss) {
+		CreateNewSpreadsheet(client_socket, message);
+		request_new_ss = false;
+	}
 
 	// Else Update Loop
 	ProcessCellSelectedRequests(client_socket, message, length, req);
 	ProcessCellEditedRequests(client_socket, message, length, req);
 }
 
+void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
+
+	Spreadsheet* s = new Spreadsheet(name);
+	available_spreadsheets.push_back(s);
+	available_clients[client_socket] = s;
+
+}
 
 std::string Server::get_available_spreadsheets() {
 	std::string res;
 
 	for (int i = 0; i < available_spreadsheets.size(); i++) {
-		std::string name = available_spreadsheets[i].get_spreadsheet_name();
+		std::string name = available_spreadsheets[i]->get_spreadsheet_name();
 		res += name + "\n";
 	}
 
@@ -170,14 +184,14 @@ Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
 
 
 
-void Server::ProcessClientConnectedRequests(int client_socket, std::string message, int length, JObject req) {
+void Server::ProcessClientConnectedRequests(int client_socket, const std::string& message, int length, JObject req) {
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
 
 		// If there are no SS availible
-		/*if (available_clients[client_socket] == NULL) 
-		{	
+		/*if (available_clients[client_socket] == NULL)
+		{
 			std::string ss = get_available_spreadsheets();
-			
+
 			lock.lock();
 			available_clients.emplace(client_socket, ss);
 			lock.unlock();
@@ -192,32 +206,60 @@ void Server::ProcessClientConnectedRequests(int client_socket, std::string messa
 			// Send Available Spreadsheets to Client
 			// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
 			std::string spreadsheets = get_available_spreadsheets();
-			if (spreadsheets == "")
+			if (spreadsheets == "") {
 				SendToClient(client_socket, spreadsheets.c_str(), length);
+				request_new_ss = true;
+			}
 
 			for (int i = 0; i < spreadsheets.size(); i++) {
 				SendToClient(client_socket, spreadsheets.c_str(), length);
 			}
 
 			if (spreadsheets == "") {
-				Spreadsheet* spreadsheet = new Spreadsheet(); 
-				
+				Spreadsheet* spreadsheet = new Spreadsheet();
+
 				lock.lock();
 				available_clients.emplace(client_socket, spreadsheet);
 				lock.unlock();
 			}
+
+
 		}
 
 		if (it.key() == "spreadsheet_name") {
 			std::cout << "Spreadsheet Name Selected: " << it.value() << '\n';
 
-			// Point to chosen spreadsheet
-			Spreadsheet* spreadsheet = find_selected_spreadsheet(it.value());
-			spreadsheet->set_spreadsheet_name(it.value()); 
+			std::string str = it.value();
+
+			// If the requested spreadsheet is present send it
+			for (int index = 0; index < available_spreadsheets.size(); index++) {
+				std::string temp = available_spreadsheets[index]->get_spreadsheet_name();
+
+				if (temp == str) {
+
+					Spreadsheet* spreadsheet = find_selected_spreadsheet(it.value());
+					spreadsheet->set_spreadsheet_name(it.value());
+
+					lock.lock();
+					available_clients[client_socket] = spreadsheet;
+					lock.unlock();
+					return;
+				}
+			}
+
+
+
+			// Spreadsheet name was not found, it did not exists yet, create it and send it
+			Spreadsheet* s = new Spreadsheet(str);
+			available_spreadsheets.push_back(s);
+
+			s->set_spreadsheet_name(str);
 
 			lock.lock();
-			available_clients[client_socket] = spreadsheet;
+			available_clients[client_socket] = s;
 			lock.unlock();
+			request_new_ss = true;
+		
 		}
 	}
 
@@ -225,7 +267,7 @@ void Server::ProcessClientConnectedRequests(int client_socket, std::string messa
 }
 
 
-void Server::ProcessCellSelectedRequests(int client_socket, std::string message, int length, JObject req) {
+void Server::ProcessCellSelectedRequests(int client_socket, const std::string& message, int length, JObject req) {
 	// Iterate the array
 	std::string cellName = "";
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
@@ -250,7 +292,7 @@ void Server::ProcessCellSelectedRequests(int client_socket, std::string message,
 }
 
 
-void Server::ProcessCellEditedRequests(int client_socket, std::string message, int length, JObject req) {
+void Server::ProcessCellEditedRequests(int client_socket, const std::string& message, int length, JObject req) {
 	// Iterate the array
 	std::string content = "";
 	std::string cellName = "";

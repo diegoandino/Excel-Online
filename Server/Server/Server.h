@@ -32,7 +32,7 @@ protected:
 	void OnClientDisconnect(int client_socket, std::string message, int length);										// Handler for when client disconnects
 	void OnMessageReceived(int client_socket, std::string message, int length);		// Handler for when a message is received
 
-	void SendToClient(int client_socket, std::string message, int length);			// Handler to send data to clients
+	void SendToClient(int client_socket,  std::string message, int length);			// Handler to send data to clients
 	void BroadcastToClients(int sending_client, std::string message, int length);	// Handler to broadcast data to clients
 
 private:
@@ -40,21 +40,23 @@ private:
 	int			_port;										// Port number for server
 	int			_socket;									// Socket for listening
 	fd_set		_master;									// Master file descriptor set
+	bool		request_new_ss;								// When we are trying to make a new spreadsheet
 
 	std::map<int, Spreadsheet*> available_clients;		// Returns the available spreadsheets in the server
 	std::mutex lock;										// Mutex for available_spreadsheets
 
 	std::string get_available_spreadsheets();
 	
-	std::vector<Spreadsheet> available_spreadsheets;
+	std::vector<Spreadsheet*> available_spreadsheets;
 
 	Spreadsheet* find_selected_spreadsheet(std::string name);
 
 	void EraseFromServer				(int client_socket);
-	void ProcessClientConnectedRequests	(int client_socket, std::string message, int length, JObject req);
-	void ProcessCellSelectedRequests	(int client_socket, std::string message, int length, JObject req);
-	void ProcessCellEditedRequests		(int client_socket, std::string message, int length, JObject req);
-	void ProcessRequests				(int client_socket, std::string message, int length, JObject req);
+	void ProcessClientConnectedRequests	(int client_socket, const std::string &message, int length, JObject req);
+	void ProcessCellSelectedRequests	(int client_socket, const std::string &message, int length, JObject req);
+	void ProcessCellEditedRequests		(int client_socket, const std::string &message, int length, JObject req);
+	void ProcessRequests				(int client_socket, const std::string &message, int length, JObject req);
+	void CreateNewSpreadsheet			(int client_socket, std::string name);
 
 	bool initial_handshake_approved = false;
 };
