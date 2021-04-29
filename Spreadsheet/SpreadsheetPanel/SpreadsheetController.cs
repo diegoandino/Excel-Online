@@ -119,7 +119,6 @@ namespace SS
 
             //Network.commandQueue.Enqueue(json);
             if (Network.server != null)
-
                 Networking.Send(Network.server.TheSocket, json);
 
             return res;

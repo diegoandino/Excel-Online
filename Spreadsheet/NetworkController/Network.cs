@@ -136,17 +136,15 @@ namespace NetworkController
                 return;
             }
 
-            //Thread t = new Thread(UpdateLoop);
             lock (state)
 			{
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
                 UpdateLoop();
-                //t.Start();
             }
 
-            Networking.GetData(server);
+            Networking.GetData(state);
         }
 
 
@@ -157,7 +155,6 @@ namespace NetworkController
         private static void ProcessMessages(SocketState state)
         {
             string totalData = state.GetData();
-
             string[] parts = Regex.Split(totalData, @"(?<=[\n])");
 
             // Loop until we have processed all messages.
@@ -185,7 +182,7 @@ namespace NetworkController
 
 
                 // Skipping incomplete JSONS
-                if (p[0] != '{' || !p.EndsWith("\n"))
+                if (p[0] != '{' || !p.EndsWith("\n") || p.StartsWith("\0"))
                 {
                     continue;
                 }
@@ -194,7 +191,7 @@ namespace NetworkController
                 //LoadObject(p);
 
                 // Then remove it from the SocketState's growable buffer
-                state.RemoveData(0, p.Length);
+                state.RemoveData(0, totalData.Length);
             }
         }
 
