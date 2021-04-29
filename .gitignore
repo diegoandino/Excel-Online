@@ -37,3 +37,6 @@ Spreadsheet/.vs/**
 
 Server/Server/Debug/**
 Server/Debug/**
+
+Server/x64/**
+Server/Server/x64/**
