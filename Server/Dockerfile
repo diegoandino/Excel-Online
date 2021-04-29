@@ -5,7 +5,7 @@
 # extension.)
 #
 # docker pull ubuntu
-# docker build --tag myubuntu  .
+# docker build --tag server_teamname .
 # 
 # (Don't forget the trailing . to specify that this directory is the context.)
 
@@ -50,6 +50,7 @@ RUN apt-get -y update && apt-get -y install \
   texinfo \
   wget \
   yasm \
-  zlib1g-dev 
+  zlib1g-dev \
+  netcat
 
 COPY . /server 
