@@ -104,8 +104,8 @@ int Server::Run() {
 /// <param name="client_socket"> The socket (int) corresponding with that client </param>
 /// <param name="message"> Message to send to the client </param>
 /// <param name="length"></param>
-void Server::SendToClient(int client_socket, std::string message, int length) {
-	send(client_socket, message.c_str(), length, 0);
+void Server::SendToClient(int client_socket, const char* message, int length) {
+	send(client_socket, message, length, 0);
 }
 
 
@@ -115,11 +115,9 @@ void Server::SendToClient(int client_socket, std::string message, int length) {
 /// <param name="sending_client"></param>
 /// <param name="message"></param>
 /// <param name="length"></param>
-void Server::BroadcastToClients(int sending_client, std::string message, int length) {
-
+void Server::BroadcastToClients(int sending_client, const char* message, int length) {
 	// Send message to other clients
 	for (int i = 0; i < _master.fd_count; i++) {
-
 		SOCKET out_socket = _master.fd_array[i];
 		if (out_socket == sending_client) {
 
@@ -134,8 +132,6 @@ void Server::BroadcastToClients(int sending_client, std::string message, int len
 /// method called upon client connection
 /// </summary>
 void Server::OnClientConnect(int client_socket) {
-	std::cout << client_socket << std::endl;
-
 	// Upon connection, this client hasnt been initialized.
 	isClientSetup.insert({ client_socket, false });
 }
@@ -144,7 +140,7 @@ void Server::OnClientConnect(int client_socket) {
 /// <summary>
 /// This method is called when a client disconnects
 /// </summary>
-void Server::OnClientDisconnect(int client_socket, std::string message, int length) {
+void Server::OnClientDisconnect(int client_socket, const char* message, int length) {
 	lock.lock();
 	std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
 	isClientSetup.erase(client_socket);
@@ -166,7 +162,7 @@ void Server::EraseFromServer(int client_socket) {
 /// Called when a client sends a message to the server
 /// If message parses into a JObject we understand it as a Request. (JSON)
 /// </summary>
-void Server::OnMessageReceived(int client_socket, std::string message, int length)
+void Server::OnMessageReceived(int client_socket, const char* message, int length)
 {
 	try
 	{
@@ -179,12 +175,13 @@ void Server::OnMessageReceived(int client_socket, std::string message, int lengt
 	}
 }
 
+
 /// <summary>
 /// Method called from OnMessageReceived.
 /// When a request is sent from the client to the server here we digest that request and process it.
 /// Requests range from setting up a spreadsheet, to requesting the server make a new spreadsheet to be used. 
 /// </summary>
-void Server::ProcessRequests(int client_socket, const std::string& message, int length, JObject req)
+void Server::ProcessRequests(int client_socket, const char* message, int length, JObject req)
 {
 	//if the client is sending their username
 	if (isClientSetup[client_socket] == 0)
@@ -218,7 +215,7 @@ void Server::ProcessRequests(int client_socket, const std::string& message, int 
 /// <param name="message"></param>
 /// <param name="length"></param>
 /// <param name="req"></param>
-void Server::ProcessClientConnectedRequests(int client_socket, const std::string& message, int length, JObject req)
+void Server::ProcessClientConnectedRequests(int client_socket, const char* message, int length, JObject req)
 {
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it)
 	{
@@ -230,8 +227,7 @@ void Server::ProcessClientConnectedRequests(int client_socket, const std::string
 
 			// Send Available Spreadsheets to Client
 			std::string spreadsheets = get_available_spreadsheets();
-			for (int i = 0; i < spreadsheets.size(); i++)
-				SendToClient(client_socket, spreadsheets.c_str(), length);
+			SendToClient(client_socket, spreadsheets.c_str(), length);
 
 
 			// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
@@ -287,22 +283,22 @@ void Server::ProcessClientConnectedRequests(int client_socket, const std::string
 	initial_handshake_approved = true;
 }
 
+
 /// <summary>
 /// Processes the client's username request and sends a list of spreadsheets back
 /// </summary>
 /// <param name="client_socket">connected socket</param>
 /// <param name="message">username</param>
 /// <param name="length"></param>
-void Server::ProcessClientUsername(int client_socket, const std::string& message, int length)
+void Server::ProcessClientUsername(int client_socket, const char* message, int length)
 {
-	std::cout << "Client: " << message << " has connected!" << '\n';
+	std::cout << "Client: " << message << " has connected!" << "\n";
 
 	std::string username = message;
 
 	// Send Available Spreadsheets to Client
 	std::string spreadsheets = get_available_spreadsheets();
-	for (int i = 0; i < spreadsheets.size(); i++)
-		SendToClient(client_socket, spreadsheets.c_str(), length);
+	SendToClient(client_socket, spreadsheets.c_str(), spreadsheets.size());
 
 	// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
 	// Also create a new (empty) Spreadsheet for the client
@@ -326,7 +322,7 @@ void Server::ProcessClientUsername(int client_socket, const std::string& message
 /// </summary>
 /// <param name="client_socket">connected socket</param>
 /// <param name="message">filename</param>
-void Server::ProcessClientFilename(int client_socket, const std::string& message)
+void Server::ProcessClientFilename(int client_socket, const char* message)
 {
 	std::cout << "Spreadsheet filename Selected: " << message << '\n';
 
@@ -366,6 +362,7 @@ void Server::ProcessClientFilename(int client_socket, const std::string& message
 	initial_handshake_approved = true;
 }
 
+
 /// <summary>
 /// This method is called when the client had requested a new spreadsheet.
 /// </summary>
@@ -374,6 +371,7 @@ void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
 	available_spreadsheets.push_back(s);
 	available_clients[client_socket] = s;
 }
+
 
 /// <summary>
 /// Returns a string of currently available spreadsheets separated by new lines.
@@ -387,6 +385,7 @@ std::string Server::get_available_spreadsheets() {
 
 	return res;
 }
+
 
 /// <summary>
 /// Returns a spreadsheet pointer to a spreadsheet name "name"
@@ -402,7 +401,7 @@ Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
 }
 
 
-void Server::ProcessCellSelectedRequests(int client_socket, const std::string& message, int length, JObject req) {
+void Server::ProcessCellSelectedRequests(int client_socket, const char* message, int length, JObject req) {
 	// Iterate the array
 	std::string cellName = "";
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
@@ -427,7 +426,7 @@ void Server::ProcessCellSelectedRequests(int client_socket, const std::string& m
 }
 
 
-void Server::ProcessCellEditedRequests(int client_socket, const std::string& message, int length, JObject req) {
+void Server::ProcessCellEditedRequests(int client_socket, const char* message, int length, JObject req) {
 	// Iterate the array
 	std::string content = "";
 	std::string cellName = "";

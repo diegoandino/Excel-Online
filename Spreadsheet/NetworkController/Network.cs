@@ -105,7 +105,6 @@ namespace NetworkController
 
             lock (state)
             {
-
                 Connected();
 
                 // Send the player name to the server 
@@ -114,7 +113,7 @@ namespace NetworkController
                  string userJson = JsonConvert.SerializeObject(user);
                  Networking.Send(state.TheSocket, userJson);*/
 
-                Networking.Send(state.TheSocket, UserName + "\n");
+                Networking.Send(state.TheSocket, UserName);
                 server = state;
 
                 // Start an event loop to receive messages from the server
