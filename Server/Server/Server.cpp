@@ -363,44 +363,6 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 }
 
 
-/// <summary>
-/// This method is called when the client had requested a new spreadsheet.
-/// </summary>
-void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
-	Spreadsheet* s = new Spreadsheet(name);
-	available_spreadsheets.push_back(s);
-	available_clients[client_socket] = s;
-}
-
-
-/// <summary>
-/// Returns a string of currently available spreadsheets separated by new lines.
-/// </summary>
-std::string Server::get_available_spreadsheets() {
-	std::string res;
-	for (int i = 0; i < available_spreadsheets.size(); i++) {
-		std::string name = available_spreadsheets[i]->get_spreadsheet_name();
-		res += name + "\n";
-	}
-
-	return res;
-}
-
-
-/// <summary>
-/// Returns a spreadsheet pointer to a spreadsheet name "name"
-/// Returns NULL if said spreadsheet could not be found.
-/// </summary>
-Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
-	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
-		if (name == it->second->get_spreadsheet_name())
-			return it->second;
-	}
-
-	return NULL;
-}
-
-
 void Server::ProcessCellSelectedRequests(int client_socket, const char* message, int length, JObject req) {
 	// Iterate the array
 	std::string cellName = "";
@@ -415,11 +377,11 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 					<< " On Spreadsheet: " << available_clients[client_socket]->get_spreadsheet_name() << '\n';
 
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "selected"
-					"\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
+					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}"
 				);
 
-				BroadcastToClients(client_socket, json.c_str(), length);
+				BroadcastToClients(client_socket, json.c_str(), json.size());
 			}
 		}
 	}
@@ -458,9 +420,47 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 					"\"" "contents" "\"" ": " "\"" + content + "\"" "}"
 				);
 
-				BroadcastToClients(client_socket, json.c_str(), length);
+				BroadcastToClients(client_socket, json.c_str(), json.size());
 			}
 		}
 	}
 }
 
+
+
+/// <summary>
+/// This method is called when the client had requested a new spreadsheet.
+/// </summary>
+void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
+	Spreadsheet* s = new Spreadsheet(name);
+	available_spreadsheets.push_back(s);
+	available_clients[client_socket] = s;
+}
+
+
+/// <summary>
+/// Returns a string of currently available spreadsheets separated by new lines.
+/// </summary>
+std::string Server::get_available_spreadsheets() {
+	std::string res;
+	for (int i = 0; i < available_spreadsheets.size(); i++) {
+		std::string name = available_spreadsheets[i]->get_spreadsheet_name();
+		res += name + "\n";
+	}
+
+	return res;
+}
+
+
+/// <summary>
+/// Returns a spreadsheet pointer to a spreadsheet name "name"
+/// Returns NULL if said spreadsheet could not be found.
+/// </summary>
+Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
+	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
+		if (name == it->second->get_spreadsheet_name())
+			return it->second;
+	}
+
+	return NULL;
+}

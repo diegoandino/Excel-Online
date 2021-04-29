@@ -110,8 +110,6 @@ namespace SS
         /// <returns></returns>
         public IEnumerable<string> SetCellContents(string contents)
         {
-            IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
-
             // Send to server
             string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" +
                             GetCellName(col, row) + @"""," + @"""contents"": " +
@@ -121,6 +119,7 @@ namespace SS
             if (Network.server != null)
                 Networking.Send(Network.server.TheSocket, json);
 
+            IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
             return res;
 
         }

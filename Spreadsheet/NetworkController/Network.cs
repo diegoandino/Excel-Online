@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using System.Threading; 
+using System.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace NetworkController
 {
@@ -154,6 +155,19 @@ namespace NetworkController
         private static void ProcessMessages(SocketState state)
         {
             string totalData = state.GetData();
+
+            char[] charsToTrim = { '\0', '�' };
+            string trimmedData = totalData.Replace("�", "");
+
+            try
+			{
+                JObject deserialized = JObject.Parse(totalData);
+			}
+            catch (Exception e)
+			{
+
+			}
+
             string[] parts = Regex.Split(totalData, @"(?<=[\n])");
 
             // Loop until we have processed all messages.
