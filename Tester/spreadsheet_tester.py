@@ -71,8 +71,8 @@ class TestClient:
         except:
             print("Fail" + messageterminator)
             exit()
-    def close_connection():
-        sckt.close
+    def close_connection(self):
+        sef.close
 
 
     def send_message(self, msg):
@@ -105,11 +105,13 @@ class TestClient:
 
 #methods defs
 def DisconnectedString(ID):
-    return "{messageType: \"disconnected\", user: \"" + ID + "\"}"
+    return "{messageType: \"disconnected\", user: \"" + ID + "\"}" + terminator
 def SelectCell(cell_name):
-     return "{requestType: \"selectCell\", cellName: " + cell_name + " }"
+     return "{requestType: \"selectCell\", cellName: " + cell_name + " }" + terminator
 def EditCell(cell_name, cell_contents):
-    return "{requestType: \"editCell\", cellName: " + cell_name + ", contents: " + cell_contents + " }"
+    return "{requestType: \"editCell\", cellName: " + cell_name + ", contents: " + cell_contents + " }" + terminator
+def RevertCell(cell_name):
+    return "{\"requestType\": \"revertCell\", \"cellName\": \"A1\"}" + terminator
 
 def SendClientName(clientname):
     return clientname + terminator
@@ -141,6 +143,15 @@ def run_input(num, address):
         test_2(address)
     elif(num == '3'):
         test_3(address)
+        elif(num == '4'):
+            test_4(address)
+            elif(num=='5'):
+                test_5(address)
+                elif(num =='6'):
+                    test_6(address)
+                    elif(num=='7'):
+                        test_7(address)
+                
         
 
 def set_connection(ip, port):
@@ -235,6 +246,7 @@ def test_3(address):
     client.send_message(EditCell("A7", "=3"))
     client.receive()
     print("Pass" + messageterminator)
+    
 def test_4(address):
     print(max_test_time)
     print("testing Undo")
@@ -253,8 +265,67 @@ def test_4(address):
     client.receive()
     print("Pass" + messageterminator)
 
-
 def test_5(address):
+    print(max_test_time)
+    print("testing Redo")
+    client = TestClient("client" + terminator);
+    client.connect_to_server(address)
+    client.send_message(client.clientname)
+    client.receive()
+    client.send_message(SendFileName("file"))
+    client.send_message(SelectCell("A1"))
+    client.receive()
+    client.send_message(RevertCell("A1"))
+    client.receive()
+    client.send_message(client_undo)
+    client.receive()
+    client.send_message(EditCell("A1", "=3"))
+    client.receive()
+    client.send_message(RevertCell("A1"))
+    client.receive()
+    client.send_message(client_undo)
+    client.receive()    
+    print("Pass" + messageterminator)
+
+def test_6(address):
+    print(max_test_time)
+    print("testing Redo and Undo for multiple clients")
+    client = TestClient("client" + terminator);
+    client.connect_to_server(address)
+    client.send_message(client.clientname)
+    client.receive()
+    client.send_message(SendFileName("file"))
+    client2 = TestClient("client2" + terminator);
+    client2.connect_to_server(address)
+    client2.send_message(client.clientname)
+    client2.receive()
+    client.send_message(SendFileName("file"))
+    client.send_message(SelectCell("A1"))
+    client.receive()
+    client.send_message(RevertCell("A1"))
+    client.receive()
+    client.send_message(EditCell("A1", "=3"))
+    client2.receive()
+    client2.send_message(client_undo)
+    client2.receive()
+    client2.send_message(SelectCell("A1"))
+    client2.receive()
+    client2.send_message(EditCell("A1", "Hello"))
+    client2.receive()
+    client.send_message(RevertCell("A1"))
+    client.receive()
+    client.send_message(client_undo)
+    client.receive()    
+    print("Pass" + messageterminator)
+def test_7(address):
+    print(max_test_time)
+    print("testing closing spreadsheet")
+    client = TestClient("client" + terminator);
+    client.connect_to_server(address)
+    client.send_message(client.clientname)
+    client.receive()
+    
+def test_stress(address):
     print(max_test_time)
     print("test editing all cells")
     client = TestClient("client" + terminator);
@@ -273,7 +344,7 @@ def test_5(address):
     
     print("Pass" + messageterminator)
         
-def test_6(address):
+def test_stress2(address):
     print(max_test_time)
     print("test multi client editing all cells")
     client = TestClient("client" + terminator);
