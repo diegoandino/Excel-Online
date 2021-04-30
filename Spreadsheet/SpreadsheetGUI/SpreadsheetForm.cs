@@ -164,7 +164,7 @@ namespace SS
         private void Request_SS(string selection, object sender, EventArgs e)
         {
             
-            if (selection.Equals("") || selection.Equals("\n") || listOfSpreadsheet.Contains(selection))
+            if (selection.Equals("") || selection.Equals("\n")/* || listOfSpreadsheet.Contains(selection)*/)
             {
                 MessageBox.Show("Selection must be non-empty, no newline, and unique");
 
@@ -259,7 +259,6 @@ namespace SS
 
             // convienence for connecting to a local server
             ServerTextBox.Text = "localhost";
-
         }
 
         /// <summary>
@@ -364,7 +363,6 @@ namespace SS
         /// <param name="e"></param>
         private void UpdateContentsOfCell(object sender, EventArgs e)
         {
-
             try
             {
                 IEnumerable<string> CellsToRecalculate = controller.SetCellContents(CellContentsBox.Text);

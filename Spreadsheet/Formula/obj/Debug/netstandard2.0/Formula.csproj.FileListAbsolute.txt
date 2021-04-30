@@ -1,12 +1,3 @@
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.deps.json
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.dll
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.pdb
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csprojAssemblyReference.cache
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfoInputs.cache
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfo.cs
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
-C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.deps.json
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.dll
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.pdb
@@ -25,3 +16,12 @@ C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj
 C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
 C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
 C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.deps.json
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.dll
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.pdb
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csprojAssemblyReference.cache
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfoInputs.cache
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfo.cs
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb

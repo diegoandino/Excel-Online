@@ -117,13 +117,8 @@ void Server::SendToClient(int client_socket, const char* message, int length) {
 /// <param name="length"></param>
 void Server::BroadcastToClients(int sending_client, const char* message, int length) {
 	// Send message to other clients
-	for (int i = 0; i < _master.fd_count; i++) {
-		SOCKET out_socket = _master.fd_array[i];
-		if (out_socket == sending_client) {
-
-			// It should be sending Spreadsheet Cell Value Changes 
-			SendToClient(out_socket, message, length);
-		}
+	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
+		SendToClient(it->first, message, length);
 	}
 }
 
@@ -305,7 +300,6 @@ void Server::ProcessClientUsername(int client_socket, const char* message, int l
 	if (spreadsheets == "")
 	{
 		SendToClient(client_socket, spreadsheets.c_str(), length);
-		//request_new_ss = true;
 
 		// Add this new spreadsheet to available spreadsheet 
 		Spreadsheet* spreadsheet = new Spreadsheet();
@@ -407,7 +401,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 			if (it.value() == "editCell") {
 				std::cout << "Client: " << client_socket << " Has Requested Edit: " << content
 					<< " On Cell: " << cellName << " On Spreadsheet: " <<
-					available_clients[client_socket] << '\n';
+					available_clients[client_socket]->get_spreadsheet_name() << '\n';
 
 				// Store data in server Spreadsheet
 				lock.lock();
@@ -416,7 +410,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 
 				// Send data over to client to display on GUI
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated "
-					"\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
+					"\"" ", " "\"" "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
 				);
 
