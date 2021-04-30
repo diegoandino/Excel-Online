@@ -51,6 +51,7 @@ namespace SS
             Network.ConnectionError += ShowConnectionError;
             Network.Connected += HandleConnected;
             Network.SpreadSheetsArrived += PickASpreadSheet;
+            Network.UpdateArrived += UpdateContentsOfCell;
 
             InitializeComponent();
 
@@ -243,7 +244,9 @@ namespace SS
             // Hooking up Enter button for CellContents
             Button enter = new Button();
             AcceptButton = enter;
-            enter.Click += UpdateContentsOfCell;
+
+            // Hitting enter will send an update request to the server
+            enter.Click += SendUpdateCellRequest; 
 
             // Event handling for when Spreadsheet closes
             this.FormClosing += ClosingWindow;
@@ -252,13 +255,22 @@ namespace SS
             UpdateTextBoxes(DefaultCell);
             MainPanel.Focus();
 
-            ///// Added for 3505 Final /////
-
             // Hook up new Controls (connect button)
             ConnectButton.Click += ConnectClick;
 
             // convienence for connecting to a local server
             ServerTextBox.Text = "localhost";
+        }
+
+
+        /// <summary>
+        /// Upon pressing enter, The Client will send to the server a request to change a specified cell
+        /// Here we pass the contents SpreadsheetController.  Our Spreadsheet controller will then handle parsing the
+        /// cell name of the requested edit.
+        /// </summary>
+        private void SendUpdateCellRequest(object sender, EventArgs e)
+        {
+            controller.SendUpdateRequest(CellContentsBox.Text);
         }
 
         /// <summary>
@@ -361,11 +373,16 @@ namespace SS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UpdateContentsOfCell(object sender, EventArgs e)
+        private void UpdateContentsOfCell(string cellName, string cellContents)
         {
             try
             {
-                IEnumerable<string> CellsToRecalculate = controller.SetCellContents(CellContentsBox.Text);
+                // Send edit request to server
+                //IEnumerable<string> CellsToRecalculate = controller.SetCellContents(cellContents);
+
+                IEnumerable<string> CellsToRecalculate = controller.GetCellsToRecalc(cellName);
+
+                // Compute edit request after server approves
                 MainPanel.GetSelection(out int col, out int row);
 
                 // Check if new value is a Formula Error.

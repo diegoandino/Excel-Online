@@ -103,11 +103,14 @@ namespace SS
 
 
         /// <summary>
-        /// Sets the contents of the cell in the Spreadsheet.
+        /// Sends a request to edit a speficied cell to the server.
+        /// The contents to be changed to are sent to this method from Spreadsheet
+        /// Form.  This method takes care of parsing the (desired) cellName to edit.
+        /// If there is no server available, nothing is sent.
         /// </summary>
         /// <param name="contents">Contents of the cell</param>
         /// <returns></returns>
-        public IEnumerable<string> SetCellContents(string contents)
+        public void SendUpdateRequest(string contents)
         {
             // Send to server
             string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" +
@@ -117,16 +120,19 @@ namespace SS
             if (Network.server != null)
                 Networking.Send(Network.server.TheSocket, json);
 
-            while (!Network.canEdit)
-			{
-                /// Awaiting response from Server . . .
-			}
-
-            IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), Network.contents);
-            Network.canEdit = false; 
-            return res;
         }
 
+        /// <summary>
+        /// Returns a list of cells to recalculate.
+        /// </summary>
+        /// <param name="cellName"></param>
+        /// <returns></returns>
+        public IEnumerable<string> GetCellsToRecalc(string cellName)
+        {
+            IEnumerable<string> res = s.SetContentsOfCell(cellName, Network.contents);
+            Network.canEdit = false;
+            return res;
+        }
 
         /// <summary>
         /// Saves the current spreadsheet.

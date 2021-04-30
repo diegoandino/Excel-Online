@@ -35,7 +35,7 @@ namespace NetworkController
         public static event ConnectionErrorHandler ConnectionError;
 
         // Event handling for updates:
-        public delegate void ServerUpdateHandler();
+        public delegate void ServerUpdateHandler(string cellName, string cellContents);
         public static event ServerUpdateHandler UpdateArrived;
 
 
@@ -189,6 +189,8 @@ namespace NetworkController
 						{
                             cellName = json["cellName"].ToString();
                             contents = json["contents"].ToString();
+
+                            UpdateArrived(cellName, contents);
 
                             canEdit = true;
 						}

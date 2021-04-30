@@ -372,9 +372,9 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellSelected"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
-					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}"+"\n"
+					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}" + "\n"
 				);
-				
+
 				BroadcastToClients(client_socket, json.c_str(), json.size());
 			}
 		}
@@ -413,6 +413,8 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 					"\"" ", " "\"" "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
 				);
+
+				std::cout << "JSON BEING SENT: " << json << std::endl;
 
 				BroadcastToClients(client_socket, json.c_str(), json.size());
 			}
