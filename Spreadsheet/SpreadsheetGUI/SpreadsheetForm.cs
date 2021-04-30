@@ -49,7 +49,6 @@ namespace SS
 
             // Connection based code:
             Network.ConnectionError += ShowConnectionError;
-            Network.UpdateArrived += ProcessUpdate;
             Network.Connected += HandleConnected;
             Network.SpreadSheetsArrived += PickASpreadSheet;
 
@@ -227,16 +226,6 @@ namespace SS
 
                     EnableConnectInputFields();
                 }));
-        }
-
-
-        /// <summary>
-        /// Where we process updates
-        /// </summary>
-        private void ProcessUpdate(Dictionary<string, string> pair)
-        {
-            MessageBox.Show("In process update");
-            
         }
 
 
