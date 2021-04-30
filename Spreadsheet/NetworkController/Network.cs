@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using SS;
+using System.Threading.Tasks;
 
 namespace NetworkController
 {
@@ -47,12 +48,6 @@ namespace NetworkController
 
 
         /// <summary>
-        /// State representing the connection with the server
-        /// </summary>
-        static SocketState theServer = null;
-
-
-        /// <summary>
         /// Our User's name
         /// </summary>
         private static string UserName;
@@ -76,7 +71,14 @@ namespace NetworkController
         public static SocketState server;
 
 
-        private static Spreadsheet serverSpreadsheet = new Spreadsheet((s) => Regex.IsMatch(s, @"^[a-zA-Z]*[0-9]+$"), (s) => s.ToUpper(), "ps6");
+        /// <summary>
+        /// Flag to check if the client can edit or not
+        /// </summary>
+        public static bool canEdit = false;
+
+
+        public static string cellName;
+        public static string contents;
 
         /// <summary>
         /// Begins handshake.
@@ -135,7 +137,7 @@ namespace NetworkController
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
-                UpdateLoop();
+                UpdateLoop(state);
             }
 
             Networking.GetData(state);
@@ -150,6 +152,7 @@ namespace NetworkController
         {
             string totalData = state.GetData();
             string[] parts = Regex.Split(totalData, @"\n+");
+            
             // Pick a spreadsheet:
             if (!SS_Chosen)
             {
@@ -157,8 +160,6 @@ namespace NetworkController
                 SpreadSheetsArrived(parts);
                 SS_Chosen = true;
             }
-
-            state.RemoveData(0, totalData.Length);
         }
 
 
@@ -166,29 +167,38 @@ namespace NetworkController
         /// Callback for OnReceive
         /// </summary>
         /// <param name="state"></param>
-        private static void UpdateLoop()
+        private static void UpdateLoop(SocketState state)
         {
-            lock (server)
+            lock (state)
             {
-                if (server.ErrorOccured)
+                if (state.ErrorOccured)
                 {
                     ConnectionError("Error on update loop");
                     return;
                 }
 
                 if (spreadsheetNameQueue.Count >= 1)
-                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+                    Networking.Send(state.TheSocket, spreadsheetNameQueue.Dequeue());
 
-                string totalData = server.GetData();
                 try
                 {
-                    JObject json = JObject.Parse(totalData);
+                    JObject json = JObject.Parse(state.data.ToString());
                     if (json.ContainsKey("cellName"))
                         if (json.ContainsKey("contents"))
-                            serverSpreadsheet.SetContentsOfCell(json["cellName"].ToString(), json["contents"].ToString());
+						{
+                            cellName = json["cellName"].ToString();
+                            contents = json["contents"].ToString();
+
+                            canEdit = true;
+						}
+
+                    state.RemoveData(0, state.data.ToString().Length);
                 }
 
-                catch (Exception e) { }
+                catch (Exception e)
+				{
+                    state.RemoveData(0, state.data.ToString().Length);
+                }
             }
         }
     }

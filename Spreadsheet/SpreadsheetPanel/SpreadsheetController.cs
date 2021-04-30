@@ -68,7 +68,6 @@ namespace SS
 
             // Send to server
             string json = @"{""requestType"": ""selectCell"", ""cellName"":" + @" "" " + GetCellName(col, row) + @" "" " + "}";
-            //Network.commandQueue.Enqueue(json);
 
             if (Network.server != null)
             {
@@ -115,13 +114,11 @@ namespace SS
                             GetCellName(col, row) + @"""," + @"""contents"": " +
                             @"""" + contents + @"""" + "}";
 
-            //Network.commandQueue.Enqueue(json);
             if (Network.server != null)
                 Networking.Send(Network.server.TheSocket, json);
 
             IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
             return res;
-
         }
 
 
