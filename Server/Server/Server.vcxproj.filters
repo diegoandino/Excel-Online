@@ -36,6 +36,9 @@
     <ClCompile Include="Formula.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="changes_stack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Formula.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="changes_stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

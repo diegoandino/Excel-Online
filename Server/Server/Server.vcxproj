@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="cell.cpp" />
     <ClCompile Include="cell_value.cpp" />
+    <ClCompile Include="changes_stack.cpp" />
     <ClCompile Include="dependency_graph.cpp" />
     <ClCompile Include="Formula.cpp" />
     <ClCompile Include="main.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\..\..\..\..\..\rapidjson-master\include\rapidjson\stringbuffer.h" />
     <ClInclude Include="cell.h" />
     <ClInclude Include="cell_value.h" />
+    <ClInclude Include="changes_stack.h" />
     <ClInclude Include="dependency_graph.h" />
     <ClInclude Include="Formula.h" />
     <ClInclude Include="Server.h" />
