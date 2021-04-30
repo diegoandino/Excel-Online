@@ -117,13 +117,8 @@ void Server::SendToClient(int client_socket, const char* message, int length) {
 /// <param name="length"></param>
 void Server::BroadcastToClients(int sending_client, const char* message, int length) {
 	// Send message to other clients
-	for (int i = 0; i < _master.fd_count; i++) {
-		SOCKET out_socket = _master.fd_array[i];
-		if (out_socket == sending_client) {
-
-			// It should be sending Spreadsheet Cell Value Changes 
-			SendToClient(out_socket, message, length);
-		}
+	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
+		SendToClient(it->first, message, length);
 	}
 }
 

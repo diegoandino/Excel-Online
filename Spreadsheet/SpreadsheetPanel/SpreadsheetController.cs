@@ -117,7 +117,13 @@ namespace SS
             if (Network.server != null)
                 Networking.Send(Network.server.TheSocket, json);
 
-            IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), contents);
+            while (!Network.canEdit)
+			{
+                /// Awaiting response from Server . . .
+			}
+
+            IEnumerable<string> res = s.SetContentsOfCell(GetCellName(col, row), Network.contents);
+            Network.canEdit = false; 
             return res;
         }
 

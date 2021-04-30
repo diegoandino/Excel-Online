@@ -132,12 +132,13 @@ namespace NetworkController
                 return;
             }
 
+            Thread t = new Thread(UpdateLoop); 
             lock (state)
             {
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
-                UpdateLoop(state);
+                t.Start();
             }
 
             Networking.GetData(state);
@@ -167,22 +168,22 @@ namespace NetworkController
         /// Callback for OnReceive
         /// </summary>
         /// <param name="state"></param>
-        private static void UpdateLoop(SocketState state)
+        private static void UpdateLoop()
         {
-            lock (state)
+            lock (server)
             {
-                if (state.ErrorOccured)
+                if (server.ErrorOccured)
                 {
                     ConnectionError("Error on update loop");
                     return;
                 }
 
                 if (spreadsheetNameQueue.Count >= 1)
-                    Networking.Send(state.TheSocket, spreadsheetNameQueue.Dequeue());
+                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
 
                 try
                 {
-                    JObject json = JObject.Parse(state.data.ToString());
+                    JObject json = JObject.Parse(server.data.ToString());
                     if (json.ContainsKey("cellName"))
                         if (json.ContainsKey("contents"))
 						{
@@ -192,12 +193,12 @@ namespace NetworkController
                             canEdit = true;
 						}
 
-                    state.RemoveData(0, state.data.ToString().Length);
+                    server.RemoveData(0, server.data.ToString().Length);
                 }
 
                 catch (Exception e)
 				{
-                    state.RemoveData(0, state.data.ToString().Length);
+                    server.RemoveData(0, server.data.ToString().Length);
                 }
             }
         }
