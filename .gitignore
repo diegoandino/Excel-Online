@@ -42,6 +42,7 @@ Server/Server/Debug/**
 Server/Debug/**
 
 Server/SSTester/x64**
+Server/SSTester/Debug**
 
 Server/x64/**
 Server/Server/x64/**
