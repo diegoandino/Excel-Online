@@ -3,9 +3,8 @@ import socket
 import threading
 import sys
 
-
 max_test_time = 10
-number_of_test = 7;
+number_of_test = 7
 
 input = sys.argv
 
@@ -14,9 +13,7 @@ if(len(input) >= 2):
     address = input[2]
 else:
     print(number_of_test)
-    quit()
-
-
+    sys.exit()
 
 
 #strings for tests
@@ -25,7 +22,7 @@ messageterminator = "/n"
 cell_name = "a1"
 cell_contents = "yo"
 ID = "42"
-name = "heyo"
+user_name = "heyo"
 error_message = "error"
 filename1 = "file1"
 filename2 = "file2"
@@ -34,27 +31,25 @@ filename3 = "file3"
 #got these from the doc but some seem to be missing ','
 
 #client -> server 
-client_disconnected = "{messageType: \"disconnected\", user: \"" + ID + "\"}"
+client_edit_cell = "{{requestType: \"editCell\", cellName: \"{0}\", contents: \"{1}\" }}".format(cell_name, cell_contents)
+client_revert = "{{\"requestType\": \"revertCell\", \"cellName\": \"{0}\"}}".format(cell_name)
+client_select_cell = "{{requestType: \"selectCell\", cellName: \"{0}\" }}".format(cell_name)
 
-client_select_cell = "{requestType: \"selectCell\", cellName: " + cell_name + " }"
-client_request_edit = "{requestType: \"editCell\", cellName: " + cell_name + ", contents: " + cell_contents + " }"
 client_undo = "{\"requestType\": \"undo\"}"
-client_revert = "{\"requestType\": \"revertCell\", \"cellName\": \"A1\"}"
 
-client_handshake_username = "\"" + name + "\"" + terminator
-client_handshake_filename = "\"" + filename1 + "\"" + terminator
+client_handshake_filename = ("\"{0}\"" + terminator).format(filename1)
+client_handshake_username = ("\"{0}\"" + terminator).format(user_name)
 
 #server -> client
-server_handshake_files = "\"" + filename1 + "\"" + terminator + "\"" + \
-    filename2 + "\"" + terminator + "\"" + \
-    filename1 + "\"" + terminator + terminator
+client_disconnected = "{{messageType: \"disconnected\", user: \"{0}\"}}".format(ID)
 
-error_invalid_request = "{ messageType: \"requestError\", cellName: " + cell_name + ",message: " + error_message + " }"
-error_shutdown_server = "{ messageType: \"serverError\", message: " + error_message + " }"
+server_handshake_files = "{1}{0}{2}{0}{3}{0}{0}".format(terminator, filename1, filename2, filename3)
 
-server_cell_selected = "{messageType: \"cellSelected\", + cellName: " + cell_name + " selector: " + ID + ", selectorName: " + name + " }"
-server_cell_changed = "{ messageType: \"cellUpdated\", cellName: " + cell_name + ", contents: " + cell_contents + "}"
+error_invalid_request = "{{ messageType: \"requestError\", cellName: {0},message: {1} }}".format(cell_name, error_message)
+error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".format(error_message)
 
+server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
+server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
 
 class TestClient:
     def __init__(self, name):
@@ -70,7 +65,8 @@ class TestClient:
             self.soc.settimeout(None)
         except:
             print("Fail" + messageterminator)
-            exit()
+            sys.exit()
+
     def close_connection(self):
         sef.close
 
@@ -92,7 +88,7 @@ class TestClient:
                     stringlist.append(received)
             except:
                 print("Fail" + messageterminator)
-                exit()
+                sys.exit()
             #        received= ""
             #       while "\n" not in received:
 
@@ -143,14 +139,14 @@ def run_input(num, address):
         test_2(address)
     elif(num == '3'):
         test_3(address)
-        elif(num == '4'):
-            test_4(address)
-            elif(num=='5'):
-                test_5(address)
-                elif(num =='6'):
-                    test_6(address)
-                    elif(num=='7'):
-                        test_7(address)
+    elif(num == '4'):
+        test_4(address)
+    elif(num=='5'):
+        test_5(address)
+    elif(num =='6'):
+        test_6(address)
+    elif(num=='7'):
+        test_7(address)
                 
         
 
@@ -162,11 +158,11 @@ def set_connection(ip, port):
 
     except socket.timeout:
         print("Failed" + messageterminator)
-        exit()
+        sys.exit()
 
     except socket.error:
         print("Failed"  + messageterminator)
-        exit()
+        sys.exit()
 
 def receive_test():
     try:
@@ -176,11 +172,11 @@ def receive_test():
 
     except socket.timeout:
         print("Fail" + messageterminator)
-        exit()
+        sys.exit()
 
     except socket.error:
         print("Fail" + messageterminator)
-        exit()
+        sys.exit()
 
     return received
 
@@ -199,7 +195,7 @@ def test_1(address):
 def test_2(address):
     print(max_test_time)
     print("test edit for one client")
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.receive()
     client.send_message(client.clientname)
@@ -217,7 +213,7 @@ def test_2(address):
 def test_3(address):
     print(max_test_time)
     print("testing a lot of edits for one client")
-    client = TestClient("client" +terminator);
+    client = TestClient("client" +terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
@@ -250,7 +246,7 @@ def test_3(address):
 def test_4(address):
     print(max_test_time)
     print("testing Undo")
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
@@ -268,7 +264,7 @@ def test_4(address):
 def test_5(address):
     print(max_test_time)
     print("testing Redo")
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
@@ -290,12 +286,12 @@ def test_5(address):
 def test_6(address):
     print(max_test_time)
     print("testing Redo and Undo for multiple clients")
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
-    client2 = TestClient("client2" + terminator);
+    client2 = TestClient("client2" + terminator)
     client2.connect_to_server(address)
     client2.send_message(client.clientname)
     client2.receive()
@@ -317,10 +313,11 @@ def test_6(address):
     client.send_message(client_undo)
     client.receive()    
     print("Pass" + messageterminator)
+
 def test_7(address):
     print(max_test_time)
     print("testing closing spreadsheet")
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
@@ -328,7 +325,7 @@ def test_7(address):
 def test_stress(address):
     print(max_test_time)
     print("test editing all cells")
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
@@ -347,25 +344,25 @@ def test_stress(address):
 def test_stress2(address):
     print(max_test_time)
     print("test multi client editing all cells")
-    client = TestClient("client" + terminator);
-    client2 = TestClient("client" + terminator);
-    client3 = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
+    client2 = TestClient("client" + terminator)
+    client3 = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
     string =client.receive()
-    client = TestClient("client" + terminator);
+    client = TestClient("client" + terminator)
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
-    client2 = TestClient("client2" + terminator);
+    client2 = TestClient("client2" + terminator)
     client2.connect_to_server(address)
     client2.send_message(client.clientname)
     client2.receive()
     client2.send_message(SendFileName("file"))
     client2.receive()
-    client3 = TestClient("client3" + terminator);
+    client3 = TestClient("client3" + terminator)
     client3.connect_to_server(address)
     client3.send_message(client.clientname)
     client3.receive()
@@ -398,4 +395,4 @@ sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 run_input(test_num, address)
 
 close_connection()
-exit()
+sys.exit()
