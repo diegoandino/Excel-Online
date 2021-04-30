@@ -38,7 +38,7 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
-
+        private List<string> listOfSpreadsheet;
         /// <summary>
         /// Public SpreadsheetForm constructor.
         /// </summary>
@@ -71,6 +71,7 @@ namespace SS
         /// <param name="Spreadsheets"></param>
         private void PickASpreadSheet(string[] Spreadsheets)
         {
+            listOfSpreadsheet = new List<string>(Spreadsheets);
             this.Invoke(new MethodInvoker(
                 () =>
                 {
@@ -90,8 +91,10 @@ namespace SS
                     // Add availible spreadsheets into a combobox
                     ComboBox selections = new ComboBox();
                     selections.SelectedText = "--Select--";
-                    foreach (string s in Spreadsheets) // rename "test" to "spreadsheets" 
-                        selections.Items.Add(s);
+                    for (int i = 0; i < Spreadsheets.Length; i++) // rename "test" to "spreadsheets" s
+                        if(Spreadsheets[i] != "")
+                            selections.Items.Add(Spreadsheets[i]);
+                    
 
                     // Reposition & hook up buttons:
                     new_SS.Click += RequestNew_SS;
@@ -161,9 +164,10 @@ namespace SS
         /// <param name="e"></param>
         private void Request_SS(string selection, object sender, EventArgs e)
         {
-            if (selection.Equals(""))
+            
+            if (selection.Equals("") || selection.Equals("\n") || listOfSpreadsheet.Contains(selection))
             {
-                MessageBox.Show("Selection must be non-empty");
+                MessageBox.Show("Selection must be non-empty, no newline, and unique");
 
                 EnableConnectInputFields();
                 ConnectButton.Text = "Connect";
@@ -229,9 +233,10 @@ namespace SS
         /// <summary>
         /// Where we process updates
         /// </summary>
-        private void ProcessUpdate()
+        private void ProcessUpdate(Dictionary<string, string> pair)
         {
             MessageBox.Show("In process update");
+            
         }
 
 

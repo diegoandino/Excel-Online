@@ -376,11 +376,11 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 				std::cout << "Client: " << client_socket << " Has Selected Cell: " << cellName
 					<< " On Spreadsheet: " << available_clients[client_socket]->get_spreadsheet_name() << '\n';
 
-				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "selected"
+				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellSelected"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
-					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}"
+					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}"+"\n"
 				);
-
+				
 				BroadcastToClients(client_socket, json.c_str(), json.size());
 			}
 		}
@@ -417,7 +417,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 				// Send data over to client to display on GUI
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated "
 					"\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
-					"\"" "contents" "\"" ": " "\"" + content + "\"" "}"
+					"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
 				);
 
 				BroadcastToClients(client_socket, json.c_str(), json.size());
@@ -443,11 +443,14 @@ void Server::CreateNewSpreadsheet(int client_socket, std::string name) {
 /// </summary>
 std::string Server::get_available_spreadsheets() {
 	std::string res;
+	if (available_spreadsheets.size() == 0) {
+		return "\n\n";
+	}
 	for (int i = 0; i < available_spreadsheets.size(); i++) {
 		std::string name = available_spreadsheets[i]->get_spreadsheet_name();
 		res += name + "\n";
 	}
-
+	res += "\n";
 	return res;
 }
 

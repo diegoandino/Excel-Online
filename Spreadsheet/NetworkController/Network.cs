@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.Threading;
 using Newtonsoft.Json.Linq;
-
+using SS;
 namespace NetworkController
 {
     // Quick User object to send with JSON
@@ -33,7 +33,7 @@ namespace NetworkController
         public static event ConnectionErrorHandler ConnectionError;
 
         // Event handling for updates:
-        public delegate void ServerUpdateHandler();
+        public delegate void ServerUpdateHandler(Dictionary<string, string> dictionary);
         public static event ServerUpdateHandler UpdateArrived;
 
 
@@ -50,12 +50,11 @@ namespace NetworkController
         /// </summary>
         static SocketState theServer = null;
 
-
+        private static int id;
         /// <summary>
         /// Our User's name
         /// </summary>
         private static string UserName;
-
 
         /// <summary>
         /// Queue to store recent issued commands by client
@@ -72,8 +71,8 @@ namespace NetworkController
         /// <summary>
         /// Access to the Server SocketState
         /// </summary>
-        public static SocketState server; 
-
+        public static SocketState server;
+        private static Spreadsheet serverSpreadsheet = new Spreadsheet((s) => Regex.IsMatch(s, @"^[a-zA-Z]*[0-9]+$"), (s) => s.ToUpper(), "ps6");
 
         /// <summary>
         /// Begins handshake.
@@ -85,6 +84,7 @@ namespace NetworkController
             UserName = userName;
             SS_Chosen = false;
             Networking.ConnectToServer(OnConnect, address, 1100);
+
         }
 
 
@@ -136,96 +136,163 @@ namespace NetworkController
                 return;
             }
 
-            lock (state)
-			{
-                ProcessMessages(state);
+       
+            ProcessMessages(state);
 
-                /* Start Editing Loop */
-                UpdateLoop();
+
+
+            lock (server)
+            {
+                if (spreadsheetNameQueue.Count >= 1)
+                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
             }
-
+            state.OnNetworkAction = UpdateLoop;
             Networking.GetData(state);
         }
 
 
         /// <summary>
-        /// Private helper method to parse and process messages sent from server.
+        /// Private helper method process User's spreadsheet selection
         /// </summary>
         /// <param name="state"></param>
         private static void ProcessMessages(SocketState state)
         {
-            string totalData = state.GetData();
-
-            char[] charsToTrim = { '\0', '�' };
-            string trimmedData = totalData.Replace("�", "");
-
-            try
-			{
-                JObject deserialized = JObject.Parse(totalData);
-			}
-            catch (Exception e)
-			{
-
-			}
-
-            string[] parts = Regex.Split(totalData, @"(?<=[\n])");
-
-            // Loop until we have processed all messages.
-            // We may have received more than one.
-            foreach (string p in parts)
+            lock (server)
             {
-                // Ignore empty strings added by the regex splitter
-                if (p.Length == 0)
-                    continue;
-
-
-                // The regex splitter will include the last string even if it doesn't end with a '\n',
-                // So we need to ignore it if this happens. 
-                /*if (p[p.Length - 1] != '\n')
-                    break;*/
-
-
-                // Pick a spreadsheet:
-                if (!SS_Chosen)
+                if (state.ErrorOccured)
                 {
+                    ConnectionError("Error while receiving data from server");
+                    return;
+                }
+                string totalData = state.GetData();
+
+                char[] charsToTrim = { '\0', '�' };
+                string trimmedData = totalData.Replace("�", "");
+
+
+
+//                string[] parts = Regex.Split(totalData, @"(?<=[\n])");
+                string[] parts = Regex.Split(totalData, @"\n+");
+                // Loop until we have processed all messages.
+                // We may have received more than one.
+//                if (!SS_Chosen)
+  //              {
                     //PickSS(totalData);
-                    SpreadSheetsArrived(parts);
-                    SS_Chosen = true;
-                }
+                SpreadSheetsArrived(parts);
+    //                SS_Chosen = true;
+      //          }
+                
+               //foreach (string p in parts)
+                //{
+                    // Ignore empty strings added by the regex splitter
+                  //  if (p.Length == 0)
+                    //    continue;
 
 
-                // Skipping incomplete JSONS
-                if (p[0] != '{' || !p.EndsWith("\n") || p.StartsWith("\0"))
-                {
-                    continue;
-                }
+                    // The regex splitter will include the last string even if it doesn't end with a '\n',
+                    // So we need to ignore it if this happens. 
+                    /*if (p[p.Length - 1] != '\n')
+                        break;*/
 
-                // Load and parse the incoming JSON (Cell)
-                //LoadObject(p);
 
-                // Then remove it from the SocketState's growable buffer
-                state.RemoveData(0, totalData.Length);
+                    // Pick a spreadsheet:
+
+
+
+                    // Skipping incomplete JSONS
+                    //if (p[0] != '{' || !p.EndsWith("\n") || p.StartsWith("\0"))
+                    //{
+                    //    continue;
+                   // }
+
+                    // Load and parse the incoming JSON (Cell)
+                    //LoadObject(p);
+                    
+                    // Then remove it from the SocketState's growable buffer
+                    state.RemoveData(0, totalData.Length);
+    //            }
             }
         }
-
+    
 
         /// <summary>
         /// Callback for OnReceive
         /// </summary>
         /// <param name="state"></param>
-        private static void UpdateLoop()
+        private static void UpdateLoop(SocketState state)
         {
+            if (state.ErrorOccured)
+            {
+                ConnectionError("Error while receiving data from server");
+                return;
+            }
             lock (server)
-			{
+            {
                 if (server.ErrorOccured)
                 {
                     ConnectionError("Error on update loop");
                     return;
                 }
+                string totalData = state.GetData();
+                char[] charsToTrim = { '\0', '�' };
+                string trimmedData = totalData.Replace("�", "");
+                string trimmed = totalData.Replace("\"", "");
+                string trimmed2 = trimmed.Replace(" ", "");
+                string[] parts = Regex.Split(trimmed2, @"(?<=[\n])");
 
-                if (spreadsheetNameQueue.Count >= 1)
-                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+                foreach (string s in parts)
+                {
+                    if (s.Length == 0)
+                        continue;
+                    if (s[s.Length - 1] != '\n')
+                        break;
+
+                    JObject deserialized = JObject.Parse(s);
+                    JToken update = deserialized["cellUpdate"];
+                    JToken select = deserialized["cellSelected"];
+                    JToken disconnect = deserialized["disconnect"];
+                    JToken invalid = deserialized["requestError"];
+                    JToken shutdown = deserialized["serverError"];
+
+                    if (update != null)
+                    {
+                        UpdateCell updateCell = JsonConvert.DeserializeObject<UpdateCell>(s);
+                        serverSpreadsheet.SetContentsOfCell(updateCell.cellName, updateCell.contents);
+                    }
+                    if (select != null)
+                    {
+                        SelectCell selectCell = JsonConvert.DeserializeObject<SelectCell>(s);
+
+                    }
+                    if (disconnect != null)
+                    {
+                        Disconnect disconnectClient = JsonConvert.DeserializeObject<Disconnect>(s);
+                    }
+                    if (invalid != null)
+                    {
+                        InvalidRequest invalidCell = JsonConvert.DeserializeObject<InvalidRequest>(s);
+                       
+                    }
+                    if (shutdown != null)
+                    {
+                        Shutdown shutdownServer = JsonConvert.DeserializeObject<Shutdown>(s);
+                    }
+                    if (update == null && select == null && disconnect == null && invalid == null && shutdown == null)
+                    {
+                        id = int.Parse(s.Substring(0, s.Length - 3));
+                    }
+                        
+
+                }
+                //if(serverSpreadsheet.Changed)
+                //UpdateArrived()
+                state.RemoveData(0, totalData.Length);
+                state.OnNetworkAction = UpdateLoop;
+                server.GetData();
+
             }
+
+
         }
     }
 }

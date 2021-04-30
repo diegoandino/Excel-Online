@@ -16,3 +16,12 @@ C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debu
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
 C:\Users\Tarik Vu\source\repos\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.deps.json
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.dll
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\bin\Debug\netstandard2.0\Formula.pdb
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csprojAssemblyReference.cache
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfoInputs.cache
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.AssemblyInfo.cs
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.csproj.CoreCompileInputs.cache
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.dll
+C:\Users\mydat\Documents\New folder\cs3505-final-project\Spreadsheet\Formula\obj\Debug\netstandard2.0\Formula.pdb

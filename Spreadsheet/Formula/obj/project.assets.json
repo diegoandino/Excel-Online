@@ -185,11 +185,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mydat\\Documents\\New folder (2)\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
+      "projectUniqueName": "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
       "projectName": "Formula",
-      "projectPath": "C:\\Users\\mydat\\Documents\\New folder (2)\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
+      "projectPath": "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
       "packagesPath": "C:\\Users\\mydat\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mydat\\Documents\\New folder (2)\\cs3505-final-project\\Spreadsheet\\Formula\\obj\\",
+      "outputPath": "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mydat\\AppData\\Roaming\\NuGet\\NuGet.Config",
