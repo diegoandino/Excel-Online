@@ -117,8 +117,15 @@ void Server::SendToClient(int client_socket, const char* message, int length) {
 /// <param name="length"></param>
 void Server::BroadcastToClients(int sending_client, const char* message, int length) {
 	// Send message to other clients
-	for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
-		SendToClient(it->first, message, length);
+	/*for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
+		if(available_clients[sending_client] = available_clients[it->first])
+			SendToClient(it->first, message, length);
+	}*/
+
+	Spreadsheet* sp = available_clients[sending_client];
+	for (int i : sp_to_client[sp])
+	{
+		SendToClient(i, message, length);
 	}
 }
 
@@ -256,6 +263,7 @@ void Server::ProcessClientConnectedRequests(int client_socket, const char* messa
 
 					lock.lock();
 					available_clients[client_socket] = spreadsheet;
+					sp_to_client[spreadsheet].push_back(client_socket);
 					lock.unlock();
 
 					isClientSetup[client_socket] = true;
@@ -271,6 +279,7 @@ void Server::ProcessClientConnectedRequests(int client_socket, const char* messa
 
 			lock.lock();
 			available_clients[client_socket] = s;
+			sp_to_client[s].push_back(client_socket);
 			lock.unlock();
 		}
 	}
@@ -305,6 +314,7 @@ void Server::ProcessClientUsername(int client_socket, const char* message, int l
 		Spreadsheet* spreadsheet = new Spreadsheet();
 		lock.lock();
 		available_clients.emplace(client_socket, spreadsheet);
+		sp_to_client[spreadsheet].push_back(client_socket);
 		lock.unlock();
 	}
 
@@ -337,6 +347,7 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 
 			lock.lock();
 			available_clients[client_socket] = spreadsheet;
+			sp_to_client[spreadsheet].push_back(client_socket);
 			lock.unlock();
 
 			return;
@@ -351,6 +362,7 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 
 	lock.lock();
 	available_clients[client_socket] = s;
+	sp_to_client[s].push_back(client_socket);
 	lock.unlock();
 
 	initial_handshake_approved = true;

@@ -15,6 +15,7 @@
 #include <nlohmann/json.hpp>
 
 #include "Spreadsheet.h"
+#include "changes_stack.h"
 
 // For convenience
 using JObject = nlohmann::json;
@@ -43,13 +44,19 @@ private:
 	fd_set		_master;									// Master file descriptor set
 	bool		request_new_ss;								// When we are trying to make a new spreadsheet
 
-	std::map<int, Spreadsheet*> available_clients;			// Returns the available spreadsheets in the server
+	std::map<int, Spreadsheet*> available_clients;			// Maps clients to spreadsheets
 	std::mutex lock;										// Mutex for available_spreadsheets
 	std::map<int, int> isClientSetup;						// maps each Client and reports whether or not their initial setup is done.
 
 	std::string get_available_spreadsheets();
 	
 	std::vector<Spreadsheet*> available_spreadsheets;
+
+	std::map<Spreadsheet*, std::vector<int>> sp_to_client;
+
+	std::map<Spreadsheet*, changes_stack> changes_list;	//changes stack for a server
+
+	std::map<Spreadsheet*, std::map<std::string, changes_stack>> cell_changes;  //changes for specific cells
 
 	Spreadsheet* find_selected_spreadsheet(std::string name);
 
