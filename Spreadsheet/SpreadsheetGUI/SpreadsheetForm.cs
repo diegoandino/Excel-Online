@@ -383,30 +383,35 @@ namespace SS
                 IEnumerable<string> CellsToRecalculate = controller.GetCellsToRecalc(cellName);
 
                 // Compute edit request after server approves
-                MainPanel.GetSelection(out int col, out int row);
+                //MainPanel.GetSelection(out int col, out int row);
+                GetCellCoords(cellName, out int col, out int row);
 
                 // Check if new value is a Formula Error.
-                if (controller.GetCellValue(CellNameBox.Text) is FormulaError)
+                if (controller.GetCellValue(cellName) is FormulaError)
                 {
-                    if (!cells.ContainsKey(CellNameBox.Text))
-                        cells.Add(CellNameBox.Text, new int[] { col, row });
+                    if (!cells.ContainsKey(cellName))
+                        cells.Add(cellName, new int[] { col, row });
 
                     // Set as Formula Error.
-                    MainPanel.SetValue(col, row, CellContentsBox.Text);
+                    MainPanel.SetValue(col, row, cellContents);
 
                     // Recalculate and set Value box to current value.
                     RecalculateCells(CellsToRecalculate);
-                    CellValueBox.Text = controller.GetCellValue(CellNameBox.Text).ToString();
+                    //MAY CAUSE BUG - ASK ME (VINCENT)
+                    CellValueBox.Text = controller.GetCellValue(cellName).ToString();
                 }
 
                 // Update cells normally.
                 else
                 {
-                    if (!cells.ContainsKey(CellNameBox.Text))
-                        cells.Add(CellNameBox.Text, new int[] { col, row });
+                    if (!cells.ContainsKey(cellName))
+                        cells.Add(cellName, new int[] { col, row });
+
+                    MainPanel.SetValue(col, row, cellContents);
 
                     RecalculateCells(CellsToRecalculate);
-                    CellValueBox.Text = controller.GetCellValue(CellNameBox.Text).ToString();
+                    //HERE TOO
+                    CellValueBox.Text = controller.GetCellValue(cellName).ToString();
                 }
             }
 
@@ -694,6 +699,249 @@ namespace SS
         private void RevertButton_Click(object sender, EventArgs e)
         {
             controller.SendRevert();
+        }
+
+        /// <summary>
+        /// Converts a col row value into a valid variable
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private string GetCellName(int col, int row)
+        {
+            string cellName = "";
+
+            switch (col)
+            {
+                #region Alphabet Spaghetti Code - DO NOT OPEN
+                case 0:
+                    cellName = "A";
+                    break;
+
+                case 1:
+                    cellName = "B";
+                    break;
+
+                case 2:
+                    cellName = "C";
+                    break;
+
+                case 3:
+                    cellName = "D";
+                    break;
+
+                case 4:
+                    cellName = "E";
+                    break;
+
+                case 5:
+                    cellName = "F";
+                    break;
+
+                case 6:
+                    cellName = "G";
+                    break;
+
+                case 7:
+                    cellName = "H";
+                    break;
+
+                case 8:
+                    cellName = "I";
+                    break;
+
+                case 9:
+                    cellName = "J";
+                    break;
+
+                case 10:
+                    cellName = "K";
+                    break;
+
+                case 11:
+                    cellName = "L";
+                    break;
+
+                case 12:
+                    cellName = "M";
+                    break;
+
+                case 13:
+                    cellName = "N";
+                    break;
+
+                case 14:
+                    cellName = "O";
+                    break;
+
+                case 15:
+                    cellName = "P";
+                    break;
+
+                case 16:
+                    cellName = "Q";
+                    break;
+
+                case 17:
+                    cellName = "R";
+                    break;
+
+                case 18:
+                    cellName = "S";
+                    break;
+
+                case 19:
+                    cellName = "T";
+                    break;
+
+                case 20:
+                    cellName = "U";
+                    break;
+
+                case 21:
+                    cellName = "V";
+                    break;
+
+                case 22:
+                    cellName = "W";
+                    break;
+
+                case 23:
+                    cellName = "X";
+                    break;
+
+                case 24:
+                    cellName = "Y";
+                    break;
+
+                case 25:
+                    cellName = "Z";
+                    break;
+                    #endregion
+            }
+
+            return cellName + (row + 1);
+        }
+
+        /// <summary>
+        /// Sets the coordinates, column row values, of a cell given its name
+        /// </summary>
+        /// <param name="name"></param>
+        private void GetCellCoords(string name, out int column, out int row)
+        {
+            int col = 0;
+
+            switch (name[0])
+            {
+                #region Reverse Alphabet Spaghetti Code - DO NOT OPEN
+                case 'A':
+                    col = 0;
+                    break;
+
+                case 'B':
+                    col = 1;
+                    break;
+
+                case 'C':
+                    col = 2;
+                    break;
+
+                case 'D':
+                    col = 3;
+                    break;
+
+                case 'E':
+                    col = 4;
+                    break;
+
+                case 'F':
+                    col = 5;
+                    break;
+
+                case 'G':
+                    col = 6;
+                    break;
+
+                case 'H':
+                    col = 7;
+                    break;
+
+                case 'I':
+                    col = 8;
+                    break;
+
+                case 'J':
+                    col = 9;
+                    break;
+
+                case 'K':
+                    col = 10;
+                    break;
+
+                case 'L':
+                    col = 11;
+                    break;
+
+                case 'M':
+                    col = 12;
+                    break;
+
+                case 'N':
+                    col = 13;
+                    break;
+
+                case 'O':
+                    col = 14;
+                    break;
+
+                case 'P':
+                    col = 15;
+                    break;
+
+                case 'Q':
+                    col = 16;
+                    break;
+
+                case 'R':
+                    col = 17;
+                    break;
+
+                case 'S':
+                    col = 18;
+                    break;
+
+                case 'T':
+                    col = 19;
+                    break;
+
+                case 'U':
+                    col = 20;
+                    break;
+
+                case 'V':
+                    col = 21;
+                    break;
+
+                case 'W':
+                    col = 22;
+                    break;
+
+                case 'X':
+                    col = 23;
+                    break;
+
+                case 'Y':
+                    col = 24;
+                    break;
+
+                case 'Z':
+                    col = 25;
+                    break;
+                    #endregion
+            }
+
+            column = col;
+            row = int.Parse(name.Substring(1)) - 1;
         }
     }
 }
