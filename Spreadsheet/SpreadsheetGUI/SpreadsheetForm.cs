@@ -230,15 +230,6 @@ namespace SS
 
 
         /// <summary>
-        /// Where we process updates
-        /// </summary>
-        private void ProcessUpdate(Dictionary<string, string> pair)
-        {
-            MessageBox.Show("In process update");
-        }
-
-
-        /// <summary>
         /// This Method is called after InitializeComponent is called.
         /// </summary>
         /// <param name="sender"></param>
