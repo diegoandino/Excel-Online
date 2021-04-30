@@ -74,6 +74,7 @@ namespace NetworkController
         public static SocketState server;
         private static Spreadsheet serverSpreadsheet = new Spreadsheet((s) => Regex.IsMatch(s, @"^[a-zA-Z]*[0-9]+$"), (s) => s.ToUpper(), "ps6");
 
+
         /// <summary>
         /// Begins handshake.
         /// </summary>
@@ -84,7 +85,6 @@ namespace NetworkController
             UserName = userName;
             SS_Chosen = false;
             Networking.ConnectToServer(OnConnect, address, 1100);
-
         }
 
 
@@ -102,17 +102,11 @@ namespace NetworkController
             }
 
             // Grab our current state
-            theServer = state;
+            //theServer = state;
 
             lock (state)
             {
                 Connected();
-
-                // Send the player name to the server 
-                /* User user = new User() { ID = state.ID, name = UserName };
-
-                 string userJson = JsonConvert.SerializeObject(user);
-                 Networking.Send(state.TheSocket, userJson);*/
 
                 Networking.Send(state.TheSocket, UserName);
                 server = state;
@@ -136,17 +130,12 @@ namespace NetworkController
                 return;
             }
 
-       
-            ProcessMessages(state);
-
-
-
-            lock (server)
+            lock (state)
             {
-                if (spreadsheetNameQueue.Count >= 1)
-                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+                ProcessMessages(state);
+                UpdateLoop(state);
             }
-            state.OnNetworkAction = UpdateLoop;
+
             Networking.GetData(state);
         }
 
@@ -165,52 +154,10 @@ namespace NetworkController
                     return;
                 }
                 string totalData = state.GetData();
-
-                char[] charsToTrim = { '\0', '�' };
-                string trimmedData = totalData.Replace("�", "");
-
-
-
-//                string[] parts = Regex.Split(totalData, @"(?<=[\n])");
                 string[] parts = Regex.Split(totalData, @"\n+");
-                // Loop until we have processed all messages.
-                // We may have received more than one.
-//                if (!SS_Chosen)
-  //              {
-                    //PickSS(totalData);
+
                 SpreadSheetsArrived(parts);
-    //                SS_Chosen = true;
-      //          }
-                
-               //foreach (string p in parts)
-                //{
-                    // Ignore empty strings added by the regex splitter
-                  //  if (p.Length == 0)
-                    //    continue;
-
-
-                    // The regex splitter will include the last string even if it doesn't end with a '\n',
-                    // So we need to ignore it if this happens. 
-                    /*if (p[p.Length - 1] != '\n')
-                        break;*/
-
-
-                    // Pick a spreadsheet:
-
-
-
-                    // Skipping incomplete JSONS
-                    //if (p[0] != '{' || !p.EndsWith("\n") || p.StartsWith("\0"))
-                    //{
-                    //    continue;
-                   // }
-
-                    // Load and parse the incoming JSON (Cell)
-                    //LoadObject(p);
-                    
-                    // Then remove it from the SocketState's growable buffer
-                    state.RemoveData(0, totalData.Length);
-    //            }
+                state.RemoveData(0, totalData.Length);
             }
         }
     
@@ -226,6 +173,7 @@ namespace NetworkController
                 ConnectionError("Error while receiving data from server");
                 return;
             }
+
             lock (server)
             {
                 if (server.ErrorOccured)
@@ -233,66 +181,25 @@ namespace NetworkController
                     ConnectionError("Error on update loop");
                     return;
                 }
+
+                if (spreadsheetNameQueue.Count >= 1)
+                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+
                 string totalData = state.GetData();
-                char[] charsToTrim = { '\0', '�' };
-                string trimmedData = totalData.Replace("�", "");
-                string trimmed = totalData.Replace("\"", "");
-                string trimmed2 = trimmed.Replace(" ", "");
-                string[] parts = Regex.Split(trimmed2, @"(?<=[\n])");
-
-                foreach (string s in parts)
+                try
                 {
-                    if (s.Length == 0)
-                        continue;
-                    if (s[s.Length - 1] != '\n')
-                        break;
-
-                    JObject deserialized = JObject.Parse(s);
-                    JToken update = deserialized["cellUpdate"];
-                    JToken select = deserialized["cellSelected"];
-                    JToken disconnect = deserialized["disconnect"];
-                    JToken invalid = deserialized["requestError"];
-                    JToken shutdown = deserialized["serverError"];
-
-                    if (update != null)
-                    {
-                        UpdateCell updateCell = JsonConvert.DeserializeObject<UpdateCell>(s);
-                        serverSpreadsheet.SetContentsOfCell(updateCell.cellName, updateCell.contents);
-                    }
-                    if (select != null)
-                    {
-                        SelectCell selectCell = JsonConvert.DeserializeObject<SelectCell>(s);
-
-                    }
-                    if (disconnect != null)
-                    {
-                        Disconnect disconnectClient = JsonConvert.DeserializeObject<Disconnect>(s);
-                    }
-                    if (invalid != null)
-                    {
-                        InvalidRequest invalidCell = JsonConvert.DeserializeObject<InvalidRequest>(s);
-                       
-                    }
-                    if (shutdown != null)
-                    {
-                        Shutdown shutdownServer = JsonConvert.DeserializeObject<Shutdown>(s);
-                    }
-                    if (update == null && select == null && disconnect == null && invalid == null && shutdown == null)
-                    {
-                        id = int.Parse(s.Substring(0, s.Length - 3));
-                    }
-                        
-
+                    JObject json = JObject.Parse(totalData);
+                    if (json.ContainsKey("cellName"))
+                        if (json.ContainsKey("contents"))
+                            serverSpreadsheet.SetContentsOfCell(json["cellName"].ToString(), json["contents"].ToString());
                 }
-                //if(serverSpreadsheet.Changed)
-                //UpdateArrived()
+
+                catch (Exception e) {}
+
                 state.RemoveData(0, totalData.Length);
                 state.OnNetworkAction = UpdateLoop;
                 server.GetData();
-
             }
-
-
         }
     }
 }

@@ -49,7 +49,7 @@ namespace SS
 
             // Connection based code:
             Network.ConnectionError += ShowConnectionError;
-            Network.UpdateArrived += ProcessUpdate;
+            //Network.UpdateArrived += ProcessUpdate;
             Network.Connected += HandleConnected;
             Network.SpreadSheetsArrived += PickASpreadSheet;
 
@@ -164,8 +164,7 @@ namespace SS
         /// <param name="e"></param>
         private void Request_SS(string selection, object sender, EventArgs e)
         {
-            
-            if (selection.Equals("") || selection.Equals("\n") || listOfSpreadsheet.Contains(selection))
+            if (selection.Equals("") || selection.Equals("\n"))
             {
                 MessageBox.Show("Selection must be non-empty, no newline, and unique");
 

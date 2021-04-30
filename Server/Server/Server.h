@@ -43,14 +43,12 @@ private:
 	fd_set		_master;									// Master file descriptor set
 	bool		request_new_ss;								// When we are trying to make a new spreadsheet
 
-	std::map<int, Spreadsheet*> available_clients;			// Returns the available spreadsheets in the server
+	std::map<int, Spreadsheet*> available_clients;			// HashMap for available clients in the server
+	std::vector<Spreadsheet*> available_spreadsheets;		// List of available Spreadsheets in the server
 	std::mutex lock;										// Mutex for available_spreadsheets
 	std::map<int, int> isClientSetup;						// maps each Client and reports whether or not their initial setup is done.
 
 	std::string get_available_spreadsheets();
-	
-	std::vector<Spreadsheet*> available_spreadsheets;
-
 	Spreadsheet* find_selected_spreadsheet(std::string name);
 
 	void EraseFromServer						(int client_socket);

@@ -378,7 +378,7 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellSelected"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
-					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}"+"\n"
+					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}" + "\n"
 				);
 				
 				BroadcastToClients(client_socket, json.c_str(), json.size());
@@ -407,7 +407,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 			if (it.value() == "editCell") {
 				std::cout << "Client: " << client_socket << " Has Requested Edit: " << content
 					<< " On Cell: " << cellName << " On Spreadsheet: " <<
-					available_clients[client_socket] << '\n';
+					available_clients[client_socket]->get_spreadsheet_name() << '\n';
 
 				// Store data in server Spreadsheet
 				lock.lock();
@@ -416,7 +416,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 
 				// Send data over to client to display on GUI
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated "
-					"\"" ", " "cellName" "\"" ": " + cellName + "\"" ", "
+					"\"" ", " "\"" "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
 				);
 
