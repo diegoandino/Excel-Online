@@ -9,6 +9,9 @@ Spreadsheet/Spreadsheet/bin/**
 Spreadsheet/FormulaEvaluator/obj/**
 Spreadsheet/FormulaEvaluator/bin/**
 
+Spreadsheet/Formula/obj/**
+Spreadsheet/Formula/bin/**
+
 Spreadsheet/FormulaTests/obj/**
 Spreadsheet/FormulaTests/bin/**
 
