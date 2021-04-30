@@ -7,6 +7,8 @@
 #include "../Server/Formula.cpp"
 #include "../Server/dependency_graph.h"
 #include "../Server/dependency_graph.cpp"
+#include "../Server/changes_stack.h"
+#include "../Server/changes_stack.cpp"
 
 #include <string>
 
@@ -400,9 +402,79 @@ TEST(DependencyGraphTests, TestIndexerButWithMoreStuff)
 
 #pragma endregion
 
+#pragma region StackTests
 
-//int main(int argc, char* argv[])
-//{
-//	testing::InitGoogleTest(&argc, argv);
-//	return RUN_ALL_TESTS();
-//}
+TEST(StackTests, TestConstructor)
+{
+	changes_stack stack;
+	EXPECT_EQ(0, stack.size());
+}
+
+TEST(StackTests, TestPush)
+{
+	changes_stack stack;
+	std::string s("heyo");
+	stack.push(s);
+	std::string s2("heyo");
+	EXPECT_EQ(1, stack.size());
+	EXPECT_EQ(s2, stack.peek());
+	EXPECT_EQ(s2, stack.pop());
+	EXPECT_EQ(0, stack.size());
+	EXPECT_TRUE(stack.is_empty());
+}
+
+TEST(StackTests, MaxSize)
+{
+	changes_stack stack;
+
+	for (int i = 0; i < 100; i++)
+	{
+		std::string s(std::to_string(i));
+		stack.push(s);
+	}
+	
+	EXPECT_EQ(100, stack.size());
+
+	std::string s("heyo");
+	stack.push(s);
+	std::string s2("heyo");
+
+	EXPECT_EQ(100, stack.size());
+	EXPECT_EQ(s2, stack.pop());
+
+	stack.clear();
+	EXPECT_EQ(0, stack.size());
+	EXPECT_TRUE(stack.is_empty());
+}
+
+TEST(StackTests, EmptyPeek)
+{
+	changes_stack stack;
+	stack.peek();
+	EXPECT_EQ(0, stack.size());
+}
+
+TEST(StackTests, EmptyPop)
+{
+	changes_stack stack;
+	std::string s = stack.pop();
+	EXPECT_EQ(s, "");
+	EXPECT_EQ(0, stack.size());
+}
+
+TEST(StackTests, PushPopOrder)
+{
+	changes_stack stack;
+	for (int i = 0; i < 10; i++)
+	{
+		std::string s(std::to_string(i));
+		stack.push(s);
+	}
+
+	for (int i = 9; i > 0; i--)
+	{
+		EXPECT_EQ(std::to_string(i), stack.pop());
+	}
+}
+
+#pragma endregion
