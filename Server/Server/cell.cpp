@@ -20,7 +20,13 @@ std::string Cell::get_cell_content()
 	return cell_value.get_content();
 }
 
+void Cell::set_cell_content(std::string& s)
+{
+	cell_value = s;
+}
+
 bool Cell::is_empty()
 {
 	return cell_value.is_empty();
 }
+

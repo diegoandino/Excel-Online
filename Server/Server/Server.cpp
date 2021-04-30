@@ -145,7 +145,23 @@ void Server::OnClientConnect(int client_socket) {
 void Server::OnClientDisconnect(int client_socket, const char* message, int length) {
 	lock.lock();
 	std::cout << "Client: " << client_socket << " disconnected!" << std::endl;
+
 	isClientSetup.erase(client_socket);
+
+	Spreadsheet* sp = available_clients[client_socket];
+	//clears available_clients of the disconnected client
+	available_clients.erase(client_socket);
+
+	//clears sp_to_client of the disconnected client
+	for (int i =  0; i < sp_to_client[sp].size(); i++ ) 
+	{
+		if (i == client_socket)
+		{
+			sp_to_client[sp].erase(sp_to_client[sp].begin() + i - 1);
+			break;
+		}
+	}
+	
 	lock.unlock();
 }
 
@@ -417,7 +433,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 
 				// Store data in server Spreadsheet
 				lock.lock();
-				available_clients[client_socket]->set_cell_content(cellName, content);
+				available_clients[client_socket]->set_contents_of_cell(cellName, content);
 				lock.unlock();
 
 				// Send data over to client to display on GUI

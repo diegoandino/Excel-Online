@@ -14,6 +14,7 @@ public:
 
 	std::string get_cell_name(); 
 	std::string get_cell_content(); 
+	void set_cell_content(std::string& s);
 	
 	bool is_empty(); 
 

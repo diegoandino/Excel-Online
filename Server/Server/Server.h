@@ -13,6 +13,8 @@
 #include <thread>
 #include <mutex>
 #include <nlohmann/json.hpp>
+#include <exception>
+#include <iostream>
 
 #include "Spreadsheet.h"
 #include "changes_stack.h"
