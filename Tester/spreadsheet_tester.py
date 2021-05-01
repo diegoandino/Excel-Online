@@ -109,12 +109,14 @@ class TestClient:
      # class's method receiving JSON
     def receive(self):
         received= ""
-        while "\n" not in received:
+                
+        # Check if the \n is in the received
+        while terminator not in received:
             try:
                 self.soc.settimeout(max_test_time)
                 received = self.soc.recv(1024).decode("utf-8")  # byte -> string
                 self.soc.settimeout(None)
-                if "\n" not in received:
+                if terminator not in received:
                     received += received
             except:
                 print("Fail" + messageterminator)
@@ -148,6 +150,8 @@ class TestClient:
                 self.soc.settimeout(max_test_time)
                 received = self.soc.recv(1024).decode("utf-8") 
                 self.soc.settimeout(None)
+                
+                # Get rid of \n from the received
                 if TryParse(received.rstrip()):
                     break;
                 else:
