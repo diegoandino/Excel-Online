@@ -16,14 +16,13 @@ public:
 	/*~CellValue();*/
 
 	std::string get_content();
-
 	void set_content(std::string& content);
-
-	void set_error();
-
 	bool is_empty();
 
+	void set_error();
 	bool is_error();
+
+	bool is_formula();
 
 private:
 	std::string content; 

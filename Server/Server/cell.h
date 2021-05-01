@@ -10,6 +10,7 @@ class Cell {
 public:
 	Cell();
 	Cell(std::string name, CellValue value);
+	Cell(std::string& name, std::string& value);
 	//~Cell();
 
 	std::string get_cell_name(); 
@@ -17,6 +18,7 @@ public:
 	void set_cell_content(std::string& s);
 	
 	bool is_empty(); 
+	bool is_formula();
 
 private:
 	std::string cell_name; 

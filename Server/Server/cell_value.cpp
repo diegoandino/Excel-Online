@@ -29,10 +29,18 @@ void CellValue::set_error()
 
 bool CellValue::is_empty()
 {
-	return content == ""; 
+	return content.empty(); 
 }
 
 bool CellValue::is_error()
 {
 	return content == "FORMULA::ERROR";
+}
+
+bool CellValue::is_formula()
+{
+	if (is_empty())
+		return false;
+
+	return content[0] == '=';
 }

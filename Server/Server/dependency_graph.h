@@ -18,7 +18,7 @@ public:
 	void add_dependency(std::string& s, std::string& t);
 	void remove_dependency(std::string& s, std::string& t);
 	void replace_dependents(std::string& s, std::vector<std::string>& new_dependents);
-	int operator[](std::string s);
+	int operator[](std::string& s);
 
 
 private:

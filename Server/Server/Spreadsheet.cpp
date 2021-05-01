@@ -188,13 +188,14 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, Form
 	{
 		std::list<std::string> list = get_cells_to_recalculate(cellName);
 
-		std::string f = formula.to_string();
+		//an "=" at the begining of a string is how we determine if something is a formula
+		std::string f = "=" + formula.to_string();
 		set_generic_content(cellName, f);//Fs in the chat bois
 
 		for (std::string s : list)
 		{
-			std::string c = update_value(s).get_cell_content();
-			cells_map[s].set_cell_content(c);
+			std::string c = update_value(s)->get_cell_content();
+			cells_map[s]->set_cell_content(c);
 		}
 
 		return list;
@@ -221,7 +222,7 @@ void Spreadsheet::set_spreadsheet_name(const std::string& new_name) {
 /// Otherwise, returns the contents (as opposed to the value) of the named cell.  The return
 /// value should be either a string, a double, or a Formula.
 /// </summary>
-Cell Spreadsheet::get_cell_contents(const std::string& name)
+Cell* Spreadsheet::get_cell_contents(const std::string& name)
 {
 	if (cells_map.contains(name))
 	{
@@ -229,7 +230,8 @@ Cell Spreadsheet::get_cell_contents(const std::string& name)
 	}
 	else
 	{
-		return Cell();
+		Cell c;
+		return &c;
 	}
 }
 
@@ -253,20 +255,22 @@ std::vector<std::string> Spreadsheet::get_nonempty_cells()
 /// helper method for the set methods
 /// adds an item if there is not one or sets it if there is one already
 /// </summary>
-/// <param name="name"></param>
-/// <param name="content"></param>
+/// <param name="name">name of the cell</param>
+/// <param name="content">content to be set</param>
 void Spreadsheet::set_generic_content(std::string& name, std::string& content)
 {
 	if (cells_map.contains(name))
 	{
-		cells_map[name].set_cell_content(content);
+		cells_map[name]->set_cell_content(content);
 	}
 	else
 	{
-		cells_map.insert({ name, Cell(name, content) });
+		Cell c(name, content);
+		cells_map.insert({ name, &c });
 	}
 
-	cells[name] = Cell(name, CellValue(content));
+	Cell c(name, content);
+	cells_map[name] = &c;
 }
 
 /// <summary>
@@ -361,23 +365,55 @@ void Spreadsheet::visit(const std::string& start, std::string& name, std::unorde
 	changed.push_front(name);
 }
 
-//TODO
 /// <summary>
-/// updates the value of the cell
+/// calculates the value of the cell
 /// should acount for the return type (double, string, Formula)
 /// </summary>
 /// <param name="name"></param>
-/// <returns></returns>
-Cell Spreadsheet::update_value(const std::string& name)
+/// <returns>a pointer to an updated cell/returns>
+Cell* Spreadsheet::update_value(const std::string& name)
 {
-	return Cell();
+	Cell* cell = get_cell_contents(name);
+
+	if (cell->is_formula())
+	{
+		std::string s(cell->get_cell_content());
+		Formula f(s);
+
+		Cell c(name, f.evaluate());
+		return &c;
+	}
+	else
+	{
+		return cell;
+	}
 }
 
+/// <summary>
+/// Normalizes the string 
+/// this means converting it to lowercase
+/// </summary>
+/// <param name="s"></param>
+/// <returns>a normalized string</returns>
 std::string Spreadsheet::normalize(const std::string& s)
 {
-	return std::string();
+	std::locale loc;
+	std::string str(s);
+
+	for (std::string::size_type i = 0; i < s.length(); ++i)
+		str[i] = std::tolower(s[i], loc);
+
+	return str;
 }
 
-void Spreadsheet::name_check(const std::string& s)
+/// <summary>
+/// checks a string to see if it is a variable
+/// </summary>
+/// <param name="s"></param>
+/// <returns>true if the string is a variable</returns>
+bool Spreadsheet::name_check(const std::string& s)
 {
+	std::string varPattern = "[a-zA-Z]?[0-9]*";
+
+	return std::regex_match(s, std::regex(varPattern));
 }

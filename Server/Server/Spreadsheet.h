@@ -5,6 +5,8 @@
 #include <map> 
 #include <unordered_map>
 #include <vector>
+#include <regex>
+
 
 #include "cell.h"
 #include "dependency_graph.h"
@@ -22,7 +24,7 @@ public:
 
 	void set_spreadsheet_name(const std::string& name); 
 
-	Cell get_cell_contents(const std::string& name);
+	Cell* get_cell_contents(const std::string& name);
 	std::vector<std::string> get_nonempty_cells();
 
 	std::list<std::string> set_contents_of_cell(std::string name, std::string content);
@@ -37,24 +39,21 @@ private:
 
 	void visit(const std::string& start, std::string& name, std::unordered_set<std::string>& visited, std::list<std::string>& changed);
 
-	std::map<std::string, Cell> cells; 
-	DependencyGraph deGraph; 
-
-	std::string spreadsheet_name;
-	bool changed; 
-
-	std::unordered_map<std::string, Cell> cells_map;
-	DependencyGraph cell_graph;
-
 	std::list<std::string> set_cell_content(std::string& cellName, double number);
 	std::list<std::string> set_cell_content(std::string& cellName, std::string text);
 	std::list<std::string> set_cell_content(std::string& cellName, Formula formula);
 
-	Cell update_value(const std::string& name);
+	Cell* update_value(const std::string& name);
 
 	std::string normalize(const std::string& s);
-	void name_check(const std::string& s);
+	bool name_check(const std::string& s);
 
+	//instance variables
+	std::unordered_map<std::string, Cell*> cells_map;
+	DependencyGraph cell_graph;
+
+	std::string spreadsheet_name;
+	bool changed; 
 };
 
 class CircularException : public std::exception

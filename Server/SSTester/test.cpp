@@ -368,7 +368,8 @@ TEST(DependencyGraphTests, TestIndexer)
 	dg.add_dependency(d, a);
 	dg.add_dependency(e, a);
 
-	EXPECT_TRUE(dg["a"] == 4);
+	std::string s("a");
+	EXPECT_EQ(dg[s], 4);
 }
 
 
@@ -395,8 +396,9 @@ TEST(DependencyGraphTests, TestIndexerButWithMoreStuff)
 	dg.add_dependency(h, b);
 	dg.add_dependency(i, b);
 
-	EXPECT_TRUE(dg["a"] == 4);
-	EXPECT_TRUE(dg["b"] == 4);
+	
+	EXPECT_TRUE(dg[a] == 4);
+	EXPECT_TRUE(dg[b] == 4);
 }
 
 

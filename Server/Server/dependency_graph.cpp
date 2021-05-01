@@ -195,7 +195,7 @@ void DependencyGraph::replace_dependents(std::string& s, std::vector<std::string
 /// dg["a"]
 /// It should return the size of dependees("a")
 /// </summary>
-int DependencyGraph::operator[](std::string s)
+int DependencyGraph::operator[](std::string& s)
 {
 	return get_dependees(s).size();
 }

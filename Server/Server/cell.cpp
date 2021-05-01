@@ -10,6 +10,12 @@ Cell::Cell(std::string name, CellValue value) : cell_name(name), cell_value(valu
 {
 }
 
+Cell::Cell(std::string& name, std::string& value) : cell_name(name)
+{
+	CellValue cv(value);
+	cell_value = cv;
+}
+
 std::string Cell::get_cell_name()
 {
 	return cell_name;
@@ -28,5 +34,10 @@ void Cell::set_cell_content(std::string& s)
 bool Cell::is_empty()
 {
 	return cell_value.is_empty();
+}
+
+bool Cell::is_formula()
+{
+	return cell_value.is_formula();
 }
 
