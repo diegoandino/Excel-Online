@@ -7,7 +7,7 @@ import sys
 max_test_time = 10
 number_of_test = 9
 
-input = sys.argv
+input = sys.argv # receive input 
 
 if(len(input) >= 2):
     test_num =  input[1]
@@ -28,6 +28,7 @@ error_message = "error"
 filename1 = "file1"
 filename2 = "file2"
 filename3 = "file3"
+
 
 #got these from the doc but some seem to be missing ','
 
@@ -52,6 +53,17 @@ error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".forma
 server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
 server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
 
+
+#char array for cell name
+letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+
+
+
+
+
+
+
+
 # Get the id from the server
 def TryParse(string):
     try:
@@ -60,11 +72,16 @@ def TryParse(string):
     except ValueError:
        return  False
 
+# Def Class TestClient
 class TestClient:
+    # Contructor
     def __init__(self, name):
-        self.soc = None
+        # create a class variable
+        self.soc = None 
         self.clientname = name
 
+        
+    # class's method connect_to_server
     def connect_to_server(self, address):
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ip_ad = address.split(':')
@@ -75,23 +92,31 @@ class TestClient:
         except:
             print("Fail" + messageterminator)
             sys.exit()
+
+        # Send the username to the server
         self.send_message(self.clientname)
+
         
+    # class's method close_connection
     def close_connection(self):
         self.soc.shutdown()
         self.soc.close()
-
+        
+     # class's method send_message
     def send_message(self, msg):
         self.soc.send(bytes(msg, 'utf-8') + bytes(terminator, 'utf-8'))
-
+        
+     # class's method receiving JSON
     def receive(self):
         received= ""
-        while "\n" not in received:
+                
+        # Check if the \n is in the received
+        while terminator not in received:
             try:
                 self.soc.settimeout(max_test_time)
-                received = self.soc.recv(1024).decode("utf-8") 
+                received = self.soc.recv(1024).decode("utf-8")  # byte -> string
                 self.soc.settimeout(None)
-                if "\n" not in received:
+                if terminator not in received:
                     received += received
             except:
                 print("Fail" + messageterminator)
@@ -99,6 +124,8 @@ class TestClient:
 
   
         return received
+
+    # class's method receiving a list of spreadsheet
     def receiveSpreadsheet(self):
         received= ""
         while "\n\n" not in received:
@@ -114,6 +141,8 @@ class TestClient:
 
   
         return received
+
+    # class's method receiving receiving spreadsheet selection and update when connecting to server
     def receiveSpreadsheetSelectionandUpdate(self):
         stringlist = []
         while True:
@@ -121,6 +150,8 @@ class TestClient:
                 self.soc.settimeout(max_test_time)
                 received = self.soc.recv(1024).decode("utf-8") 
                 self.soc.settimeout(None)
+                
+                # Get rid of \n from the received
                 if TryParse(received.rstrip()):
                     break;
                 else:
@@ -134,10 +165,10 @@ class TestClient:
 
 
 
+#The end of the class def
 
 
-
-#methods defs
+#methods defs for JSON
 def DisconnectedString(ID):
     return "{messageType: \"disconnected\", user: \"" + ID + "\"}" 
 def SelectCell(cell_name):
@@ -219,7 +250,7 @@ def receive_test():
 
     return received
 
-
+# Tests
 def test_1(address):
     
     print(max_test_time)
@@ -348,6 +379,8 @@ def test_6(address):
     client.send_message(client_undo)
     client.receive()    
     print("Pass" + messageterminator)
+
+    
 def test_7(address):
     print(max_test_time)
     print("testing closing connection")
@@ -366,7 +399,6 @@ def test_stress(address):
     client.receive()
     client.send_message(SendFileName("file"))
     string =client.receiveSpreadsheetSelectionandUpdate();
-    letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     for i in range(0, 100):
         for a in letter:
             client.send_message(SelectCell(a+i))
@@ -396,7 +428,6 @@ def test_stress2(address):
     client3.receive()
     client3.send_message(SendFileName("file"))
     client3.receiveSpreadsheetSelectionandUpdate()
-    letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
     for i in range(0, 100):
         for a in letter:
