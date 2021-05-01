@@ -1,3 +1,4 @@
+#TODO run the tests on the server
 #import  json
 import socket
 import threading
@@ -110,8 +111,8 @@ class TestClient:
 
   
         return received
-    def receiveSpreadsheetUpdate(self):
-        received= ""
+    def receiveSpreadsheetSelectionandUpdate(self):
+        stringlist = []
         while true:
             try:
                 self.soc.settimeout(max_test_time)
@@ -120,6 +121,8 @@ class TestClient:
                 bool try = TryParse(received.rstrip())
                 if try:
                     break;
+                else:
+                    stringlist.append(received)
             except:
                 print("Fail" + messageterminator)
                 exit()    
@@ -233,7 +236,7 @@ def test_2(address):
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receiveSpreadsheetUpdate()
+    string =client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
     client.receive()
     client.send_message(EditCell("A1", "1"))
@@ -249,7 +252,7 @@ def test_3(address):
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receiveSpreadsheetUpdate()
+    string =client.receiveSpreadsheetSelectionandUpdate()
     if string.count() != 0:
         print("Fail" + messageterminator)
     client.send_message(SelectCell("A1"))
@@ -281,7 +284,7 @@ def test_4(address):
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
-    client.receiveSpreadsheetUpdate();
+    client.receiveSpreadsheetSelectionandUpdate();
     client.send_message(SelectCell("A1"))
     client.receive()
     client.send_message(client_undo)
@@ -297,7 +300,7 @@ def test_5(address):
     print("testing Redo")
     client = TestClient("client");
     client.connect_to_server(address)
-    client.receiveSpreadsheetUpdate()
+    client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SendFileName("file"))
     client.send_message(SelectCell("A1"))
     client.receive()
@@ -320,12 +323,12 @@ def test_6(address):
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
-    client.receiveSpreadsheetUpdate()
+    client.receiveSpreadsheetSelectionandUpdate()
     client2 = TestClient("client2");
     client2.connect_to_server(address)
     client2.receive()
     client.send_message(SendFileName("file"))
-    client2.receiveSpreadsheetUpdate()
+    client2.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
     client.receive()
     client.send_message(RevertCell("A1"))
@@ -348,8 +351,8 @@ def test_7(address):
     print("testing closing connection")
     client = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
     client.receive()
+    client.send_message(SendFileName("file"))
     client.close_connection()
     print("Pass" + messageterminator)
     
@@ -360,7 +363,7 @@ def test_stress(address):
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receiveSpreadsheetUpdate()
+    string =client.receiveSpreadsheetSelectionandUpdate();
     letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     for i in range(0, 100):
         for a in letter:
@@ -380,17 +383,17 @@ def test_stress2(address):
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
-    client.receiveSpreadsheetUpdate()
+    client.receiveSpreadsheetSelectionandUpdate()
     client2 = TestClient("client2");
     client2.connect_to_server(address)
     client2.receive()
     client2.send_message(SendFileName("file"))
-    client2.receiveSpreadsheetUpdate()
+    client2.receiveSpreadsheetSelectionandUpdate()
     client3 = TestClient("client3" + terminator);
     client3.connect_to_server(address)
     client3.receive()
     client3.send_message(SendFileName("file"))
-    client3.receiveSpreadsheetUpdate()
+    client3.receiveSpreadsheetSelectionandUpdate()
     letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
     for i in range(0, 100):
