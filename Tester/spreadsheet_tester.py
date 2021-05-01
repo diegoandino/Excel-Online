@@ -7,7 +7,7 @@ import sys
 max_test_time = 10
 number_of_test = 9
 
-input = sys.argv # receive input from client 
+input = sys.argv # receive input 
 
 if(len(input) >= 2):
     test_num =  input[1]
@@ -165,7 +165,7 @@ class TestClient:
 
 
 
-#The end of the class
+#The end of the class def
 
 
 #methods defs for JSON
