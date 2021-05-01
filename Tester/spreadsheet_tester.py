@@ -29,6 +29,7 @@ filename1 = "file1"
 filename2 = "file2"
 filename3 = "file3"
 
+
 #got these from the doc but some seem to be missing ','
 
 #client -> server 
@@ -51,6 +52,17 @@ error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".forma
 
 server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
 server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
+
+
+#char array for cell name
+letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+
+
+
+
+
+
+
 
 # Get the id from the server
 def TryParse(string):
@@ -366,7 +378,6 @@ def test_stress(address):
     client.receive()
     client.send_message(SendFileName("file"))
     string =client.receiveSpreadsheetSelectionandUpdate();
-    letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     for i in range(0, 100):
         for a in letter:
             client.send_message(SelectCell(a+i))
@@ -396,7 +407,6 @@ def test_stress2(address):
     client3.receive()
     client3.send_message(SendFileName("file"))
     client3.receiveSpreadsheetSelectionandUpdate()
-    letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
     for i in range(0, 100):
         for a in letter:
