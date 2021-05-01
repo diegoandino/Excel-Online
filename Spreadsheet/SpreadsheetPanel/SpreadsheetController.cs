@@ -71,6 +71,12 @@ namespace SS
 
             if (Network.server != null)
             {
+                /**
+                lock (Network.commandQueue)
+                {
+                    Network.commandQueue.Enqueue(json);
+                }
+                **/
                 Networking.Send(Network.server.TheSocket, json);
             }
             else
@@ -119,6 +125,12 @@ namespace SS
 
             if (Network.server != null)
                 Networking.Send(Network.server.TheSocket, json);
+            /**
+            lock (Network.commandQueue)
+            {
+                Network.commandQueue.Enqueue(json);
+            }
+            **/
 
         }
 
@@ -231,6 +243,10 @@ namespace SS
             if (Network.server != null)
             {
                 Networking.Send(Network.server.TheSocket, json);
+               /** lock (Network.commandQueue)
+                {
+                    Network.commandQueue.Enqueue(json);
+                }**/
             }
 
             else
@@ -250,6 +266,10 @@ namespace SS
 
             if (Network.server != null)
             {
+                /**lock (Network.commandQueue)
+                {
+                    Network.commandQueue.Enqueue(json);
+                }**/
                 Networking.Send(Network.server.TheSocket, json);
             }
 

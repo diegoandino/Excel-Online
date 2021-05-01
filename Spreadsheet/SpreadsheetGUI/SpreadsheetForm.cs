@@ -38,6 +38,8 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
+
+        /// <summary> list of spreadsheet so user can't create duplication spreadsheet names
         private List<string> listOfSpreadsheet;
         /// <summary>
         /// Public SpreadsheetForm constructor.
@@ -146,7 +148,7 @@ namespace SS
             cancelButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
             //cancelButton.Click += (sender, e) => SetCanShowSpreadSheets();
             confirmButton.Click += (sender, e) => ClosePrompt(prompt, sender, e);
-            confirmButton.Click += (sender, e) => Request_SS(t.Text, sender, e);
+            confirmButton.Click += (sender, e) => RequestNew_SS(t.Text, sender, e);
 
             // Add to the prompt:
             prompt.Controls.Add(t);
@@ -155,7 +157,31 @@ namespace SS
             prompt.ShowDialog();
 
         }
+        /// <summary>
+        /// This method is invoked when a user asks for an existing spreadsheet.
+        /// </summary>
+        /// <param name="selection"></param>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RequestNew_SS(string selection, object sender, EventArgs e)
+        {
 
+            if (selection.Equals("") || selection.Equals("\n") || listOfSpreadsheet.Contains(selection))
+            {
+                MessageBox.Show("Selection must be non-empty, no newline, and unique");
+
+                EnableConnectInputFields();
+                ConnectButton.Text = "Connect";
+
+                return;
+            }
+
+            DisableConnectInputFields();
+            MessageBox.Show(selection + " Was chosen");
+
+            // Send the name of the spreadsheet to server:
+            Network.spreadsheetNameQueue.Enqueue(selection);
+        }
         /// <summary>
         /// This method is invoked when a user asks for an existing spreadsheet.
         /// </summary>

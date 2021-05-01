@@ -46,7 +46,7 @@ namespace NetworkController
         /// <summary> Reports whether or not this client has selected a SS</summary>
         public static bool SS_Chosen { get; private set; }
 
-
+        private static int id;
         /// <summary>
         /// Our User's name
         /// </summary>
@@ -181,9 +181,17 @@ namespace NetworkController
                 if (spreadsheetNameQueue.Count >= 1)
                     Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
 
+                lock (commandQueue)
+                {
+                    if (commandQueue.Count >= 1)
+                        Networking.Send(server.TheSocket, commandQueue.Dequeue());
+                }
+                
                 try
                 {
                     JObject json = JObject.Parse(server.data.ToString());
+                    json.TryGetValue("messageType", out JToken value);
+                    if (value.ToString().Contains("cellUpdated"))
                     if (json.ContainsKey("cellName"))
                         if (json.ContainsKey("contents"))
 						{
@@ -194,14 +202,42 @@ namespace NetworkController
 
                             canEdit = true;
 						}
+                    if (value.ToString().Contains("cellSelected"))
+                    {
+                        // TODO: Show in client's GUI and disable owner's selection showing up
+
+                    }
+                    if (value.ToString().Contains("disconnected"))
+                    {
+                        // TODO: Show in client's GUI 
+                    }
+                    if (value.ToString().Contains("requestError"))
+                    {
+                        //TODO: Show in client's GUI 
+                    }
+                    if (value.ToString().Contains("serverError"))
+                    {
+                        //TODO: Show in client's GUI 
+                    }
+
 
                     server.RemoveData(0, server.data.ToString().Length);
                 }
 
                 catch (Exception e)
 				{
+                    string num = server.data.ToString().Substring(server.data.Length-2);
+                    if(int.TryParse(num, out int clientID))
+                    {
+                        id = clientID;
+                         //TODO: Now the client can send edits
+                    }
+                    
+                    
                     server.RemoveData(0, server.data.ToString().Length);
                 }
+
+
             }
         }
     }
