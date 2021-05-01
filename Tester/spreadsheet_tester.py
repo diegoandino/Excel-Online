@@ -71,7 +71,8 @@ class TestClient:
         except:
             print("Fail" + messageterminator)
             sys.exit()
-
+        self.send_message(self.clientname)
+        
     def close_connection(self):
         self.soc.shutdown()
         self.soc.close()
