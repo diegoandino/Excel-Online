@@ -38,6 +38,8 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
+
+        /// <summary> list of spreadsheet so user can't create duplication spreadsheet names
         private List<string> listOfSpreadsheet;
         /// <summary>
         /// Public SpreadsheetForm constructor.
