@@ -186,7 +186,7 @@ namespace NetworkController
                     if (commandQueue.Count >= 1)
                         Networking.Send(server.TheSocket, commandQueue.Dequeue());
                 }
-                }
+                
                 try
                 {
                     JObject json = JObject.Parse(server.data.ToString());

@@ -71,10 +71,13 @@ namespace SS
 
             if (Network.server != null)
             {
+                /**
                 lock (Network.commandQueue)
                 {
                     Network.commandQueue.Enqueue(json);
                 }
+                **/
+                Networking.Send(Network.server.TheSocket, json);
             }
             else
             {
@@ -121,10 +124,13 @@ namespace SS
                             @"""" + contents + @"""" + "}";
 
             if (Network.server != null)
-                lock (Network.commandQueue)
-                {
-                    Network.commandQueue.Enqueue(json);
-                }
+                Networking.Send(Network.server.TheSocket, json);
+            /**
+            lock (Network.commandQueue)
+            {
+                Network.commandQueue.Enqueue(json);
+            }
+            **/
 
         }
 
@@ -236,10 +242,11 @@ namespace SS
 
             if (Network.server != null)
             {
-                lock (Network.commandQueue)
+                Networking.Send(Network.server.TheSocket, json);
+               /** lock (Network.commandQueue)
                 {
                     Network.commandQueue.Enqueue(json);
-                }
+                }**/
             }
 
             else
@@ -259,11 +266,11 @@ namespace SS
 
             if (Network.server != null)
             {
-                lock (Network.commandQueue)
+                /**lock (Network.commandQueue)
                 {
                     Network.commandQueue.Enqueue(json);
-                }
-                //Networking.Send(Network.server.TheSocket, json);
+                }**/
+                Networking.Send(Network.server.TheSocket, json);
             }
 
             else
