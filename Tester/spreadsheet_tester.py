@@ -4,7 +4,7 @@ import threading
 import sys
 
 max_test_time = 10
-number_of_test = 7
+number_of_test = 9
 
 input = sys.argv
 
@@ -50,7 +50,12 @@ error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".forma
 
 server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
 server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
-
+def TryParse(string):
+    try:
+        int(string)
+        return true
+    except ValueError:
+       return  false
 class TestClient:
     def __init__(self, name):
         self.soc = None
@@ -68,29 +73,55 @@ class TestClient:
             sys.exit()
 
     def close_connection(self):
-        sef.close
-
+        self.soc.shutdown()
+        self.soc.close()
 
     def send_message(self, msg):
         self.soc.send(bytes(msg, 'utf-8') + bytes(terminator, 'utf-8'))
-        #print(msg + " sent.")
 
     def receive(self):
-        stringlist = []
-        while True:
+        received= ""
+        while "\n" not in received:
             try:
                 self.soc.settimeout(max_test_time)
-                received = self.soc.recv(1024)
+                received = self.soc.recv(1024).decode("utf-8") 
                 self.soc.settimeout(None)
-                if len(received) == 0:
-                    break
-                else:
-                    stringlist.append(received)
+                if "\n" not in received:
+                    received += received
             except:
                 print("Fail" + messageterminator)
-                sys.exit()
-            #        received= ""
-            #       while "\n" not in received:
+                exit()    
+
+  
+        return received
+    def receiveSpreadsheet(self):
+        received= ""
+        while "\n\n" not in received:
+            try:
+                self.soc.settimeout(max_test_time)
+                received = self.soc.recv(1024).decode("utf-8") 
+                self.soc.settimeout(None)
+                if "\n\n" not in received:
+                    received += received
+            except:
+                print("Fail" + messageterminator)
+                exit()    
+
+  
+        return received
+    def receiveSpreadsheetUpdate(self):
+        received= ""
+        while true:
+            try:
+                self.soc.settimeout(max_test_time)
+                received = self.soc.recv(1024).decode("utf-8") 
+                self.soc.settimeout(None)
+                bool try = TryParse(received.rstrip())
+                if try:
+                    break;
+            except:
+                print("Fail" + messageterminator)
+                exit()    
 
   
         return received
@@ -99,21 +130,23 @@ class TestClient:
 
 
 
+
 #methods defs
 def DisconnectedString(ID):
-    return "{messageType: \"disconnected\", user: \"" + ID + "\"}" + terminator
+    return "{messageType: \"disconnected\", user: \"" + ID + "\"}" 
 def SelectCell(cell_name):
-     return "{requestType: \"selectCell\", cellName: " + cell_name + " }" + terminator
+     return "{requestType: \"selectCell\", cellName: " + cell_name + " }" 
 def EditCell(cell_name, cell_contents):
-    return "{requestType: \"editCell\", cellName: " + cell_name + ", contents: " + cell_contents + " }" + terminator
+    return "{requestType: \"editCell\", cellName: " + cell_name + ", contents: " + cell_contents + " }" 
 def RevertCell(cell_name):
-    return "{\"requestType\": \"revertCell\", \"cellName\": \"A1\"}" + terminator
+    return "{\"requestType\": \"revertCell\", \"cellName\": \"A1\"}" 
 
 def SendClientName(clientname):
-    return clientname + terminator
+    return clientname
 
 def SendFileName(file):
-    return file+ terminator
+    return file
+
 
 
 
@@ -195,13 +228,11 @@ def test_1(address):
 def test_2(address):
     print(max_test_time)
     print("test edit for one client")
-    client = TestClient("client" + terminator)
+    client = TestClient("client");
     client.connect_to_server(address)
     client.receive()
-    client.send_message(client.clientname)
-    client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receive()
+    string =client.receiveSpreadsheetUpdate()
     client.send_message(SelectCell("A1"))
     client.receive()
     client.send_message(EditCell("A1", "1"))
@@ -213,12 +244,11 @@ def test_2(address):
 def test_3(address):
     print(max_test_time)
     print("testing a lot of edits for one client")
-    client = TestClient("client" +terminator)
+    client = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receive()
+    string =client.receiveSpreadsheetUpdate()
     if string.count() != 0:
         print("Fail" + messageterminator)
     client.send_message(SelectCell("A1"))
@@ -246,11 +276,11 @@ def test_3(address):
 def test_4(address):
     print(max_test_time)
     print("testing Undo")
-    client = TestClient("client" + terminator)
+    client = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
+    client.receiveSpreadsheetUpdate();
     client.send_message(SelectCell("A1"))
     client.receive()
     client.send_message(client_undo)
@@ -264,10 +294,9 @@ def test_4(address):
 def test_5(address):
     print(max_test_time)
     print("testing Redo")
-    client = TestClient("client" + terminator)
+    client = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
-    client.receive()
+    client.receiveSpreadsheetUpdate()
     client.send_message(SendFileName("file"))
     client.send_message(SelectCell("A1"))
     client.receive()
@@ -286,16 +315,16 @@ def test_5(address):
 def test_6(address):
     print(max_test_time)
     print("testing Redo and Undo for multiple clients")
-    client = TestClient("client" + terminator)
+    client = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
-    client2 = TestClient("client2" + terminator)
+    client.receiveSpreadsheetUpdate()
+    client2 = TestClient("client2");
     client2.connect_to_server(address)
-    client2.send_message(client.clientname)
     client2.receive()
     client.send_message(SendFileName("file"))
+    client2.receiveSpreadsheetUpdate()
     client.send_message(SelectCell("A1"))
     client.receive()
     client.send_message(RevertCell("A1"))
@@ -313,24 +342,24 @@ def test_6(address):
     client.send_message(client_undo)
     client.receive()    
     print("Pass" + messageterminator)
-
 def test_7(address):
     print(max_test_time)
-    print("testing closing spreadsheet")
-    client = TestClient("client" + terminator)
+    print("testing closing connection")
+    client = TestClient("client");
     client.connect_to_server(address)
     client.send_message(client.clientname)
     client.receive()
+    client.close_connection()
+    print("Pass" + messageterminator)
     
 def test_stress(address):
     print(max_test_time)
     print("test editing all cells")
-    client = TestClient("client" + terminator)
+    client = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receive()
+    string =client.receiveSpreadsheetUpdate()
     letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     for i in range(0, 100):
         for a in letter:
@@ -344,29 +373,23 @@ def test_stress(address):
 def test_stress2(address):
     print(max_test_time)
     print("test multi client editing all cells")
-    client = TestClient("client" + terminator)
-    client2 = TestClient("client" + terminator)
-    client3 = TestClient("client" + terminator)
+    client = TestClient("client");
+    client2 = TestClient("client");
+    client3 = TestClient("client");
     client.connect_to_server(address)
-    client.send_message(client.clientname)
     client.receive()
     client.send_message(SendFileName("file"))
-    string =client.receive()
-    client = TestClient("client" + terminator)
-    client.connect_to_server(address)
-    client.send_message(client.clientname)
-    client.receive()
-    client2 = TestClient("client2" + terminator)
+    client.receiveSpreadsheetUpdate()
+    client2 = TestClient("client2");
     client2.connect_to_server(address)
-    client2.send_message(client.clientname)
     client2.receive()
     client2.send_message(SendFileName("file"))
-    client2.receive()
-    client3 = TestClient("client3" + terminator)
+    client2.receiveSpreadsheetUpdate()
+    client3 = TestClient("client3" + terminator);
     client3.connect_to_server(address)
-    client3.send_message(client.clientname)
     client3.receive()
     client3.send_message(SendFileName("file"))
+    client3.receiveSpreadsheetUpdate()
     letter = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
     for i in range(0, 100):
