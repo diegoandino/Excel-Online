@@ -11,23 +11,26 @@
 #include "cell.h"
 #include "dependency_graph.h"
 #include "Formula.h"
+#include "changes_stack.h"
 
 class Spreadsheet {
 public:
 	Spreadsheet();
 	Spreadsheet(std::string& name);
-	~Spreadsheet();
 
-	std::map<Cell, std::string> get_spreadsheet_contents(); 
+	//std::map<Cell, std::string> get_spreadsheet_contents(); 
 
 	std::string get_spreadsheet_name(); 
 
 	void set_spreadsheet_name(const std::string& name); 
 
-	Cell* get_cell_contents(const std::string& name);
+	std::string get_cell_contents(const std::string& name);
 	std::vector<std::string> get_nonempty_cells();
 
-	std::list<std::string> set_contents_of_cell(std::string name, std::string content);
+	std::list<std::string> set_contents_of_cell(std::string& name, std::string& content);
+
+	std::string undo();
+	std::string revert(const std::string& name);
 
 private:
 
@@ -43,7 +46,7 @@ private:
 	std::list<std::string> set_cell_content(std::string& cellName, std::string text);
 	std::list<std::string> set_cell_content(std::string& cellName, Formula formula);
 
-	Cell* update_value(const std::string& name);
+	std::string update_value(std::string& name);
 
 	std::string normalize(const std::string& s);
 	bool name_check(const std::string& s);
@@ -54,6 +57,11 @@ private:
 
 	std::string spreadsheet_name;
 	bool changed; 
+
+	/// <summary>
+	/// stores the names of changed cells
+	/// </summary>
+	changes_stack stack_changes;
 };
 
 class CircularException : public std::exception
