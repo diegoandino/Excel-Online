@@ -51,12 +51,15 @@ error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".forma
 
 server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
 server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
+
+# Get the id from the server
 def TryParse(string):
     try:
         int(string)
         return true
     except ValueError:
        return  false
+
 class TestClient:
     def __init__(self, name):
         self.soc = None
