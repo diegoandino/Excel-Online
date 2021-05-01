@@ -7,7 +7,7 @@ import sys
 max_test_time = 10
 number_of_test = 9
 
-input = sys.argv
+input = sys.argv # receive input from client 
 
 if(len(input) >= 2):
     test_num =  input[1]
@@ -72,11 +72,16 @@ def TryParse(string):
     except ValueError:
        return  False
 
+# Def Class TestClient
 class TestClient:
+    # Contructor
     def __init__(self, name):
-        self.soc = None
+        # create a class variable
+        self.soc = None 
         self.clientname = name
 
+        
+    # class's method connect_to_server
     def connect_to_server(self, address):
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ip_ad = address.split(':')
@@ -87,21 +92,27 @@ class TestClient:
         except:
             print("Fail" + messageterminator)
             sys.exit()
+
+        # Send the username to the server
         self.send_message(self.clientname)
+
         
+    # class's method close_connection
     def close_connection(self):
         self.soc.shutdown()
         self.soc.close()
-
+        
+     # class's method send_message
     def send_message(self, msg):
         self.soc.send(bytes(msg, 'utf-8') + bytes(terminator, 'utf-8'))
-
+        
+     # class's method receiving JSON
     def receive(self):
         received= ""
         while "\n" not in received:
             try:
                 self.soc.settimeout(max_test_time)
-                received = self.soc.recv(1024).decode("utf-8") 
+                received = self.soc.recv(1024).decode("utf-8")  # byte -> string
                 self.soc.settimeout(None)
                 if "\n" not in received:
                     received += received
@@ -111,6 +122,8 @@ class TestClient:
 
   
         return received
+
+    # class's method receiving a list of spreadsheet
     def receiveSpreadsheet(self):
         received= ""
         while "\n\n" not in received:
@@ -126,6 +139,8 @@ class TestClient:
 
   
         return received
+
+    # class's method receiving receiving spreadsheet selection and update when connecting to server
     def receiveSpreadsheetSelectionandUpdate(self):
         stringlist = []
         while True:
@@ -146,10 +161,10 @@ class TestClient:
 
 
 
+#The end of the class
 
 
-
-#methods defs
+#methods defs for JSON
 def DisconnectedString(ID):
     return "{messageType: \"disconnected\", user: \"" + ID + "\"}" 
 def SelectCell(cell_name):
@@ -231,7 +246,7 @@ def receive_test():
 
     return received
 
-
+# Tests
 def test_1(address):
     
     print(max_test_time)
@@ -360,6 +375,8 @@ def test_6(address):
     client.send_message(client_undo)
     client.receive()    
     print("Pass" + messageterminator)
+
+    
 def test_7(address):
     print(max_test_time)
     print("testing closing connection")
