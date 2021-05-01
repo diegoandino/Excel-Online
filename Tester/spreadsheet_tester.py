@@ -56,9 +56,9 @@ server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents:
 def TryParse(string):
     try:
         int(string)
-        return true
+        return True
     except ValueError:
-       return  false
+       return  False
 
 class TestClient:
     def __init__(self, name):
@@ -116,13 +116,12 @@ class TestClient:
         return received
     def receiveSpreadsheetSelectionandUpdate(self):
         stringlist = []
-        while true:
+        while True:
             try:
                 self.soc.settimeout(max_test_time)
                 received = self.soc.recv(1024).decode("utf-8") 
                 self.soc.settimeout(None)
-                bool try = TryParse(received.rstrip())
-                if try:
+                if TryParse(received.rstrip()):
                     break;
                 else:
                     stringlist.append(received)
