@@ -362,7 +362,7 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 		{
 			Spreadsheet* spreadsheet = find_selected_spreadsheet(message);
 			spreadsheet->set_spreadsheet_name(message);
-
+			
 			lock.lock();
 			available_clients[client_socket] = spreadsheet;
 			sp_to_client[spreadsheet].push_back(client_socket);
