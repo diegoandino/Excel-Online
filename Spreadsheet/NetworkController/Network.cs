@@ -192,7 +192,7 @@ namespace NetworkController
                     Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
                 if (canEdit)
                 {
-                    messageSent();
+                    messageSend();
                 }
 
                 try
@@ -207,8 +207,6 @@ namespace NetworkController
                             contents = json["contents"].ToString();
 
                             UpdateArrived(cellName, contents);
-
-                            canEdit = true;
 						}
                     if (value.ToString().Contains("cellSelected"))
                     {
@@ -265,11 +263,14 @@ namespace NetworkController
             lock (commandQueue)
             {
                 commandQueue.Enqueue(json);
-                messageSent();
+                messageSend();
             }
             
         }
-        private static void messageSent()
+        /// <summary>
+        /// Send the JSON to the server
+        /// </summary>
+        private static void messageSend()
         {
 
             lock (commandQueue)
