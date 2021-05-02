@@ -366,6 +366,17 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 			lock.lock();
 			available_clients[client_socket] = spreadsheet;
 			sp_to_client[spreadsheet].push_back(client_socket);
+
+			// Send all existing cells to this client.
+			for (std::string cellName : spreadsheet->get_nonempty_cells())
+			{
+				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated"
+					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
+					"\"" "contents" "\"" ": " "\"" + spreadsheet->get_cell_contents(cellName) + "\"" "}" + "\n");
+
+				SendToClient(client_socket, json.c_str(), json.size());
+			}
+
 			lock.unlock();
 
 			return;

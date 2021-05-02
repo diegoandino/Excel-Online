@@ -418,6 +418,8 @@ namespace SS
                 // Send edit request to server
                 //IEnumerable<string> CellsToRecalculate = controller.SetCellContents(cellContents);
 
+                
+
                 IEnumerable<string> CellsToRecalculate = controller.GetCellsToRecalc(cellName);
 
                 // Compute edit request after server approves

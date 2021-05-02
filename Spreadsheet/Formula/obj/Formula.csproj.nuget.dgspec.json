@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj": {}
+    "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj": {
+    "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
+        "projectUniqueName": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
         "projectName": "Formula",
-        "projectPath": "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
-        "packagesPath": "C:\\Users\\mydat\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mydat\\Documents\\New folder\\cs3505-final-project\\Spreadsheet\\Formula\\obj\\",
+        "projectPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\Formula\\Formula.csproj",
+        "packagesPath": "C:\\Users\\Tarik Vu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Tarik Vu\\source\\repos\\cs3505-final-project\\Spreadsheet\\Formula\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\mydat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tarik Vu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -57,7 +60,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
         }
       }
     }

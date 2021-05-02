@@ -139,7 +139,7 @@ namespace NetworkController
                 return;
             }
 
-            Thread t = new Thread(UpdateLoop); 
+            Thread t = new Thread(UpdateLoop);
             lock (state)
             {
                 ProcessMessages(state);
@@ -160,7 +160,7 @@ namespace NetworkController
         {
             string totalData = state.GetData();
             string[] parts = Regex.Split(totalData, @"\n+");
-            
+
             // Pick a spreadsheet:
             if (!SS_Chosen)
             {
@@ -185,30 +185,35 @@ namespace NetworkController
                     return;
                 }
 
+                // Sends spreadsheet name to open to server
                 if (spreadsheetNameQueue.Count >= 1)
+                {
                     Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+                    server.RemoveData(0, server.data.ToString().Length);
+                    return;
+                }
 
                 lock (commandQueue)
                 {
                     if (commandQueue.Count >= 1)
                         Networking.Send(server.TheSocket, commandQueue.Dequeue());
                 }
-                
+
                 try
                 {
                     JObject json = JObject.Parse(server.data.ToString());
                     json.TryGetValue("messageType", out JToken value);
                     if (value.ToString().Contains("cellUpdated"))
-                    if (json.ContainsKey("cellName"))
-                        if (json.ContainsKey("contents"))
-						{
-                            cellName = json["cellName"].ToString();
-                            contents = json["contents"].ToString();
+                        if (json.ContainsKey("cellName"))
+                            if (json.ContainsKey("contents"))
+                            {
+                                cellName = json["cellName"].ToString();
+                                contents = json["contents"].ToString();
 
-                            UpdateArrived(cellName, contents);
+                                UpdateArrived(cellName, contents);
 
-                            canEdit = true;
-						}
+                                canEdit = true;
+                            }
                     if (value.ToString().Contains("cellSelected"))
                     {
                         // TODO: Show in client's GUI and disable owner's selection showing up
@@ -224,7 +229,7 @@ namespace NetworkController
                     {
                         json.TryGetValue("message", out JToken error);
                         json.TryGetValue("message", out JToken cellName);
-                        Invalid(cellName.Value<string>() + " : " +error.Value<string>());
+                        Invalid(cellName.Value<string>() + " : " + error.Value<string>());
                         return;
                     }
                     if (value.ToString().Contains("serverError"))
@@ -239,15 +244,15 @@ namespace NetworkController
                 }
 
                 catch (Exception e)
-				{
-                    string num = server.data.ToString().Substring(server.data.Length-2);
-                    if(int.TryParse(num, out int clientID))
+                {
+                    // string num = server.data.ToString().Substring(server.data.Length-2);
+                    /*if(int.TryParse(num, out int clientID))
                     {
                         id = clientID;
                          //TODO: Now the client can send edits
                     }
-                    
-                    
+                    */
+
                     server.RemoveData(0, server.data.ToString().Length);
                 }
 
