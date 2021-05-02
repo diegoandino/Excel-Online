@@ -38,7 +38,7 @@ namespace SS
         /// <summary>  Bitmap to use for printing feature. </summary>
         private Bitmap memoryImage;
 
-
+        private bool HasSelected;
         /// <summary> list of spreadsheet so user can't create duplication spreadsheet names
         private List<string> listOfSpreadsheet;
         /// <summary>
@@ -116,10 +116,20 @@ namespace SS
                     prompt.Controls.Add(confirm_SS);
                     prompt.Controls.Add(new_SS);
                     prompt.Controls.Add(selections);
+                    prompt.FormClosed += Prompt_FormClosed;
                     prompt.Text = "Pick a spreadsheet";
 
                     prompt.ShowDialog();
                 }));
+        }
+
+        private void Prompt_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (!HasSelected)
+            {
+                Network.server.TheSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                Network.server.TheSocket.Close();
+            }
         }
 
         /// <summary>
@@ -169,7 +179,7 @@ namespace SS
         private void RequestNew_SS(string selection, object sender, EventArgs e)
         {
 
-            if (selection.Equals("") || selection.Equals("\n") || listOfSpreadsheet.Contains(selection))
+            if (selection.Equals("") || selection.Equals("\\n") || listOfSpreadsheet.Contains(selection))
             {
                 MessageBox.Show("Selection must be non-empty, no newline, and unique");
 
@@ -181,7 +191,7 @@ namespace SS
 
             DisableConnectInputFields();
             MessageBox.Show(selection + " Was chosen");
-
+            HasSelected = true;
             // Send the name of the spreadsheet to server:
             Network.spreadsheetNameQueue.Enqueue(selection);
         }
@@ -194,19 +204,18 @@ namespace SS
         private void Request_SS(string selection, object sender, EventArgs e)
         {
             
-            if (selection.Equals("") || selection.Equals("\n")/* || listOfSpreadsheet.Contains(selection)*/)
+            if (selection.Equals("") || selection.Equals("\n"))
             {
                 MessageBox.Show("Selection must be non-empty, no newline, and unique");
 
                 EnableConnectInputFields();
                 ConnectButton.Text = "Connect";
-
                 return;
             }
 
             DisableConnectInputFields();
             MessageBox.Show(selection + " Was chosen");
-
+            HasSelected = true;
             // Send the name of the spreadsheet to server:
             Network.spreadsheetNameQueue.Enqueue(selection);
         }
@@ -219,8 +228,9 @@ namespace SS
         private void ClosePrompt(Form prompt, object sender, EventArgs e)
         {
             //EnableConnectInputFields();
-            ConnectButton.Text = "Connect";
 
+            ConnectButton.Text = "Connect";
+            
             prompt.Close();
         }
 

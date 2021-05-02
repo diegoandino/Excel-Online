@@ -133,18 +133,21 @@ namespace NetworkController
         /// <param name="obj"></param>
         private static void OnReceive(SocketState state)
         {
+
             if (state.ErrorOccured)
             {
                 ConnectionError("Error while receiving data from server");
                 return;
             }
 
-            Thread t = new Thread(UpdateLoop); 
+            Thread t = new Thread(UpdateLoop);
             lock (state)
             {
                 ProcessMessages(state);
 
+               
                 /* Start Editing Loop */
+                if(state.ErrorOccured)
                 t.Start();
             }
 
@@ -187,13 +190,11 @@ namespace NetworkController
 
                 if (spreadsheetNameQueue.Count >= 1)
                     Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
-
-                lock (commandQueue)
+                if (canEdit)
                 {
-                    if (commandQueue.Count >= 1)
-                        Networking.Send(server.TheSocket, commandQueue.Dequeue());
+                    messageSent();
                 }
-                
+
                 try
                 {
                     JObject json = JObject.Parse(server.data.ToString());
@@ -244,7 +245,8 @@ namespace NetworkController
                     if(int.TryParse(num, out int clientID))
                     {
                         id = clientID;
-                         //TODO: Now the client can send edits
+                        canEdit = true;
+
                     }
                     
                     
@@ -254,5 +256,28 @@ namespace NetworkController
 
             }
         }
+        /// <summary>
+        /// Enqueue message to commandqueue
+        /// </summary>
+        /// <param name="json">JSON message</param>
+        public static void messageQueueHander(string json)
+        {
+            lock (commandQueue)
+            {
+                commandQueue.Enqueue(json);
+                messageSent();
+            }
+            
+        }
+        private static void messageSent()
+        {
+
+            lock (commandQueue)
+            {
+                if(commandQueue.Count >= 1 && canEdit)
+                    Networking.Send(server.TheSocket, commandQueue.Dequeue());
+            }
+        }
+
     }
 }
