@@ -71,6 +71,7 @@ namespace SS
 
             if (Network.server != null)
             {
+                //TODO: Command queue doesn't work currently 
                 /**
                 lock (Network.commandQueue)
                 {
@@ -124,13 +125,16 @@ namespace SS
                             @"""" + contents + @"""" + "}";
 
             if (Network.server != null)
-                Networking.Send(Network.server.TheSocket, json);
-            /**
-            lock (Network.commandQueue)
             {
-                Network.commandQueue.Enqueue(json);
+                Networking.Send(Network.server.TheSocket, json);
+                
+              /**
+               lock (Network.commandQueue)
+                {
+                    Network.commandQueue.Enqueue(json);
+                }
+                **/
             }
-            **/
 
         }
 
@@ -243,10 +247,12 @@ namespace SS
             if (Network.server != null)
             {
                 Networking.Send(Network.server.TheSocket, json);
-               /** lock (Network.commandQueue)
+                /**
+                lock (Network.commandQueue)
                 {
                     Network.commandQueue.Enqueue(json);
-                }**/
+                }
+                **/
             }
 
             else
@@ -266,10 +272,12 @@ namespace SS
 
             if (Network.server != null)
             {
-                /**lock (Network.commandQueue)
+                /**
+                lock (Network.commandQueue)
                 {
                     Network.commandQueue.Enqueue(json);
-                }**/
+                }
+                **/
                 Networking.Send(Network.server.TheSocket, json);
             }
 

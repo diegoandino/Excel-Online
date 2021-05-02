@@ -204,7 +204,9 @@ void Server::ProcessRequests(int client_socket, const char* message, int length,
 	//if the client is sending their username
 	if (isClientSetup[client_socket] == 0)
 	{
-		ProcessClientUsername(client_socket, message, length);
+		std::string string(message);
+		string = string.substr(0,string.length()-1);
+		ProcessClientUsername(client_socket, string.c_str(), length);
 	}
 
 	//or if the client sent a spreadsheet name
