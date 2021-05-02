@@ -54,6 +54,9 @@ namespace SS
             Network.Connected += HandleConnected;
             Network.SpreadSheetsArrived += PickASpreadSheet;
             Network.UpdateArrived += UpdateContentsOfCell;
+            Network.Invalid += ShowMessage;
+            Network.Disconnect += ShowMessage;
+
 
             InitializeComponent();
 
@@ -238,10 +241,19 @@ namespace SS
 
 
         /// <summary>
-        /// Method used to report any errors that occured.
+        /// Method used to report any message from the server that occured.
         /// </summary>
         /// <param name="err">Error to be reported</param>
-        private void ShowConnectionError(string error)
+        private void ShowMessage(string error)
+        {
+            MessageBox.Show(error);
+        }
+
+            /// <summary>
+            /// Method used to report any errors that occured.
+            /// </summary>
+            /// <param name="err">Error to be reported</param>
+            private void ShowConnectionError(string error)
         {
             MessageBox.Show(error);
 

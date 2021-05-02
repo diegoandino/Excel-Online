@@ -34,6 +34,11 @@ namespace NetworkController
         public delegate void ConnectionErrorHandler(string err);
         public static event ConnectionErrorHandler ConnectionError;
 
+        public delegate void InvalidRequestHandler(string err);
+        public static event InvalidRequestHandler Invalid;
+
+        public delegate void DisconnectHandler(string err);
+        public static event DisconnectHandler Disconnect;
         // Event handling for updates:
         public delegate void ServerUpdateHandler(string cellName, string cellContents);
         public static event ServerUpdateHandler UpdateArrived;
@@ -209,15 +214,22 @@ namespace NetworkController
                     }
                     if (value.ToString().Contains("disconnected"))
                     {
-                        // TODO: Show in client's GUI 
+                        json.TryGetValue("user", out JToken disconnect);
+                        Disconnect(disconnect.Value<string>() + " has disconnected");
+                        return;
                     }
                     if (value.ToString().Contains("requestError"))
                     {
-                        //TODO: Show in client's GUI 
+                        json.TryGetValue("message", out JToken error);
+                        json.TryGetValue("message", out JToken cellName);
+                        Invalid(cellName.Value<string>() + " : " +error.Value<string>());
+                        return;
                     }
                     if (value.ToString().Contains("serverError"))
                     {
-                        //TODO: Show in client's GUI 
+                        json.TryGetValue("message", out JToken error);
+                        ConnectionError(error.Value<string>());
+                        return;
                     }
 
 
