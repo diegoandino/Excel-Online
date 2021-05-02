@@ -51,6 +51,8 @@ namespace NetworkController
         /// <summary> Reports whether or not this client has selected a SS</summary>
         public static bool SS_Chosen { get; private set; }
 
+
+        // ID for the client
         private static int id;
         /// <summary>
         /// Our User's name
