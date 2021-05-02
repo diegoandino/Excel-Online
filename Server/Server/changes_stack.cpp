@@ -22,7 +22,10 @@ std::string changes_stack::pop()
 		return ret;
 	}
 	else
-		return "";
+	{
+		std::string s("");
+		return s;
+	}
 }
 
 /// <summary>
@@ -32,9 +35,15 @@ std::string changes_stack::pop()
 std::string changes_stack::peek()
 {
 	if (change_stack.size() > 0)
-		return change_stack.front();
+	{
+		std::string s(change_stack.front());
+		return s;
+	}
 	else
-		return "";
+	{
+		std::string s("");
+		return s;
+	}
 }
 
 /// <summary>

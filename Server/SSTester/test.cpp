@@ -9,6 +9,8 @@
 #include "../Server/dependency_graph.cpp"
 #include "../Server/changes_stack.h"
 #include "../Server/changes_stack.cpp"
+#include "../Server/Spreadsheet.h"
+#include "../Server/Spreadsheet.cpp"
 
 #include <string>
 
@@ -78,6 +80,23 @@ TEST(CellTest, TestConstructor2)
 	EXPECT_EQ(cell.get_cell_content(), std::string("some content"));
 	EXPECT_EQ(cell.get_cell_name(), std::string("name"));
 	EXPECT_FALSE(cell.is_empty());
+}
+
+TEST(CellTest, TestRevert)
+{
+	std::string name("name");
+	std::string content("some content");
+	Cell cell(name, content);
+	
+	cell.set_cell_content(name);
+	EXPECT_EQ(cell.get_cell_content(), name);
+
+	EXPECT_EQ(cell.revert(), content);
+	EXPECT_EQ(cell.get_cell_content(), content);
+
+	std::string empty("");
+	EXPECT_EQ(cell.revert(), empty);
+	EXPECT_EQ(cell.get_cell_content(), empty);
 }
 
 #pragma endregion
@@ -261,97 +280,98 @@ TEST(DependencyGraphTests, SizeTest)
 	EXPECT_EQ(4, t.get_size());
 }
 
-TEST(DependencyGraphTests, StressTest)
-{
-	// Dependency graph
-	DependencyGraph t;
-
-	// A bunch of strings to use
-	const int SIZE = 200;
-	std::string letters[SIZE];
-	for (int i = 0; i < SIZE; i++)
-	{
-		//letters[i] = ("" + (char)('a' + i));
-		letters[i] = std::string("a") + std::to_string(i);
-	}
-
-	// The correct answers
-	std::unordered_set<std::string> dents[SIZE];
-	std::unordered_set<std::string> dees[SIZE];
-	for (int i = 0; i < SIZE; i++)
-	{
-		//dents[i] = new HashSet<string>();
-		
-		dents[i] = std::unordered_set<std::string>();
-		dees[i] = std::unordered_set<std::string>();
-	}
-
-	// Add a bunch of dependencies
-	for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = i + 1; j < SIZE; j++)
-		{
-			t.add_dependency(letters[i], letters[j]);
-			dents[i].insert(letters[j]);
-			dees[j].insert(letters[i]);
-		}
-	}
-
-	// Remove a bunch of dependencies
-	for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = i + 4; j < SIZE; j += 4)
-		{
-			t.remove_dependency(letters[i], letters[j]);
-			dents[i].erase(letters[j]);
-			dees[j].erase(letters[i]);
-		}
-	}
-
-	// Add some back
-	for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = i + 1; j < SIZE; j += 2)
-		{
-			t.add_dependency(letters[i], letters[j]);
-			dents[i].insert(letters[j]);
-			dees[j].insert(letters[i]);
-		}
-	}
-
-	// Remove some more
-	for (int i = 0; i < SIZE; i += 2)
-	{
-		for (int j = i + 3; j < SIZE; j += 3)
-		{
-			t.remove_dependency(letters[i], letters[j]);
-			dents[i].erase(letters[j]);
-			dees[j].erase(letters[i]);
-		}
-	}
-
-	// Make sure everything is right
-	for (int i = 0; i < SIZE; i++)
-	{
-		std::unordered_set<std::string> set1;
-		
-
-		for (std::string s : t.get_dependees(letters[i]))
-		{
-			set1.insert(s);
-		}
-
-		std::unordered_set<std::string> set2;
-		for (std::string s : t.get_dependents(letters[i]))
-		{
-			set2.insert(s);
-		}
-
-		
-		EXPECT_TRUE(dees[i] == set1);
-		EXPECT_TRUE(dents[i] == set2);
-	}
-}
+//
+//TEST(DependencyGraphTests, StressTest)
+//{
+//	// Dependency graph
+//	DependencyGraph t;
+//
+//	// A bunch of strings to use
+//	const int SIZE = 200;
+//	std::string letters[SIZE];
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		//letters[i] = ("" + (char)('a' + i));
+//		letters[i] = std::string("a") + std::to_string(i);
+//	}
+//
+//	// The correct answers
+//	std::unordered_set<std::string> dents[SIZE];
+//	std::unordered_set<std::string> dees[SIZE];
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		//dents[i] = new HashSet<string>();
+//		
+//		dents[i] = std::unordered_set<std::string>();
+//		dees[i] = std::unordered_set<std::string>();
+//	}
+//
+//	// Add a bunch of dependencies
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		for (int j = i + 1; j < SIZE; j++)
+//		{
+//			t.add_dependency(letters[i], letters[j]);
+//			dents[i].insert(letters[j]);
+//			dees[j].insert(letters[i]);
+//		}
+//	}
+//
+//	// Remove a bunch of dependencies
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		for (int j = i + 4; j < SIZE; j += 4)
+//		{
+//			t.remove_dependency(letters[i], letters[j]);
+//			dents[i].erase(letters[j]);
+//			dees[j].erase(letters[i]);
+//		}
+//	}
+//
+//	// Add some back
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		for (int j = i + 1; j < SIZE; j += 2)
+//		{
+//			t.add_dependency(letters[i], letters[j]);
+//			dents[i].insert(letters[j]);
+//			dees[j].insert(letters[i]);
+//		}
+//	}
+//
+//	// Remove some more
+//	for (int i = 0; i < SIZE; i += 2)
+//	{
+//		for (int j = i + 3; j < SIZE; j += 3)
+//		{
+//			t.remove_dependency(letters[i], letters[j]);
+//			dents[i].erase(letters[j]);
+//			dees[j].erase(letters[i]);
+//		}
+//	}
+//
+//	// Make sure everything is right
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		std::unordered_set<std::string> set1;
+//		
+//
+//		for (std::string s : t.get_dependees(letters[i]))
+//		{
+//			set1.insert(s);
+//		}
+//
+//		std::unordered_set<std::string> set2;
+//		for (std::string s : t.get_dependents(letters[i]))
+//		{
+//			set2.insert(s);
+//		}
+//
+//		
+//		EXPECT_TRUE(dees[i] == set1);
+//		EXPECT_TRUE(dents[i] == set2);
+//	}
+//}
 
 TEST(DependencyGraphTests, TestIndexer)
 {
@@ -480,3 +500,72 @@ TEST(StackTests, PushPopOrder)
 }
 
 #pragma endregion
+
+#pragma region SpreadsheetTests
+
+TEST(SpreadsheetTests, Constructor1)
+{
+	Spreadsheet sp;
+	std::string s("spwedsweet UwU");
+	EXPECT_EQ(s, sp.get_spreadsheet_name());
+
+	std::vector<std::string> vec;
+	EXPECT_EQ(vec, sp.get_nonempty_cells());
+}
+
+TEST(SpreadsheetTests, Constructor2)
+{
+	std::string uwu("UwU");
+	Spreadsheet sp(uwu);
+
+	std::string s(uwu);
+	EXPECT_EQ(s, sp.get_spreadsheet_name());
+
+	std::vector<std::string> vec;
+	EXPECT_EQ(vec, sp.get_nonempty_cells());
+}
+
+TEST(SpreadsheetTests, SetCellStr1)
+{
+	std::string uwu("UwU");
+	Spreadsheet sp(uwu);
+
+	std::string name1("a1");
+	std::string content1("Tarik is not a weeb");
+	sp.set_contents_of_cell(name1, content1);
+
+	std::string name2("a2");
+	std::string content2("Tarik is is a weeb");
+	sp.set_contents_of_cell(name2, content2);
+
+	std::vector<std::string> vec;
+	vec.push_back(name1);
+	vec.push_back(name2);
+
+	EXPECT_EQ(vec, sp.get_nonempty_cells());
+}
+
+TEST(SpreadsheetTests, SetCellContents1)
+{
+	std::string uwu("UwU");
+	Spreadsheet sp(uwu);
+
+	std::string name1("a1");
+	std::string content1("Tarik is not a weeb");
+	sp.set_contents_of_cell(name1, content1);
+
+	std::string name2("a2");
+	std::string content2("Tarik is is a weeb");
+	sp.set_contents_of_cell(name2, content2);
+
+	std::vector<std::string> vec;
+	vec.push_back(name1);
+	vec.push_back(name2);
+
+	EXPECT_EQ(vec, sp.get_nonempty_cells());
+	EXPECT_EQ(content1, sp.get_cell_contents(content1));
+	EXPECT_EQ(content2, sp.get_cell_contents(content2));
+}
+
+#pragma endregion
+

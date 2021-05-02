@@ -17,22 +17,20 @@
 /// <summary>
 /// default constructor
 /// </summary>
-Spreadsheet::Spreadsheet()
+Spreadsheet::Spreadsheet() : spreadsheet_name("spwedsweet UwU"), changed(false)
 {
-	changed = false;
 }
 
 
-Spreadsheet::Spreadsheet(std::string& name)
+Spreadsheet::Spreadsheet(std::string& name) : spreadsheet_name(name), changed(false)
 {
-	changed = false;
 }
 
-std::map<Cell, std::string> Spreadsheet::get_spreadsheet_contents() {
-	std::map<Cell, std::string> content; 
-
-	return content; 
-}
+//std::map<Cell, std::string> Spreadsheet::get_spreadsheet_contents() {
+//	std::map<Cell, std::string> content; 
+//
+//	return content; 
+//}
 
 std::string Spreadsheet::get_spreadsheet_name() { return spreadsheet_name;  }
 
@@ -58,8 +56,11 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, doub
 
 	std::list<std::string> list = get_cells_to_recalculate(cellName);
 
-	for(std::string s : list)
-		cells_map[s] = update_value(s);
+	for (std::string s : list)
+	{
+		std::string new_cont(update_value(s));
+		cells_map[s]->set_cell_content(new_cont);
+	}
 
 	return list;
 }
@@ -91,7 +92,10 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, std:
 		set_generic_content(cellName, text);
 
 		for (std::string s : list)
-			cells_map[s] = update_value(s);
+		{
+			std::string new_cont(update_value(s));
+			cells_map[s]->set_cell_content(new_cont);
+		}
 	}
 
 	return list;
@@ -129,7 +133,7 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, std:
 /// For example, if name is A1, B1 contains A1*2, and C1 contains B1+A1, the
 /// list {A1, B1, C1} is returned.
 /// </summary>
-std::list<std::string> Spreadsheet::set_contents_of_cell(std::string name, std::string content)
+std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std::string& content)
 {
 	if (content.empty())
 		throw std::invalid_argument("NO EMPTY STRINGS");
@@ -165,6 +169,31 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string name, std::
 }
 
 /// <summary>
+/// undoes the last change to the spreadsheet
+/// </summary>
+std::string Spreadsheet::undo()
+{
+	return revert(stack_changes.pop());
+}
+
+/// <summary>
+/// Reverts a specific cell back to its previous value
+/// </summary>
+/// <param name="name">name of the cell to be reverted</param>
+std::string Spreadsheet::revert(const std::string& name)
+{
+	try
+	{
+		return cells_map.at(name)->revert();
+	}
+	catch (std::out_of_range e)
+	{
+		std::cout << "revert on nonexistent cell" << std::endl;
+		return "";
+	}
+}
+
+/// <summary>
 /// If changing the contents of the named cell to be the formula would cause a 
 /// circular dependency, throws a CircularException, and no change is made to the spreadsheet.
 /// 
@@ -194,8 +223,8 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, Form
 
 		for (std::string s : list)
 		{
-			std::string c = update_value(s)->get_cell_content();
-			cells_map[s]->set_cell_content(c);
+			std::string new_cont(update_value(s));
+			cells_map[s]->set_cell_content(new_cont);
 		}
 
 		return list;
@@ -217,21 +246,19 @@ void Spreadsheet::set_spreadsheet_name(const std::string& new_name) {
 }
 
 /// <summary>
-/// If name is null or invalid, throws an InvalidNameException.
-/// 
 /// Otherwise, returns the contents (as opposed to the value) of the named cell.  The return
 /// value should be either a string, a double, or a Formula.
 /// </summary>
-Cell* Spreadsheet::get_cell_contents(const std::string& name)
+std::string Spreadsheet::get_cell_contents(const std::string& name)
 {
 	if (cells_map.contains(name))
 	{
-		return cells_map[name];
+		std::string s(cells_map[name]->get_cell_content());
+		return s;
 	}
 	else
 	{
-		Cell c;
-		return &c;
+		return "";
 	}
 }
 
@@ -370,22 +397,24 @@ void Spreadsheet::visit(const std::string& start, std::string& name, std::unorde
 /// should acount for the return type (double, string, Formula)
 /// </summary>
 /// <param name="name"></param>
-/// <returns>a pointer to an updated cell/returns>
-Cell* Spreadsheet::update_value(const std::string& name)
+/// <returns>the value of the calculated cell</returns>
+std::string Spreadsheet::update_value(std::string& name)
 {
-	Cell* cell = get_cell_contents(name);
+	std::string s(get_cell_contents(name));
+	Cell cell(name, s);
 
-	if (cell->is_formula())
+	if (cell.is_formula())
 	{
-		std::string s(cell->get_cell_content());
+		std::string s(cell.get_cell_content());
 		Formula f(s);
 
-		Cell c(name, f.evaluate());
-		return &c;
+		std::string evaluate(f.evaluate().get_content());
+		//Cell c(name, evaluate);
+		return f.evaluate().get_content();
 	}
 	else
 	{
-		return cell;
+		return s;
 	}
 }
 
