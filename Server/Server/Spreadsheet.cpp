@@ -87,12 +87,37 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, std:
 	{
 		cells_map.erase(cellName);
 	}
-	else if (text != "")
+	else if (!text.empty())
 	{
 		set_generic_content(cellName, text);
 
-		for (std::string s : list)
+		/*for (std::string s : list)
 		{
+			std::string new_cont(update_value(s));
+			cells_map[s]->set_cell_content(new_cont);
+		}*/
+		//std::string s = list.begin
+		/*for (int i = 0; i < list.size(); i++)
+		{
+			std::string new_cont(update_value(s));
+			cells_map[s]->set_cell_content(new_cont);
+		}*/
+
+		/*std::list<std::string>::iterator it;
+		for (it = list.begin(); it != list.end(); ++it)
+		{
+			std::string s;
+			s = *it;
+			std::string new_cont(update_value(s));
+			cells_map[s]->set_cell_content(new_cont);
+		}*/
+
+		for (auto const& i : list)
+		{
+			std::string s;
+			s = i; //THERE IS AN ERROR HERE
+			std::cout << i << std::endl;
+			std::cout << s << std::endl;
 			std::string new_cont(update_value(s));
 			cells_map[s]->set_cell_content(new_cont);
 		}
@@ -293,11 +318,8 @@ void Spreadsheet::set_generic_content(std::string& name, std::string& content)
 	else
 	{
 		Cell c(name, content);
-		cells_map.insert({ name, &c });
+		cells_map.insert({ name, &c });//after this line the cell loses its name
 	}
-
-	Cell c(name, content);
-	cells_map[name] = &c;
 }
 
 /// <summary>
