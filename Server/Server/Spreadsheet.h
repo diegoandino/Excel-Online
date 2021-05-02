@@ -52,7 +52,7 @@ private:
 	bool name_check(const std::string& s);
 
 	//instance variables
-	std::unordered_map<std::string, Cell*> cells_map;
+	std::unordered_map<std::string, Cell> cells_map;
 	DependencyGraph cell_graph;
 
 	std::string spreadsheet_name;

@@ -563,8 +563,8 @@ TEST(SpreadsheetTests, SetCellContents1)
 	vec.push_back(name2);
 
 	EXPECT_EQ(vec, sp.get_nonempty_cells());
-	EXPECT_EQ(content1, sp.get_cell_contents(content1));
-	EXPECT_EQ(content2, sp.get_cell_contents(content2));
+	EXPECT_EQ(content1, sp.get_cell_contents(name1));
+	EXPECT_EQ(content2, sp.get_cell_contents(name2));
 }
 
 #pragma endregion

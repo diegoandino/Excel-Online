@@ -59,7 +59,7 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, doub
 	for (std::string s : list)
 	{
 		std::string new_cont(update_value(s));
-		cells_map[s]->set_cell_content(new_cont);
+		cells_map[s].set_cell_content(new_cont);
 	}
 
 	return list;
@@ -91,35 +91,17 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, std:
 	{
 		set_generic_content(cellName, text);
 
-		/*for (std::string s : list)
+		for (auto i : list)
 		{
-			std::string new_cont(update_value(s));
-			cells_map[s]->set_cell_content(new_cont);
-		}*/
-		//std::string s = list.begin
-		/*for (int i = 0; i < list.size(); i++)
-		{
-			std::string new_cont(update_value(s));
-			cells_map[s]->set_cell_content(new_cont);
-		}*/
+			if (i == cellName)
+				continue;
 
-		/*std::list<std::string>::iterator it;
-		for (it = list.begin(); it != list.end(); ++it)
-		{
-			std::string s;
-			s = *it;
-			std::string new_cont(update_value(s));
-			cells_map[s]->set_cell_content(new_cont);
-		}*/
-
-		for (auto const& i : list)
-		{
-			std::string s;
+			std::string s("");
 			s = i; //THERE IS AN ERROR HERE
 			std::cout << i << std::endl;
 			std::cout << s << std::endl;
 			std::string new_cont(update_value(s));
-			cells_map[s]->set_cell_content(new_cont);
+			cells_map[s].set_cell_content(new_cont); // this is updating the current cell twice
 		}
 	}
 
@@ -209,7 +191,7 @@ std::string Spreadsheet::revert(const std::string& name)
 {
 	try
 	{
-		return cells_map.at(name)->revert();
+		return cells_map.at(name).revert();
 	}
 	catch (std::out_of_range e)
 	{
@@ -249,7 +231,7 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, Form
 		for (std::string s : list)
 		{
 			std::string new_cont(update_value(s));
-			cells_map[s]->set_cell_content(new_cont);
+			cells_map[s].set_cell_content(new_cont);
 		}
 
 		return list;
@@ -278,7 +260,7 @@ std::string Spreadsheet::get_cell_contents(const std::string& name)
 {
 	if (cells_map.contains(name))
 	{
-		std::string s(cells_map[name]->get_cell_content());
+		std::string s(cells_map[name].get_cell_content());
 		return s;
 	}
 	else
@@ -313,12 +295,12 @@ void Spreadsheet::set_generic_content(std::string& name, std::string& content)
 {
 	if (cells_map.contains(name))
 	{
-		cells_map[name]->set_cell_content(content);
+		cells_map[name].set_cell_content(content);
 	}
 	else
 	{
 		Cell c(name, content);
-		cells_map.insert({ name, &c });//after this line the cell loses its name
+		cells_map.insert({ name, c });//after this line the cell loses its name
 	}
 }
 

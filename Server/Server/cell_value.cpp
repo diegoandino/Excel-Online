@@ -39,7 +39,7 @@ bool CellValue::is_error()
 
 bool CellValue::is_formula()
 {
-	if (is_empty())
+	if (is_empty() || content.length() < 0)
 		return false;
 
 	return content[0] == '=';
