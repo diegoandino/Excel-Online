@@ -115,7 +115,7 @@ namespace NetworkController
             {
                 Connected();
 
-                Networking.Send(state.TheSocket, UserName);
+                Networking.Send(state.TheSocket, UserName + "\n");
                 server = state;
 
                 // Start an event loop to receive messages from the server
