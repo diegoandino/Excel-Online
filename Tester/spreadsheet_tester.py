@@ -277,7 +277,7 @@ def test_2(address):
     if client.receiveSpreadsheet() != "\n\n":
         print("Fail" + messageterminator)
         return
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     string =client.receiveSpreadsheetSelectionandUpdate()
     if "\n" in string:
         print("Fail" + messageterminator)
@@ -299,13 +299,13 @@ def test_2(address):
 
 def test_3(address):
     print(max_test_time)
-    print("Testing a lot of edits for one client")
+    print("Testing edits for one client")
     client = TestClient("client");
     client.connect_to_server(address)
     if client.receiveSpreadsheet() != "\n\n":
         print("Fail" + messageterminator)
         return
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", 1))
@@ -368,7 +368,7 @@ def test_4(address):
     if client.receiveSpreadsheet() != "\n\n":
         print("Fail" + messageterminator)
         return
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate();
     client.send_message(SelectCell("A1"))
     client.send_message(client_undo)
@@ -431,11 +431,11 @@ def test_4(address):
 
 def test_5(address):
     print(max_test_time)
-    print("testing Redo")
+    print("Testing Redo")
     client = TestClient("client");
     client.connect_to_server(address)
     client.receiveSpreadsheet()
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
     client.send_message(RevertCell("A1"))
@@ -488,11 +488,11 @@ def test_5(address):
 
 def test_6(address):
     print(max_test_time)
-    print("testing Redo and Undo for multiple clients")
+    print("Testing Redo and Undo for multiple clients")
     client = TestClient("client")
     client.connect_to_server(address)
     client.receiveSpreadsheet()
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate()
     client2 = TestClient("client2");
     client2.connect_to_server(address)
@@ -500,7 +500,7 @@ def test_6(address):
     if client2.receiveSpreadsheet() != "file/n/n":
         print("Fail" + messageterminator)
         return
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     client2.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
     try:
@@ -638,8 +638,8 @@ def test_7(address):
     client2.connect_to_server(address)
     client.receiveSpreadsheet()
     client2.receiveSpreadsheet()
-    client.send_message(SendFileName("file"))
-    client2.send_message(SendFileName("file"))
+    client.send_message("file")
+    client2.send_message("file")
     client.close_connection()
     try:
         x = json.load(client2.receive())
@@ -662,8 +662,8 @@ def test_8(address):
     client2.connect_to_server(address)
     client.receiveSpreadsheet()
     client2.receiveSpreadsheet()
-    client.send_message(SendFileName("file"))
-    client2.send_message(SendFileName("file"))
+    client.send_message("file")
+    client2.send_message("file")
     client2.send_message(SelectCell("A1"))
     client.receive()
     client2.send_message(EditCell("A1", "=A1"))
@@ -737,7 +737,7 @@ def test_9(address):
             print("Fail" + messageterminator)
             return
         s = "file" + i
-        client.send_message(SendFileName(s))
+        client.send_message(s)
         endFile = s + r"\n" + endFile
         client.close_connection()
     print("Pass" + messageterminator)
@@ -757,7 +757,7 @@ def test_stress(address):
     client = TestClient("client")
     client.connect_to_server(address)
     client.receive()
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     string =client.receiveSpreadsheetSelectionandUpdate()
     for i in range(0, 100):
         for a in letter:
@@ -780,17 +780,17 @@ def test_stress2(address):
     client = TestClient("client")
     client.connect_to_server(address)
     client.receive()
-    client.send_message(SendFileName("file"))
+    client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate()
     client2 = TestClient("client2")
     client2.connect_to_server(address)
     client2.receiveSpreadsheet()
-    client2.send_message(SendFileName("file"))
+    client2.send_message("file")
     client2.receiveSpreadsheetSelectionandUpdate()
     client3 = TestClient("client3" + terminator);
     client3.connect_to_server(address)
     client3.receiveSpreadsheet()
-    client3.send_message(SendFileName("file"))
+    client3.send_message("file")
     client3.receiveSpreadsheetSelectionandUpdate()
 
     for i in range(0, 100):
