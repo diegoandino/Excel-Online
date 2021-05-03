@@ -79,3 +79,16 @@ public:
 		return _msg.c_str();
 	}
 };
+
+
+class InvalidRequestError : public std::exception
+{
+	std::string _msg;
+public:
+	InvalidRequestError(const std::string& msg) : _msg(msg) {}
+
+	virtual const char* what() const noexcept override
+	{
+		return _msg.c_str();
+	}
+};

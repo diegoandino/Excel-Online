@@ -536,6 +536,11 @@ void Formula::set_error()
 {
 	tokens.clear();
 	tokens.push_back("FORMULA::ERROR");
+	
+}
+
+bool Formula::is_Error() {
+	return to_string() == "FORMULA::ERROR";
 }
 
 bool Formula::is_valid(std::string& str)

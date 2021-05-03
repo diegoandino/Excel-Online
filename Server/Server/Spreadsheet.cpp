@@ -32,7 +32,7 @@ Spreadsheet::Spreadsheet(std::string& name) : spreadsheet_name(name), changed(fa
 //	return content; 
 //}
 
-std::string Spreadsheet::get_spreadsheet_name() { return spreadsheet_name;  }
+std::string Spreadsheet::get_spreadsheet_name() { return spreadsheet_name; }
 
 // MODIFIED PROTECTION FOR PS5
 /// <summary>
@@ -166,7 +166,19 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std:
 			std::string s = content.substr(1);
 			Formula formula(s);
 
-			return set_cell_content(normalized, formula);
+			if (formula.is_Error())
+			{
+				throw InvalidRequestError("INVALID FORMULA");
+			}
+
+			try {
+				return set_cell_content(normalized, formula);
+			}
+			catch (CircularException e) {
+				throw InvalidRequestError("WILD CIRCULAR DEPENDENCY APPEARED");
+
+			}
+
 		}
 		//text
 		else
@@ -174,6 +186,7 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std:
 			return set_cell_content(normalized, content);
 		}
 	}
+
 }
 
 /// <summary>
@@ -201,7 +214,7 @@ std::string Spreadsheet::revert(const std::string& name, bool is_undo)
 			return cells_map.at(name).revert();
 		}
 		else
-		{	
+		{
 			//should add to the changes stack
 			return cells_map.at(name).revert();
 		}
@@ -239,7 +252,7 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, Form
 
 		//an "=" at the begining of a string is how we determine if something is a formula
 		std::string f = "=" + formula.to_string();
-		set_generic_content(cellName, f);//Fs in the chat bois
+		set_generic_content(cellName, f);
 
 		for (std::string s : list)
 		{
@@ -254,7 +267,7 @@ std::list<std::string> Spreadsheet::set_cell_content(std::string& cellName, Form
 		for (std::string s : variables)
 			cell_graph.remove_dependency(cellName, s);
 
-		throw CircularException("HOLY SHIT A WILD CIRCULAR DEPENDENCY APPEARED");
+		throw CircularException("A WILD CIRCULAR DEPENDENCY APPEARED");
 	}
 
 	return std::list<std::string>();

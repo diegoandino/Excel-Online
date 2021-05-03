@@ -452,7 +452,24 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 
 				// Store data in server Spreadsheet
 				lock.lock();
-				available_clients[client_socket]->set_contents_of_cell(cellName, content);
+
+				try {
+					available_clients[client_socket]->set_contents_of_cell(cellName, content);
+				}
+				catch (InvalidRequestError e)
+				{
+					// Send invalid Request error to client.
+					std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "requestError"
+						"\"" ", " "\"" "cellName" "\"" ": " "\"" + cellName + "\"" ", "
+						"\"" "message" "\"" ": " "\"" + e.what() + "\"" "}" + "\n"
+					);
+
+					std::cout << "JSON BEING SENT: " << json << std::endl;
+					BroadcastToClients(client_socket, json.c_str(), json.size());
+					lock.unlock();
+					return;
+					
+				}
 				lock.unlock();
 
 				// Send data over to client to display on GUI

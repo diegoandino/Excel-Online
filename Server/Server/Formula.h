@@ -16,6 +16,7 @@ public:
 	Formula(std::string& formula);
 
 	bool is_valid(std::string& str);
+	bool is_Error();
 
 	double lookup(std::string& str);
 
