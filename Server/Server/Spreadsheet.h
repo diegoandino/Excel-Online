@@ -51,6 +51,8 @@ private:
 	std::string normalize(const std::string& s);
 	bool name_check(const std::string& s);
 
+	std::vector<std::string> tokenize(std::string& s, std::string& del);
+
 	//instance variables
 	std::unordered_map<std::string, Cell> cells_map;
 	DependencyGraph cell_graph;

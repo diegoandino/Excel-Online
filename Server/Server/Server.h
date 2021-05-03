@@ -56,7 +56,7 @@ private:
 
 	std::map<Spreadsheet*, std::vector<int>> sp_to_client;
 
-	std::map<Spreadsheet*, changes_stack> changes_list;	//changes stack for a server
+	//std::map<Spreadsheet*, changes_stack> changes_list;	//changes stack for a server
 
 	std::map<Spreadsheet*, std::map<std::string, changes_stack>> cell_changes;  //changes for specific cells
 

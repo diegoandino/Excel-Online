@@ -197,6 +197,13 @@ std::string Spreadsheet::undo(std::string& name)
 {
 	name = stack_changes.peek();
 	name = normalize(name);
+
+	std::string rev(name);
+	std::string tkn("::");
+	std::vector<std::string> vec = tokenize(rev, tkn);
+
+	name = vec[0];
+
 	return revert(stack_changes.pop(), true);
 }
 
@@ -211,11 +218,27 @@ std::string Spreadsheet::revert(const std::string& name, bool is_undo)
 	{
 		if (is_undo)
 		{
+
+			std::string rev(name);
+			std::string tkn("::");
+
+			std::vector<std::string> vec = tokenize(rev, tkn);
+
+			//means we have a cell name and a content 
+			//which means its a revert
+			if (vec.size() == 2)
+			{
+				cells_map.at(vec[0]).set_cell_content(vec[1]);
+				return cells_map.at(vec[0]).get_cell_content();
+			}
+
 			return cells_map.at(name).revert();
 		}
 		else
 		{
 			//should add to the changes stack
+			std::string p(name + "::" + get_cell_contents(name));
+			stack_changes.push(p);
 			return cells_map.at(name).revert();
 		}
 	}
@@ -478,4 +501,29 @@ bool Spreadsheet::name_check(const std::string& s)
 	std::string varPattern = "[a-zA-Z]?[0-9]*";
 
 	return std::regex_match(s, std::regex(varPattern));
+}
+
+/// <summary>
+/// splits a string using a character a a delimiter
+/// from https://www.geeksforgeeks.org/how-to-split-a-string-in-cc-python-and-java/
+/// </summary>
+/// <param name="s">string to be split</param>
+/// <param name="del">character delimeter</param>
+/// <returns>a vector of strings</returns>
+std::vector<std::string> Spreadsheet::tokenize(std::string& s, std::string& del)
+{
+	int start = 0;
+	int end = s.find(del);
+	std::vector<std::string> ret;
+
+	while (end != -1)
+	{
+		std::string tkn(s.substr(start, end - start));
+		ret.push_back(tkn);
+		start = end + del.size();
+		end = s.find(del, start);
+	}
+
+	ret.push_back(s.substr(start, end - start));
+	return ret;
 }
