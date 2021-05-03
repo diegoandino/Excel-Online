@@ -188,11 +188,14 @@ namespace NetworkController
                 // Sends spreadsheet name to open to server
                 if (spreadsheetNameQueue.Count >= 1)
                 {
+                    Console.WriteLine("sending spreadsheet name " + server.data);
+
+                    server.RemoveData(0, server.data.Length);
+
                     //Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
                     byte[] dataBytes = Encoding.UTF8.GetBytes(spreadsheetNameQueue.Dequeue());
                     server.TheSocket.BeginSend(dataBytes, 0, dataBytes.Length, SocketFlags.None, null, server.TheSocket);
 
-                    server.RemoveData(0, server.data.ToString().Length);
                     return;
                 }
 
@@ -204,6 +207,8 @@ namespace NetworkController
 
                 try
                 {
+
+                    Console.WriteLine("before changes loop" + server.data);
 
                     string[] commands = Regex.Split(server.data.ToString(), @"\n+");
 
@@ -248,7 +253,7 @@ namespace NetworkController
                         }
                     }
                
-                    server.RemoveData(0, server.data.ToString().Length);
+                    server.RemoveData(0, server.data.Length);
                 }
 
                 catch (Exception e)
