@@ -300,7 +300,7 @@ def test_3(address):
     client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
-    client.send_message(EditCell("A1", 1))
+    client.send_message(EditCell("A1", "1"))
     try:
         x= json.loads(client.receive())
         if  "cellUpdated" not in x["messageType"] or "A1" not in x["cellName"] or "1" not in x["contents"]:
@@ -310,7 +310,7 @@ def test_3(address):
         print("Fail" + messageterminator)
         return
     client.send_message(SelectCell("A4"))
-    client.send_message(EditCell("A4", 5))
+    client.send_message(EditCell("A4", "5"))
     try:
         x= json.loads(client.receive())
         if  "cellUpdated" not in x["messageType"] or "A4" not in x["cellName"] or "5" not in x["contents"]:

@@ -238,12 +238,15 @@ namespace NetworkController
 
                 catch (Exception e)
 				{
-                    string num = server.data.ToString().Substring(server.data.Length-2);
-                    if(int.TryParse(num, out int clientID))
+                    if (server.data.ToString().Contains("\n"))
                     {
-                        id = clientID;
-                        canEdit = true;
+                        string num = server.data.ToString().Substring(server.data.Length - 2);
+                        if (int.TryParse(num, out int clientID))
+                        {
+                            id = clientID;
+                            canEdit = true;
 
+                        }
                     }
 
                     
