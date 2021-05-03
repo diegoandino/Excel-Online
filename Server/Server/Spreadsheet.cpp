@@ -146,10 +146,10 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std:
 		throw std::invalid_argument("NO EMPTY STRINGS");
 
 	std::string normalized = normalize(name);
-	name_check(name);
+	name_check(normalized);
 
 	changed = true;
-	stack_changes.push(name);
+	stack_changes.push(normalized);
 
 	//three cases possible content is either a:
 	//number
@@ -177,10 +177,13 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std:
 }
 
 /// <summary>
-/// undoes the last change to the spreadsheet
+/// undoes the last change to the spreadsheet 
 /// </summary>
-std::string Spreadsheet::undo()
+/// <returns>the new content of the cell</returns>
+std::string Spreadsheet::undo(std::string& name)
 {
+	name = stack_changes.peek();
+	name = normalize(name);
 	return revert(stack_changes.pop(), true);
 }
 
@@ -188,6 +191,7 @@ std::string Spreadsheet::undo()
 /// Reverts a specific cell back to its previous value
 /// </summary>
 /// <param name="name">name of the cell to be reverted</param>
+/// <returns>the new content of the cell</returns>
 std::string Spreadsheet::revert(const std::string& name, bool is_undo)
 {
 	try
@@ -302,6 +306,9 @@ std::vector<std::string> Spreadsheet::get_nonempty_cells()
 /// <param name="content">content to be set</param>
 void Spreadsheet::set_generic_content(std::string& name, std::string& content)
 {
+	std::string s(name);
+
+
 	if (cells_map.contains(name))
 	{
 		cells_map[name].set_cell_content(content);

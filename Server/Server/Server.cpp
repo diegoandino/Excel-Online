@@ -218,6 +218,7 @@ void Server::ProcessRequests(int client_socket, const char* message, int length,
 	else
 	{
 		// Else Update Loop
+		ProcessUndoRequests(client_socket, message, length, req);
 		ProcessCellSelectedRequests(client_socket, message, length, req);
 		ProcessCellEditedRequests(client_socket, message, length, req);
 	}
@@ -508,4 +509,39 @@ Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
 	}
 
 	return NULL;
+}
+
+/// <summary>
+/// Processes an undo request on a spreadsheet
+/// </summary>
+/// <param name="client_socket"></param>
+void Server::ProcessUndoRequests(int client_socket, const char* message, int length, JObject req)
+{
+	//get the client's spreadsheet
+	//undo the last command
+	//broadcast to clients
+
+	for (JObject::iterator it = req.begin(); it != req.end(); ++it)
+	{
+		if (it.key() == "requestType")
+		{
+			if (it.value() == "undo")
+			{
+				lock.lock();
+				Spreadsheet* sp = available_clients[client_socket];
+				std::string name("");
+				std::string content(sp->undo(name));
+				lock.unlock();
+
+				// Send data over to client to display on GUI
+				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated "
+					"\"" ", " "\"" "cellName" "\"" ": " "\"" + name + "\"" ", "
+					"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
+				);
+
+				BroadcastToClients(client_socket, json.c_str(), json.size());
+			}
+		}
+	}
+
 }

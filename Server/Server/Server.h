@@ -67,10 +67,10 @@ private:
 	void ProcessCellSelectedRequests			(int client_socket, const char* message, int length, JObject req);
 	void ProcessCellEditedRequests				(int client_socket, const char* message, int length, JObject req);
 	void ProcessRequests						(int client_socket, const char* message, int length, JObject req);
+	void ProcessUndoRequests					(int client_socket, const char* message, int length, JObject req);
 	void CreateNewSpreadsheet					(int client_socket, std::string name);
 	void ProcessClientUsername					(int client_socket, const const char* message, int length);
 	void ProcessClientFilename					(int client_socket, const const char* message);
-
 
 	bool initial_handshake_approved = false;
 };

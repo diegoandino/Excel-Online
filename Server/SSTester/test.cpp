@@ -576,12 +576,14 @@ TEST(SpreadsheetTests, Undo1)
 	std::string content1("Tarik is not a weeb");
 	sp.set_contents_of_cell(name1, content1);
 
-	sp.undo();
-
+	std::string s("");
+	EXPECT_EQ("", sp.undo(s));
+	EXPECT_EQ("a1", s);
 	EXPECT_EQ("", sp.get_cell_contents(name1));
+
 }
 
-TEST(SpreadsheetTests, UndoLomgChain)
+TEST(SpreadsheetTests, UndoLongChain)
 {
 	std::string uwu("UwU");
 	Spreadsheet sp(uwu);
@@ -610,19 +612,26 @@ TEST(SpreadsheetTests, UndoLomgChain)
 	std::string content6("ofc");
 	sp.set_contents_of_cell(name6, content6);
 
-	sp.undo();
+	std::string s5("");
+	EXPECT_EQ(content5, sp.undo(s5));
+	EXPECT_EQ(name5, s5);
 	EXPECT_EQ(content5, sp.get_cell_contents(name5));
 
-	sp.undo();
+	std::string s4("");
+	EXPECT_EQ(content4, sp.undo(s4));
+	EXPECT_EQ(name4, s4);
 	EXPECT_EQ(content4, sp.get_cell_contents(name4));
 
-	sp.undo();
+	std::string s3("");
+	EXPECT_EQ(content3, sp.undo(s3));
 	EXPECT_EQ(content3, sp.get_cell_contents(name3));
 
-	sp.undo();
+	std::string s2("");
+	EXPECT_EQ(content2, sp.undo(s2));
 	EXPECT_EQ(content2, sp.get_cell_contents(name2));
 
-	sp.undo();
+	std::string s1("");
+	EXPECT_EQ(content1, sp.undo(s1));
 	EXPECT_EQ(content1, sp.get_cell_contents(name1));
 }
 

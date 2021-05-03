@@ -119,9 +119,10 @@ namespace SS
         /// <returns></returns>
         public void SendUpdateRequest(string contents)
         {
+
             // Send to server
             string json = @"{""requestType"": ""editCell"", ""cellName"":" + @"""" +
-                            GetCellName(col, row) + @"""," + @"""contents"": " +
+                            GetCellName(col, row).ToLower() + @"""," + @"""contents"": " +
                             @"""" + contents + @"""" + "}";
 
             if (Network.server != null)
@@ -241,7 +242,6 @@ namespace SS
         /// </summary>
         public void SendUndo()
         {
-
             string json = @"{""requestType"": ""undo"" }";
 
             if (Network.server != null)
@@ -254,7 +254,6 @@ namespace SS
                 }
                 **/
             }
-
             else
             {
                 return;

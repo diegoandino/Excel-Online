@@ -29,7 +29,7 @@ public:
 
 	std::list<std::string> set_contents_of_cell(std::string& name, std::string& content);
 
-	std::string undo();
+	std::string undo(std::string &name);
 	std::string revert(const std::string& name, bool is_undo);
 
 private:
