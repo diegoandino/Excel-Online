@@ -400,7 +400,8 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 	available_clients[client_socket] = s;
 	sp_to_client[s].push_back(client_socket);
 	lock.unlock();
-
+	std::string id(std::to_string(client_socket) + "\n");
+	SendToClient(client_socket, id.c_str(), id.size());
 	initial_handshake_approved = true;
 }
 
