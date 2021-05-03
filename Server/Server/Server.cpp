@@ -370,6 +370,8 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 			// Send all existing cells to this client.
 			for (std::string cellName : spreadsheet->get_nonempty_cells())
 			{
+				std::cout << "open cell: " << cellName << std::endl;
+
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "contents" "\"" ": " "\"" + spreadsheet->get_cell_contents(cellName) + "\"" "}" + "\n");

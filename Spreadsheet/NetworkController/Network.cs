@@ -8,6 +8,7 @@ using System.Threading;
 using Newtonsoft.Json.Linq;
 using SS;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace NetworkController
 {
@@ -87,6 +88,9 @@ namespace NetworkController
         public static string cellName;
         public static string contents;
 
+        private static Stopwatch sw;
+        private static long UpdateDelay = 30;
+
         /// <summary>
         /// Begins handshake.
         /// </summary>
@@ -140,12 +144,14 @@ namespace NetworkController
             }
 
             Thread t = new Thread(UpdateLoop);
+            sw = new Stopwatch();
             lock (state)
             {
                 ProcessMessages(state);
 
                 /* Start Editing Loop */
                 t.Start();
+                sw.Start();
             }
 
             Networking.GetData(state);
@@ -177,6 +183,10 @@ namespace NetworkController
         /// <param name="state"></param>
         private static void UpdateLoop()
         {
+
+            while(sw.ElapsedMilliseconds < UpdateDelay){       }
+            sw.Restart();
+
             lock (server)
             {
                 if (server.ErrorOccured)
