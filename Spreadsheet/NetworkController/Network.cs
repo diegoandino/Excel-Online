@@ -275,7 +275,7 @@ namespace NetworkController
             lock (commandQueue)
             {
                 if(commandQueue.Count >= 1)
-                    Networking.Send(server.TheSocket, commandQueue.Dequeue());
+                    Networking.Send(server.TheSocket, commandQueue.Dequeue() + "\n");
             }
         }
 

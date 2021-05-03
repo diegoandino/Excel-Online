@@ -4,7 +4,7 @@ import socket
 import threading
 import sys
 
-max_test_time = 10
+max_test_time = 20
 number_of_test = 13
 
 input = sys.argv # receive input 
@@ -279,9 +279,8 @@ def test_2(address):
         return
     client.send_message("file")
     string =client.receiveSpreadsheetSelectionandUpdate()
-    if "\n" in string:
-        print("Fail" + messageterminator)
-        return
+    print(SelectCell("A1"))
+    print(EditCell("A1", "1"))
     client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", "1"))
     try:
@@ -302,9 +301,7 @@ def test_3(address):
     print("Testing edits for one client")
     client = TestClient("client");
     client.connect_to_server(address)
-    if client.receiveSpreadsheet() != "\n\n":
-        print("Fail" + messageterminator)
-        return
+    client.receiveSpreadsheet()
     client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
@@ -365,9 +362,7 @@ def test_4(address):
     print("testing Undo")
     client = TestClient("client");
     client.connect_to_server(address)
-    if client.receiveSpreadsheet() != "\n\n":
-        print("Fail" + messageterminator)
-        return
+    client.receiveSpreadsheet()
     client.send_message("file")
     client.receiveSpreadsheetSelectionandUpdate();
     client.send_message(SelectCell("A1"))
