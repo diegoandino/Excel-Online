@@ -378,6 +378,9 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 
 				SendToClient(client_socket, json.c_str(), json.size());
 			}
+			
+			std::string id(std::to_string(client_socket) + "\n");
+			SendToClient(client_socket, id.c_str(), id.size());
 
 			lock.unlock();
 
