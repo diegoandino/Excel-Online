@@ -223,6 +223,7 @@ void Server::OnMessageReceived(int client_socket, const char* message, int lengt
 /// </summary>
 void Server::ProcessRequests(int client_socket, const char* message, int length, JObject req)
 {
+
 	//if the client is sending their username
 	if (isClientSetup[client_socket] == 0)
 	{
@@ -245,88 +246,6 @@ void Server::ProcessRequests(int client_socket, const char* message, int length,
 		ProcessCellSelectedRequests(client_socket, message, length, req);
 		ProcessCellEditedRequests(client_socket, message, length, req);
 	}
-}
-
-
-/// <summary>
-/// This method is called from ProcessRequests.
-/// Here We use an iterator to look at our req based off of the key of that request.
-/// 
-/// Case:
-/// -	"name" : printout to console this user has connected. Send a string of available spreadsheets to client.   
-/// </summary>
-/// <param name="client_socket"></param>
-/// <param name="message"></param>
-/// <param name="length"></param>
-/// <param name="req"></param>
-void Server::ProcessClientConnectedRequests(int client_socket, const char* message, int length, JObject req)
-{
-	for (JObject::iterator it = req.begin(); it != req.end(); ++it)
-	{
-		if (it.key() == "name")
-		{
-			std::cout << "Client: " << it.value() << " has connected!" << '\n';
-
-			std::string username = it.value();
-
-			// Send Available Spreadsheets to Client
-			std::string spreadsheets = get_available_spreadsheets();
-			SendToClient(client_socket, spreadsheets.c_str(), length);
-
-
-			// Check if it's empty; if so send anyways, Client needs to know there's no available Spreadsheets
-			// Also create a new (empty) Spreadsheet for the client
-			if (spreadsheets == "") {
-				SendToClient(client_socket, spreadsheets.c_str(), length);
-				//request_new_ss = true;
-
-				// Add this new spreadsheet to available spreadsheet 
-				Spreadsheet* spreadsheet = new Spreadsheet();
-				lock.lock();
-				available_clients.emplace(client_socket, spreadsheet);
-				lock.unlock();
-			}
-		}
-
-		if (it.key() == "spreadsheet_name")
-		{
-			std::cout << "Spreadsheet Name Selected: " << it.value() << '\n';
-
-			std::string str = it.value();
-
-			// If the requested spreadsheet is present send it
-			for (int index = 0; index < available_spreadsheets.size(); index++)
-			{
-				std::string temp = available_spreadsheets[index]->get_spreadsheet_name();
-
-				if (temp == str) {
-					Spreadsheet* spreadsheet = find_selected_spreadsheet(it.value());
-					spreadsheet->set_spreadsheet_name(it.value());
-
-					lock.lock();
-					available_clients[client_socket] = spreadsheet;
-					sp_to_client[spreadsheet].push_back(client_socket);
-					lock.unlock();
-
-					isClientSetup[client_socket] = true;
-					return;
-				}
-			}
-
-			// Spreadsheet name was not found, it did not exists yet, create it and send it
-			Spreadsheet* s = new Spreadsheet(str);
-			available_spreadsheets.push_back(s);
-
-			s->set_spreadsheet_name(str);
-
-			lock.lock();
-			available_clients[client_socket] = s;
-			sp_to_client[s].push_back(client_socket);
-			lock.unlock();
-		}
-	}
-
-	initial_handshake_approved = true;
 }
 
 
@@ -460,6 +379,8 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 	for (JObject::iterator it = req.begin(); it != req.end(); ++it) {
 		if (it.key() == "contents") {
 			content = it.value();
+			if (content.empty())
+				return;
 		}
 
 		if (it.key() == "cellName") {
@@ -489,7 +410,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 					);
 
 					std::cout << "JSON BEING SENT: " << json << std::endl;
-					BroadcastToClients(client_socket, json.c_str(), json.size());
+					SendToClient(client_socket, json.c_str(), json.size());
 					lock.unlock();
 					return;
 					

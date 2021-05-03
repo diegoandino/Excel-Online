@@ -109,12 +109,11 @@ Formula::Formula(std::string& formula)
 		{
 			if (is_variable(tokens[i]))
 			{
-				if (!is_valid(tokens[i]))
-				{
+				
 					std::cout << "a token is not valid" << std::endl;
 					set_error();
 					return;
-				}
+				
 			}
 		}
 	}
