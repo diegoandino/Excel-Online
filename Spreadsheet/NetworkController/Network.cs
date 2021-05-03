@@ -237,28 +237,33 @@ namespace NetworkController
 
                                     canEdit = true;
                                 }
+                        if (value.ToString().Contains("requestError"))
+                        {
+                            json.TryGetValue("message", out JToken error);
+                            json.TryGetValue("message", out JToken cellName);
+                            Invalid("requestError" + " : " + error.Value<string>());
+                            server.RemoveData(0, server.data.Length);
+                            return;
+                        }
                         if (value.ToString().Contains("cellSelected"))
                         {
                             // TODO: Show in client's GUI and disable owner's selection showing up
+                            server.RemoveData(0, server.data.Length);
+                            return;
 
                         }
                         if (value.ToString().Contains("disconnected"))
                         {
                             json.TryGetValue("user", out JToken disconnect);
                             Disconnect(disconnect.Value<string>() + " has disconnected");
-                            return;
-                        }
-                        if (value.ToString().Contains("requestError"))
-                        {
-                            json.TryGetValue("message", out JToken error);
-                            json.TryGetValue("message", out JToken cellName);
-                            Invalid(cellName.Value<string>() + " : " + error.Value<string>());
+                            server.RemoveData(0, server.data.Length);
                             return;
                         }
                         if (value.ToString().Contains("serverError"))
                         {
                             json.TryGetValue("message", out JToken error);
                             ConnectionError(error.Value<string>());
+                            server.RemoveData(0, server.data.Length);
                             return;
                         }
                     }
