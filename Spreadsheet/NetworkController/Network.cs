@@ -241,7 +241,7 @@ namespace NetworkController
                         {
                             json.TryGetValue("message", out JToken error);
                             json.TryGetValue("message", out JToken cellName);
-                            Invalid("requestError" + " : " + error.Value<string>());
+                            Invalid("requestError" + " : " + error.Value<string>() + " on cell: " + cellName);
                             server.RemoveData(0, server.data.Length);
                             return;
                         }
