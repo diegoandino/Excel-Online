@@ -56,14 +56,11 @@ private:
 
 	std::map<Spreadsheet*, std::vector<int>> sp_to_client;
 
-	//std::map<Spreadsheet*, changes_stack> changes_list;	//changes stack for a server
-
 	std::map<Spreadsheet*, std::map<std::string, changes_stack>> cell_changes;  //changes for specific cells
 
 	Spreadsheet* find_selected_spreadsheet(std::string name);
 
 	void EraseFromServer						(int client_socket);
-	void ProcessClientConnectedRequests			(int client_socket, const char* message, int length, JObject req);
 	void ProcessCellSelectedRequests			(int client_socket, const char* message, int length, JObject req);
 	void ProcessCellEditedRequests				(int client_socket, const char* message, int length, JObject req);
 	void ProcessRequests						(int client_socket, const char* message, int length, JObject req);
