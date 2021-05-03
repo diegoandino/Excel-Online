@@ -147,7 +147,6 @@ namespace NetworkController
 
                
                 /* Start Editing Loop */
-                if(state.ErrorOccured)
                 t.Start();
             }
 
@@ -191,9 +190,9 @@ namespace NetworkController
                 if (spreadsheetNameQueue.Count >= 1)
                     Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
                 if (canEdit)
-                {
                     messageSend();
-                }
+
+                
 
                 try
                 {
@@ -246,12 +245,12 @@ namespace NetworkController
                         canEdit = true;
 
                     }
-                    
+
                     
                     server.RemoveData(0, server.data.ToString().Length);
                 }
 
-
+                
             }
         }
         /// <summary>
@@ -275,7 +274,7 @@ namespace NetworkController
 
             lock (commandQueue)
             {
-                if(commandQueue.Count >= 1 && canEdit)
+                if(commandQueue.Count >= 1)
                     Networking.Send(server.TheSocket, commandQueue.Dequeue());
             }
         }

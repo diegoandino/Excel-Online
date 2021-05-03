@@ -1,5 +1,5 @@
 #TODO run the tests on the server
-#import  json
+import  json
 import socket
 import threading
 import sys
@@ -79,6 +79,7 @@ class TestClient:
         # create a class variable
         self.soc = None 
         self.clientname = name
+        self.id = None
 
         
     # class's method connect_to_server
@@ -123,7 +124,7 @@ class TestClient:
                 exit()    
 
   
-        return received
+        return received.rstrip()
 
     # class's method receiving a list of spreadsheet
     def receiveSpreadsheet(self):
@@ -153,9 +154,10 @@ class TestClient:
                 
                 # Get rid of \n from the received
                 if TryParse(received.rstrip()):
+                    id = int(received.rstrip())
                     break;
                 else:
-                    stringlist.append(received)
+                    stringlist.append(received.rstrip())
             except:
                 print("Fail" + messageterminator)
                 exit()    
@@ -178,14 +180,15 @@ def EditCell(cell_name, cell_contents):
 def RevertCell(cell_name):
     return "{\"requestType\": \"revertCell\", \"cellName\": \"A1\"}" 
 
-def SendClientName(clientname):
-    return clientname
 
-def SendFileName(file):
-    return file
+#server_handshake_files = "{1}{0}{2}{0}{3}{0}{0}".format(terminator, file1, file2, file3)
 
 
+#error_invalid_request = "{{ messageType: \"requestError\", cellName: {0},message: {1} }}".format(cell_name, error_message)
+#error_shutdown_server = "{{ messageType: \"serverError\", message: {0} }}".format(error_message)
 
+#server_cell_selected = "{{messageType: \"cellSelected\", + cellName: {0} selector: {1}, selectorName: {2} }}".format(cell_name, ID, user_name)
+#server_cell_changed = "{{ messageType: \"cellUpdated\", cellName: {0}, contents: {1} }}".format(cell_name, cell_contents)
 
 
 
@@ -217,6 +220,10 @@ def run_input(num, address):
         test_6(address)
     elif(num=='7'):
         test_7(address)
+    elif(num=='8'):
+        stress(address)
+    elif(num=='9'):
+        stress2(address)
                 
         
 
@@ -254,78 +261,171 @@ def receive_test():
 def test_1(address):
     
     print(max_test_time)
-    print("test receive #1")
+    print("Testing receive")
 
     ip_ad = address.split(':')
     set_connection(ip_ad[0], int(ip_ad[1]) )
     send_message("client" + terminator)
     receive_test()
     print("Pass" + messageterminator)
+    return
 
 def test_2(address):
     print(max_test_time)
-    print("test edit for one client")
+    print("Testing edit for one client")
     client = TestClient("client");
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
     string =client.receiveSpreadsheetSelectionandUpdate()
+    if "\n" in string:
+        print("Fail" + messageterminator)
+        return
     client.send_message(SelectCell("A1"))
-    client.receive()
     client.send_message(EditCell("A1", "1"))
-    client.receive()
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "1":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     print("Pass" + messageterminator)
+    return
     
 
 
 def test_3(address):
     print(max_test_time)
-    print("testing a lot of edits for one client")
+    print("Testing a lot of edits for one client")
     client = TestClient("client");
     client.connect_to_server(address)
-    client.receive()
-    client.send_message(SendFileName("file"))
-    string =client.receiveSpreadsheetSelectionandUpdate()
-    if string.count() != 0:
+    if string == "\n\n":
         print("Fail" + messageterminator)
+        return
+    client.send_message(SendFileName("file"))
+    client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
-    client.receive()
-    client.send_message(EditCell("A1", "1"))
-    client.receive()
+    client.send_message(EditCell("A1", 1))
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != 1:
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     client.send_message(SelectCell("A4"))
-    client.receive()
-    client.send_message(EditCell("A4", "5"))
-    client.receive()
+    client.send_message(EditCell("A4", 5))
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A4" or x["contents"] != 5:
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     client.send_message(SelectCell("A5"))
-    client.receive()
     client.send_message(EditCell("A5", "=A1 + A4"))
-    client.receive()
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A5" or "=A1 + A4" not in x["contents"]:
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     client.send_message(SelectCell("A5"))
-    client.receive()
     client.send_message(EditCell("A5", "Hello World"))
-    client.receive()
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A5" or "Hello World" not in x["contents"]:
+            print("Fail" + messageterminator)
+        return
+    except:
+        print("Fail" + messageterminator)
+        return
     client.send_message(SelectCell("A7"))
-    client.receive()
     client.send_message(EditCell("A7", "=3"))
-    client.receive()
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A5" or "=3" not in x["contents"]:
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     print("Pass" + messageterminator)
+    r
     
 def test_4(address):
     print(max_test_time)
     print("testing Undo")
     client = TestClient("client");
     client.connect_to_server(address)
-    client.receive()
+    if client.receive() != "\n\n":
+        print("Fail" + messageterminator)
+        return
     client.send_message(SendFileName("file"))
     client.receiveSpreadsheetSelectionandUpdate();
     client.send_message(SelectCell("A1"))
-    client.receive()
     client.send_message(client_undo)
-    client.receive()
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "requestError"  or x["cellName"] != "A1":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     client.send_message(EditCell("A1", "=3"))
     client.receive()
     client.send_message(client_undo)
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "=3":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+    client.send_message(SelectCell("A1"))
+    client.send_message(EditCell("A1", "=3"))
     client.receive()
+    client.send_message(SelectCell("A1"))
+    client.send_message(EditCell("A1", 3))
+    client.receive()
+    client.send_message(SelectCell("A1"))
+    client.send_message(EditCell("A1", "H"))
+    client.receive()
+    client.send_message(client_undo)
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "H":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+    client.send_message(client_undo)
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != 3:
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+    client.send_message(client_undo)
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "=3":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
     print("Pass" + messageterminator)
 
 def test_5(address):
@@ -333,26 +433,62 @@ def test_5(address):
     print("testing Redo")
     client = TestClient("client");
     client.connect_to_server(address)
-    client.receiveSpreadsheetSelectionandUpdate()
+    client.recieve()
     client.send_message(SendFileName("file"))
+    client.receiveSpreadsheetSelectionandUpdate()
     client.send_message(SelectCell("A1"))
-    client.receive()
     client.send_message(RevertCell("A1"))
-    client.receive()
-    client.send_message(client_undo)
-    client.receive()
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+    client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", "=3"))
+    client.recieve()
+    client.send_message(SelectCell("A1"))
+    client.send_message(EditCell("A1", "What"))
+    client.recieve()
+    client.send_message(SelectCell("A1"))
+    client.send_message(EditCell("A1", "Hello"))
     client.receive()
     client.send_message(RevertCell("A1"))
-    client.receive()
-    client.send_message(client_undo)
-    client.receive()    
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "What":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+    client.send_message(RevertCell("A1"))
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "requestError" or x["cellName"] != "=3":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+        client.send_message(RevertCell("A1"))
+    try:
+        x= json.load(client.receive())
+        if x["messageType"] != "requestError" or x["cellName"] != "":
+            print("Fail" + messageterminator)
+            return
+    except:
+        print("Fail" + messageterminator)
+        return
+    
     print("Pass" + messageterminator)
 
 def test_6(address):
     print(max_test_time)
     print("testing Redo and Undo for multiple clients")
-    client = TestClient("client");
+    client = TestClient("client")
     client.connect_to_server(address)
     client.receive()
     client.send_message(SendFileName("file"))
@@ -384,13 +520,50 @@ def test_6(address):
 def test_7(address):
     print(max_test_time)
     print("testing closing connection")
-    client = TestClient("client");
+    client = TestClient("client")
+    client2 = TestClient("client")
     client.connect_to_server(address)
+    client2.connect_to_server(address)
     client.receive()
+    client2.receive()
     client.send_message(SendFileName("file"))
+    client2.send_message(SendFileName("file"))
     client.close_connection()
+    try:
+        x = json.load(client2.receive())
+        if x["messageType"]!= "disconnected" || x["user"] != client.id:
+        print("Fail" + messageterminator)
+        return
+    except:
+        print("Fail" + messageterminator)
+        return
     print("Pass" + messageterminator)
-    
+    return
+
+
+def test_8(address):
+    print(max_test_time)
+    print("testing circular dependencies")
+    client = TestClient("client")
+
+    print("Pass" + messageterminator)
+    return
+
+def test_9(address):
+    print(max_test_time)
+    print("testing file list")
+    client = TestClient("client")
+    print("Pass" + messageterminator)
+    return
+
+def test_10(address):
+    print(max_test_time)
+    print("testing spreadsheet update for new client")
+    client = TestClient("client")
+
+    print("Pass" + messageterminator)
+    return
+
 def test_stress(address):
     print(max_test_time)
     print("test editing all cells")
@@ -403,7 +576,15 @@ def test_stress(address):
         for a in letter:
             client.send_message(SelectCell(a+i))
             client.receive()
-            client.send_message(EditCell(a+i, "1"))
+            client.send_message(EditCell(a+i, i))
+            client.receive()
+            client.send_message(SelectCell(a+i))
+            client.receive()
+            client.send_message(EditCell(a+i, "Hello"))
+            client.receive()
+            client.send_message(SelectCell(a+i))
+            client.receive()
+            client.send_message(EditCell(a+i, "= 3 + 10"))
             client.receive()
     
     print("Pass" + messageterminator)
@@ -445,6 +626,23 @@ def test_stress2(address):
             client2.receive()
     
     print("Pass" + messageterminator)
+
+def test_sttess3():
+    for int i in range(0, 10):
+        client.send_message(SelectCell("A1"))
+        client.send_message(EditCell("A1", "=3"))
+        client.receive()
+        client.send_message(SelectCell("A1"))
+        client.send_message(EditCell("A1", "= 20 +3"))
+        client.receive()
+        client.send_message(SelectCell("A1"))
+        client.send_message(EditCell("A1", "Hello"))
+        client.receive()
+        client.send_message(SelectCell("A1"))
+        client.send_message(EditCell("A1", "32"))
+        client.receive()
+    for int i in range(0, 30):
+        
 
 #from https://www.geeksforgeeks.org/socket-programming-python/
 
