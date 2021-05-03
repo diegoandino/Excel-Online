@@ -580,7 +580,6 @@ TEST(SpreadsheetTests, Undo1)
 	EXPECT_EQ("", sp.undo(s));
 	EXPECT_EQ("a1", s);
 	EXPECT_EQ("", sp.get_cell_contents(name1));
-
 }
 
 TEST(SpreadsheetTests, UndoLongChain)
@@ -633,6 +632,21 @@ TEST(SpreadsheetTests, UndoLongChain)
 	std::string s1("");
 	EXPECT_EQ(content1, sp.undo(s1));
 	EXPECT_EQ(content1, sp.get_cell_contents(name1));
+}
+
+TEST(SpreadsheetTests, Revert1)
+{
+	std::string uwu("UwU");
+	Spreadsheet sp(uwu);
+
+	std::string name1("a1");
+	std::string content1("Tarik is not a weeb");
+	sp.set_contents_of_cell(name1, content1);
+
+	//std::string s("");
+	EXPECT_EQ("", sp.revert("a1", false));
+	EXPECT_EQ("", sp.get_cell_contents(name1));
+
 }
 
 #pragma endregion

@@ -218,7 +218,8 @@ void Server::ProcessRequests(int client_socket, const char* message, int length,
 	else
 	{
 		// Else Update Loop
-		ProcessUndoRequests(client_socket, message, length, req);
+		ProcessUndoRequests(client_socket, req);
+		ProcessRevertRequests(client_socket, req);
 		ProcessCellSelectedRequests(client_socket, message, length, req);
 		ProcessCellEditedRequests(client_socket, message, length, req);
 	}
@@ -532,7 +533,7 @@ Spreadsheet* Server::find_selected_spreadsheet(std::string name) {
 /// Processes an undo request on a spreadsheet
 /// </summary>
 /// <param name="client_socket"></param>
-void Server::ProcessUndoRequests(int client_socket, const char* message, int length, JObject req)
+void Server::ProcessUndoRequests(int client_socket, JObject req)
 {
 	//get the client's spreadsheet
 	//undo the last command
@@ -561,4 +562,66 @@ void Server::ProcessUndoRequests(int client_socket, const char* message, int len
 		}
 	}
 
+}
+
+/// <summary>
+/// Processes revert requests to specific cells
+/// </summary>
+/// <param name="client_socket"></param>
+/// <param name="message"></param>
+/// <param name="length"></param>
+/// <param name="req"></param>
+void Server::ProcessRevertRequests(int client_socket, JObject req)
+{
+	std::string cell_name;
+	bool can_revert = false;
+	for (JObject::iterator it = req.begin(); it != req.end(); ++it)
+	{
+		if (it.key() == "cellName")
+		{
+			cell_name = it.value();
+		}
+
+		if (it.key() == "requestType")
+		{
+			if (it.value() == "revertCell")
+			{
+				can_revert = true;
+			}
+		}
+	}
+
+	std::string cell_n = normalize(cell_name);
+
+	if (can_revert && !cell_n.empty())
+	{
+		lock.lock();
+		Spreadsheet* sp = available_clients[client_socket];
+		std::string content(sp->revert(cell_n, false));
+		lock.unlock();
+
+		// Send data over to client to display on GUI
+		std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated "
+			"\"" ", " "\"" "cellName" "\"" ": " "\"" + cell_n + "\"" ", "
+			"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
+		);
+
+		BroadcastToClients(client_socket, json.c_str(), json.size());
+	}
+}
+
+/// <summary>
+/// normalizes a string
+/// </summary>
+/// <param name="s"></param>
+/// <returns></returns>
+std::string Server::normalize(const std::string& s)
+{
+	std::locale loc;
+	std::string str(s);
+
+	for (std::string::size_type i = 0; i < s.length(); ++i)
+		str[i] = std::tolower(s[i], loc);
+
+	return str;
 }

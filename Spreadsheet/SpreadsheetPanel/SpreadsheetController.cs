@@ -267,7 +267,7 @@ namespace SS
         public void SendRevert()
         {
             string json = @"{""requestType"": ""revertCell"",""cellName"":" + @"""" +
-                            GetCellName(col, row) + @""" }";
+                            GetCellName(col, row).ToLower() + @""" }";
 
             if (Network.server != null)
             {
