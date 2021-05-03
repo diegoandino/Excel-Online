@@ -18,7 +18,7 @@ else:
 
 
 #strings for tests
-terminator = r"\n"
+terminator = "\n"
 messageterminator = "/n"
 cell_name = "a1"
 cell_contents = "yo"
@@ -159,19 +159,18 @@ class TestClient:
         return received
 
 
-
 #The end of the class def
 
 
 #methods defs for JSON
 def DisconnectedString(ID):
-    return "{{messageType: \"disconnected\", user: \"{0}\"}}".format(ID)
+    return '{{"messageType": "disconnected", user: "{0}"}}'.format(ID)
 def SelectCell(cell_name):
-     return "{{requestType: \"selectCell\", cellName: \"{0}\" }}".format(cell_name)
+     return '{{"requestType": "selectCell", "cellName": "{0}" }}'.format(cell_name)
 def EditCell(cell_name, cell_contents):
-    return "{{requestType: \"editCell\", cellName: \"{0}\", contents: \"{1}\" }}".format(cell_name, cell_contents)
+    return '{{"requestType": "editCell", "cellName": "{0}", "contents": "{1}" }}'.format(cell_name, cell_contents)
 def RevertCell(cell_name):
-    return "{{\"requestType\": \"revertCell\", \"cellName\": \"{0}\"}}".format(cell_name)
+    return '{"requestType": "revertCell", "cellName": "{0}"}}'.format(cell_name)
 
 
 #server_handshake_files = "{1}{0}{2}{0}{3}{0}{0}".format(terminator, file1, file2, file3)
@@ -218,12 +217,10 @@ def run_input(num, address):
     elif(num=='9'):
         test_9(address)
     elif(num=='10'):
-        test_10(address)
-    elif(num=='11'):
         test_stress(address)
-    elif(num=='12'):
+    elif(num=='11'):
         test_stress2(address)
-    elif(num=='13'):
+    elif(num=='12'):
         test_stress3(address)
 
 def set_connection(ip, port):
@@ -279,13 +276,11 @@ def test_2(address):
         return
     client.send_message("file")
     string =client.receiveSpreadsheetSelectionandUpdate()
-    print(SelectCell("A1"))
-    print(EditCell("A1", "1"))
     client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", "1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "1":
+        x= json.loads(client.receive())
+        if  "cellUpdated" not in x["messageType"] or  "A1" not in x["cellName"] or "1" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -307,8 +302,8 @@ def test_3(address):
     client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", 1))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != 1:
+        x= json.loads(client.receive())
+        if  "cellUpdated" not in x["messageType"] or "A1" not in x["cellName"] or "1" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -317,8 +312,8 @@ def test_3(address):
     client.send_message(SelectCell("A4"))
     client.send_message(EditCell("A4", 5))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A4" or x["contents"] != 5:
+        x= json.loads(client.receive())
+        if  "cellUpdated" not in x["messageType"] or "A4" not in x["cellName"] or "5" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -327,8 +322,8 @@ def test_3(address):
     client.send_message(SelectCell("A5"))
     client.send_message(EditCell("A5", "=A1 + A4"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A5" or "=A1 + A4" not in x["contents"]:
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"] or "A5" not in x["cellName"] or "=A1 + A4" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -337,18 +332,18 @@ def test_3(address):
     client.send_message(SelectCell("A5"))
     client.send_message(EditCell("A5", "Hello World"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A5" or "Hello World" not in x["contents"]:
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"] or "A5" not in x["cellName"] or "Hello World" not in x["contents"]:
             print("Fail" + messageterminator)
         return
     except:
         print("Fail" + messageterminator)
         return
     client.send_message(SelectCell("A7"))
-    client.send_message(EditCell("A7", "=3"))
+    client.send_message(EditCell("A7", "3"))
     try:
         x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A5" or "=3" not in x["contents"]:
+        if "cellUpdated" not in x["messageType"] or "A7" not in x["cellName"] or "3" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -368,26 +363,26 @@ def test_4(address):
     client.send_message(SelectCell("A1"))
     client.send_message(client_undo)
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "requestError"  or x["cellName"] != "A1":
+        x= json.loads(client.receive())
+        if "requestError" not in x["messageType"]  or "A1"  not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
-    client.send_message(EditCell("A1", "=3"))
+    client.send_message(EditCell("A1", "3"))
     client.receive()
     client.send_message(client_undo)
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "=3":
+        x= json.loads(client.receive())
+        if  "cellUpdated" not in x["messageType"] or "A1" not in x["cellName"] or  not x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
     client.send_message(SelectCell("A1"))
-    client.send_message(EditCell("A1", "=3"))
+    client.send_message(EditCell("A1", "=3 + 4"))
     client.receive()
     client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", 3))
@@ -397,8 +392,8 @@ def test_4(address):
     client.receive()
     client.send_message(client_undo)
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "H":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"] or "A1"not in x["cellName"] or "H" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -406,8 +401,8 @@ def test_4(address):
         return
     client.send_message(client_undo)
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != 3:
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "3" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -415,8 +410,8 @@ def test_4(address):
         return
     client.send_message(client_undo)
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "=3":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "12" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -435,15 +430,15 @@ def test_5(address):
     client.send_message(SelectCell("A1"))
     client.send_message(RevertCell("A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        x= json.loads(client.receive())
+        if "requestError" not in x["messageType"]  or "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
     client.send_message(SelectCell("A1"))
-    client.send_message(EditCell("A1", "=3"))
+    client.send_message(EditCell("A1", "=3 + 5"))
     client.recieve()
     client.send_message(SelectCell("A1"))
     client.send_message(EditCell("A1", "What"))
@@ -453,8 +448,8 @@ def test_5(address):
     client.receive()
     client.send_message(RevertCell("A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "What":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "What" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -462,8 +457,8 @@ def test_5(address):
         return
     client.send_message(RevertCell("A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1" or x["contents"] != "=3":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "15" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -471,8 +466,8 @@ def test_5(address):
         return
         client.send_message(RevertCell("A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or not x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -500,7 +495,7 @@ def test_6(address):
     client.send_message(SelectCell("A1"))
     try:
         x= json.load(client2.receive())
-        if x["messageType"] != "cellSelected" or x["cellName"] != "A1" or x["selector"] != client.id or x["selectorName"] != client.clientname:
+        if "cellSelected" not in x["messageType"]  or "A1" not in x["cellName"] or str(client.id) not in x["selector"] or str(client.clientname) not in x["selectorName"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -510,7 +505,8 @@ def test_6(address):
     
     try:
         x= json.load(client.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        
+        if  "requestError" not in x["messageType"] or  "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -518,7 +514,7 @@ def test_6(address):
         return
     try:
         x= json.load(client2.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        if "requestError" not in x["messageType"] or "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -526,17 +522,17 @@ def test_6(address):
         return
     client2.send_message(SelectCell("A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellSelected" or x["cellName"] != "A1" or x["selector"] != client2.id or x["selectorName"] != client2.clientname:
+        x= json.loads(client.receive())
+        if "cellSelected" not in x["messageType"]  or "A1" not in x["cellName"] or str(client2.id) not in x["selector"] or str(client2.clientname) not in x["selectorName"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
-    client2.send_message(EditCell("A1", "=3"))
+    client2.send_message(EditCell("A1", "3"))
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "=3":
+        x= json.loads(client2.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "3" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -544,8 +540,8 @@ def test_6(address):
         return
     
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "=3":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "3" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -554,8 +550,8 @@ def test_6(address):
     
     client2.send_message(client_undo)
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "":
+        x= json.loads(client2.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or not x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -563,8 +559,8 @@ def test_6(address):
         return
     
         try:
-            x= json.load(client.receive())
-            if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "":
+            x= json.loads(client.receive())
+            if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or not x["contents"]:
                 print("Fail" + messageterminator)
                 return
         except:
@@ -587,8 +583,8 @@ def test_6(address):
     client.receive()
     client.send_message(RevertCell("A1"))
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "":
+        x= json.loads(client2.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or not x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -596,8 +592,8 @@ def test_6(address):
         return
     
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or not x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -605,8 +601,8 @@ def test_6(address):
         return
     client.send_message(client_undo)
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "Hello":
+        x= json.loads(client2.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or "Hello" not in x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -614,8 +610,8 @@ def test_6(address):
         return
     
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "cellUpdated" or x["cellName"] != "A1"or x["contents"] != "Hello":
+        x= json.loads(client.receive())
+        if "cellUpdated" not in x["messageType"]  or "A1" not in x["cellName"] or not x["contents"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -637,8 +633,8 @@ def test_7(address):
     client2.send_message("file")
     client.close_connection()
     try:
-        x = json.load(client2.receive())
-        if x["messageType"]!= "disconnected" or x["user"] != client.id:
+        x = json.loads(client2.receive())
+        if "disconnected" not in x["messageType"] or str(client.id) not in x["user"]:
             print("Fail" + messageterminator)
         return
     except:
@@ -663,16 +659,16 @@ def test_8(address):
     client.receive()
     client2.send_message(EditCell("A1", "=A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        x= json.loads(client.receive())
+        if "requestError" not in x["messageType"] or "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        x= json.loads(client2.receive())
+        if "requestError" not in x["messageType"] or "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -682,16 +678,16 @@ def test_8(address):
     client.receive()
     client2.send_message(EditCell("A1", "=A1 + A1"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        x= json.loads(client.receive())
+        if "requestError" not in x["messageType"] or "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A1":
+        x= json.loads(client2.receive())
+        if "requestError" not in x["messageType"] or "A1" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -702,16 +698,16 @@ def test_8(address):
     client1.send_message(SelectCell("A3"))
     client2.send_message(EditCell("A3", "=A1 + A8"))
     try:
-        x= json.load(client.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A3":
+        x= json.loads(client.receive())
+        if "requestError" not in x["messageType"] or "A3" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
         print("Fail" + messageterminator)
         return
     try:
-        x= json.load(client2.receive())
-        if x["messageType"] != "requestError" or x["cellName"] != "A3":
+        x= json.loads(client2.receive())
+        if "requestError" not in x["messageType"] or "A3" not in x["cellName"]:
             print("Fail" + messageterminator)
             return
     except:
@@ -738,13 +734,6 @@ def test_9(address):
     print("Pass" + messageterminator)
     return
 
-def test_10(address):
-    print(max_test_time)
-    print("testing spreadsheet update for new client")
-    client = TestClient("client")
-
-    print("Pass" + messageterminator)
-    return
 
 def test_stress(address):
     print(max_test_time)
@@ -791,17 +780,26 @@ def test_stress2(address):
     for i in range(0, 100):
         for a in letter:
             client.send_message(SelectCell(a+i))
-            client.receive()
+            client2.receive()
+            client3.receive()
             client.send_message(EditCell(a+i, "1"))
             client.receive()
-            client2.send_message(SelectCell(a+i))
             client2.receive()
+            client3.receive()
+            client2.send_message(SelectCell(a+i))
+            client.receive()
+            client3.receive()
             client2.send_message(EditCell(a+i, "2"))
+            client.receive()
             client2.receive()
-            client2.send_message(SelectCell(a+i))
+            client3.receive()
+            client3.send_message(SelectCell(a+i))
+            client.receive()
             client2.receive()
-            client2.send_message(EditCell(a+i, "3"))
+            client3.send_message(EditCell(a+i, "3"))
+            client.receive()
             client2.receive()
+            client3.receive()
     
     print("Pass" + messageterminator)
     return
