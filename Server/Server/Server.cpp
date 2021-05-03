@@ -293,8 +293,8 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 
 	//advances the client in the handshake
 	isClientSetup[client_socket] = 2;
-
-	std::string str = message;
+	std::string str(message);
+	str = str.substr(0, str.length() - 1); 
 
 	// If the requested spreadsheet is present send it
 	for (int index = 0; index < available_spreadsheets.size(); index++)
