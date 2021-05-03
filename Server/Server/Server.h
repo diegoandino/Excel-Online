@@ -38,6 +38,7 @@ protected:
 
 	void SendToClient(int client_socket,  const char* message, int length);			// Handler to send data to clients
 	void BroadcastToClients(int sending_client, const char* message, int length);	// Handler to broadcast data to clients
+	void BroadcastToOtherClients(int sending_client, const char* message, int length);	// Handler to broadcast data to other clients
 
 private:
 	const char* _ip_address;								// IP Address that the server will run on  

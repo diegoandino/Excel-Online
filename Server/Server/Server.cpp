@@ -129,6 +129,26 @@ void Server::BroadcastToClients(int sending_client, const char* message, int len
 	}
 }
 
+/// <summary>
+/// Send (broadcast) changes to all clients
+/// </summary>
+/// <param name="sending_client"></param>
+/// <param name="message"></param>
+/// <param name="length"></param>
+void Server::BroadcastToOtherClients(int sending_client, const char* message, int length) {
+	// Send message to other clients
+	/*for (std::map<int, Spreadsheet*>::iterator it = available_clients.begin(); it != available_clients.end(); ++it) {
+		if(available_clients[sending_client] = available_clients[it->first])
+			SendToClient(it->first, message, length);
+	}*/
+
+	Spreadsheet* sp = available_clients[sending_client];
+	for (int i : sp_to_client[sp])
+	{
+		if(i != sending_client)
+		SendToClient(i, message, length);
+	}
+}
 
 /// <summary>
 /// method called upon client connection
@@ -184,8 +204,10 @@ void Server::OnMessageReceived(int client_socket, const char* message, int lengt
 {
 	try
 	{
-		JObject req = JObject::parse(message);
-		ProcessRequests(client_socket, message, length, req);
+		std::string string(message);
+		string = string.substr(0, string.length() - 1);
+		JObject req = JObject::parse(string.c_str());
+		ProcessRequests(client_socket, string.c_str(), length, req);
 	}
 	catch (std::exception e)
 	{
@@ -424,7 +446,7 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}\n"
 				);
 
-				BroadcastToClients(client_socket, json.c_str(), json.size());
+				BroadcastToOtherClients(client_socket, json.c_str(), json.size());
 			}
 		}
 	}
