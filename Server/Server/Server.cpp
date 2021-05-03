@@ -291,8 +291,6 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 			// Send all existing cells to this client.
 			for (std::string cellName : spreadsheet->get_nonempty_cells())
 			{
-				std::cout << "open cell: " << cellName << std::endl;
-
 				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellUpdated"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "contents" "\"" ": " "\"" + spreadsheet->get_cell_contents(cellName) + "\"" "}" + "\n");
@@ -319,6 +317,7 @@ void Server::ProcessClientFilename(int client_socket, const char* message)
 	available_clients[client_socket] = s;
 	sp_to_client[s].push_back(client_socket);
 	lock.unlock();
+
 	std::string id(std::to_string(client_socket) + "\n");
 	SendToClient(client_socket, id.c_str(), id.size());
 	initial_handshake_approved = true;
@@ -335,9 +334,6 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 
 		if (it.key() == "requestType") {
 			if (it.value() == "selectCell") {
-				std::cout << "Client: " << client_socket << " Has Selected Cell: " << cellName
-					<< " On Spreadsheet: " << available_clients[client_socket]->get_spreadsheet_name() << '\n';
-
 				std::string json("{" "\"" "messageType" "\"" ": " "\"" "cellSelected"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}\n"
@@ -366,13 +362,7 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 		}
 
 		if (it.key() == "requestType") {
-
-			// TODO :: Process and send back to client GUI to display changes
 			if (it.value() == "editCell") {
-				std::cout << "Client: " << client_socket << " Has Requested Edit: " << content
-					<< " On Cell: " << cellName << " On Spreadsheet: " <<
-					available_clients[client_socket]->get_spreadsheet_name() << '\n';
-
 				// Store data in server Spreadsheet
 				lock.lock();
 
@@ -387,12 +377,12 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 						"\"" "message" "\"" ": " "\"" + e.what() + "\"" "}" + "\n"
 					);
 
-					std::cout << "JSON BEING SENT: " << json << std::endl;
 					SendToClient(client_socket, json.c_str(), json.size());
 					lock.unlock();
-					return;
-					
+
+					return;	
 				}
+
 				lock.unlock();
 
 				// Send data over to client to display on GUI
@@ -400,8 +390,6 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 					"\"" ", " "\"" "cellName" "\"" ": " "\"" + cellName + "\"" ", "
 					"\"" "contents" "\"" ": " "\"" + content + "\"" "}" + "\n"
 				);
-
-				std::cout << "JSON BEING SENT: " << json << std::endl;
 
 				BroadcastToClients(client_socket, json.c_str(), json.size());
 			}
