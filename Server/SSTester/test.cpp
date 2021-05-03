@@ -567,5 +567,64 @@ TEST(SpreadsheetTests, SetCellContents1)
 	EXPECT_EQ(content2, sp.get_cell_contents(name2));
 }
 
+TEST(SpreadsheetTests, Undo1)
+{
+	std::string uwu("UwU");
+	Spreadsheet sp(uwu);
+
+	std::string name1("a1");
+	std::string content1("Tarik is not a weeb");
+	sp.set_contents_of_cell(name1, content1);
+
+	sp.undo();
+
+	EXPECT_EQ("", sp.get_cell_contents(name1));
+}
+
+TEST(SpreadsheetTests, UndoLomgChain)
+{
+	std::string uwu("UwU");
+	Spreadsheet sp(uwu);
+
+	std::string name1("a1");
+	std::string content1("Tarik is not a weeb");
+	sp.set_contents_of_cell(name1, content1);
+
+	std::string name2("a1");
+	std::string content2("Tarik is a weeb");
+	sp.set_contents_of_cell(name2, content2);
+
+	std::string name3("a1");
+	std::string content3("weeb");
+	sp.set_contents_of_cell(name3, content3);
+
+	std::string name4("a1");
+	std::string content4("anime is good");
+	sp.set_contents_of_cell(name4, content4);
+
+	std::string name5("a1");
+	std::string content5("sherk is the best anime");
+	sp.set_contents_of_cell(name5, content5);
+
+	std::string name6("a1");
+	std::string content6("ofc");
+	sp.set_contents_of_cell(name6, content6);
+
+	sp.undo();
+	EXPECT_EQ(content5, sp.get_cell_contents(name5));
+
+	sp.undo();
+	EXPECT_EQ(content4, sp.get_cell_contents(name4));
+
+	sp.undo();
+	EXPECT_EQ(content3, sp.get_cell_contents(name3));
+
+	sp.undo();
+	EXPECT_EQ(content2, sp.get_cell_contents(name2));
+
+	sp.undo();
+	EXPECT_EQ(content1, sp.get_cell_contents(name1));
+}
+
 #pragma endregion
 

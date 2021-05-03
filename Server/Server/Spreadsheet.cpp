@@ -149,6 +149,7 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std:
 	name_check(name);
 
 	changed = true;
+	stack_changes.push(name);
 
 	//three cases possible content is either a:
 	//number
@@ -180,18 +181,26 @@ std::list<std::string> Spreadsheet::set_contents_of_cell(std::string& name, std:
 /// </summary>
 std::string Spreadsheet::undo()
 {
-	return revert(stack_changes.pop());
+	return revert(stack_changes.pop(), true);
 }
 
 /// <summary>
 /// Reverts a specific cell back to its previous value
 /// </summary>
 /// <param name="name">name of the cell to be reverted</param>
-std::string Spreadsheet::revert(const std::string& name)
+std::string Spreadsheet::revert(const std::string& name, bool is_undo)
 {
 	try
 	{
-		return cells_map.at(name).revert();
+		if (is_undo)
+		{
+			return cells_map.at(name).revert();
+		}
+		else
+		{	
+			//should add to the changes stack
+			return cells_map.at(name).revert();
+		}
 	}
 	catch (std::out_of_range e)
 	{

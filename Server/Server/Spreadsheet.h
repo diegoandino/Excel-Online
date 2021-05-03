@@ -30,7 +30,7 @@ public:
 	std::list<std::string> set_contents_of_cell(std::string& name, std::string& content);
 
 	std::string undo();
-	std::string revert(const std::string& name);
+	std::string revert(const std::string& name, bool is_undo);
 
 private:
 
@@ -60,6 +60,10 @@ private:
 
 	/// <summary>
 	/// stores the names of changed cells
+	/// two types of info here
+	/// cell names: just cells names that we can call cell.revert on
+	/// reverts: cell name and value pair, we push the value into the cell
+	/// reverts look like this: CellName:::Value
 	/// </summary>
 	changes_stack stack_changes;
 };
