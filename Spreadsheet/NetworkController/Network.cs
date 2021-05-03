@@ -188,7 +188,10 @@ namespace NetworkController
                 // Sends spreadsheet name to open to server
                 if (spreadsheetNameQueue.Count >= 1)
                 {
-                    Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+                    //Networking.Send(server.TheSocket, spreadsheetNameQueue.Dequeue());
+                    byte[] dataBytes = Encoding.UTF8.GetBytes(spreadsheetNameQueue.Dequeue());
+                    server.TheSocket.BeginSend(dataBytes, 0, dataBytes.Length, SocketFlags.None, null, server.TheSocket);
+
                     server.RemoveData(0, server.data.ToString().Length);
                     return;
                 }
@@ -201,45 +204,50 @@ namespace NetworkController
 
                 try
                 {
-                    JObject json = JObject.Parse(server.data.ToString());
-                    json.TryGetValue("messageType", out JToken value);
-                    if (value.ToString().Contains("cellUpdated"))
-                        if (json.ContainsKey("cellName"))
-                            if (json.ContainsKey("contents"))
-                            {
-                                cellName = json["cellName"].ToString();
-                                contents = json["contents"].ToString();
 
-                                UpdateArrived(cellName, contents);
+                    string[] commands = Regex.Split(server.data.ToString(), @"\n+");
 
-                                canEdit = true;
-                            }
-                    if (value.ToString().Contains("cellSelected"))
+                    foreach(string s in commands)
                     {
-                        // TODO: Show in client's GUI and disable owner's selection showing up
+                        JObject json = JObject.Parse(s);
+                        json.TryGetValue("messageType", out JToken value);
+                        if (value.ToString().Contains("cellUpdated"))
+                            if (json.ContainsKey("cellName"))
+                                if (json.ContainsKey("contents"))
+                                {
+                                    cellName = json["cellName"].ToString();
+                                    contents = json["contents"].ToString();
 
-                    }
-                    if (value.ToString().Contains("disconnected"))
-                    {
-                        json.TryGetValue("user", out JToken disconnect);
-                        Disconnect(disconnect.Value<string>() + " has disconnected");
-                        return;
-                    }
-                    if (value.ToString().Contains("requestError"))
-                    {
-                        json.TryGetValue("message", out JToken error);
-                        json.TryGetValue("message", out JToken cellName);
-                        Invalid(cellName.Value<string>() + " : " + error.Value<string>());
-                        return;
-                    }
-                    if (value.ToString().Contains("serverError"))
-                    {
-                        json.TryGetValue("message", out JToken error);
-                        ConnectionError(error.Value<string>());
-                        return;
-                    }
+                                    UpdateArrived(cellName, contents);
 
+                                    canEdit = true;
+                                }
+                        if (value.ToString().Contains("cellSelected"))
+                        {
+                            // TODO: Show in client's GUI and disable owner's selection showing up
 
+                        }
+                        if (value.ToString().Contains("disconnected"))
+                        {
+                            json.TryGetValue("user", out JToken disconnect);
+                            Disconnect(disconnect.Value<string>() + " has disconnected");
+                            return;
+                        }
+                        if (value.ToString().Contains("requestError"))
+                        {
+                            json.TryGetValue("message", out JToken error);
+                            json.TryGetValue("message", out JToken cellName);
+                            Invalid(cellName.Value<string>() + " : " + error.Value<string>());
+                            return;
+                        }
+                        if (value.ToString().Contains("serverError"))
+                        {
+                            json.TryGetValue("message", out JToken error);
+                            ConnectionError(error.Value<string>());
+                            return;
+                        }
+                    }
+               
                     server.RemoveData(0, server.data.ToString().Length);
                 }
 
@@ -252,6 +260,8 @@ namespace NetworkController
                          //TODO: Now the client can send edits
                     }
                     */
+
+                    Console.WriteLine(e.Message);
 
                     server.RemoveData(0, server.data.ToString().Length);
                 }

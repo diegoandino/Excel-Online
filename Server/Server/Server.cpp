@@ -411,9 +411,9 @@ void Server::ProcessCellSelectedRequests(int client_socket, const char* message,
 				std::cout << "Client: " << client_socket << " Has Selected Cell: " << cellName
 					<< " On Spreadsheet: " << available_clients[client_socket]->get_spreadsheet_name() << '\n';
 
-				std::string json = std::string("{" "\"" "messageType" "\"" ": " "\"" "cellSelected"
+				std::string json("{" "\"" "messageType" "\"" ": " "\"" "cellSelected"
 					"\"" ", "  "\""  "cellName" "\"" ": " "\"" + cellName + "\"" ", "
-					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}" + "\n"
+					"\"" "selector" "\"" ": " "\"" + std::to_string(client_socket) + "\"" "}\n"
 				);
 
 				BroadcastToClients(client_socket, json.c_str(), json.size());

@@ -438,7 +438,9 @@ namespace SS
                     // Recalculate and set Value box to current value.
                     RecalculateCells(CellsToRecalculate);
                     //MAY CAUSE BUG - ASK ME (VINCENT)
-                    CellValueBox.Text = controller.GetCellValue(cellName).ToString();
+                    this.Invoke(new MethodInvoker(() => {
+                        CellValueBox.Text = controller.GetCellValue(cellName).ToString();
+                    }));
                 }
 
                 // Update cells normally.
@@ -451,7 +453,9 @@ namespace SS
 
                     RecalculateCells(CellsToRecalculate);
                     //HERE TOO
-                    CellValueBox.Text = controller.GetCellValue(cellName).ToString();
+                    this.Invoke(new MethodInvoker(() => { 
+                        CellValueBox.Text = controller.GetCellValue(cellName).ToString(); }));
+
                 }
             }
 
@@ -476,7 +480,8 @@ namespace SS
         {
             foreach (string cell in CellsToRecalculate)
             {
-                MainPanel.SetValue(cells[cell][0], cells[cell][1], controller.GetCellValue(cell).ToString());
+                string c = cell.ToLower();
+                MainPanel.SetValue(cells[c][0], cells[c][1], controller.GetCellValue(cell).ToString());
             }
         }
 
@@ -869,9 +874,11 @@ namespace SS
         /// <param name="name"></param>
         private void GetCellCoords(string name, out int column, out int row)
         {
+            string n = name.ToUpper();
+
             int col = 0;
 
-            switch (name[0])
+            switch (n[0])
             {
                 #region Reverse Alphabet Spaghetti Code - DO NOT OPEN
                 case 'A':
