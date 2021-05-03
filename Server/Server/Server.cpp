@@ -465,7 +465,8 @@ void Server::ProcessCellEditedRequests(int client_socket, const char* message, i
 					);
 
 					std::cout << "JSON BEING SENT: " << json << std::endl;
-					BroadcastToClients(client_socket, json.c_str(), json.size());
+				//	BroadcastToClients(client_socket, json.c_str(), json.size());
+					SendToClient(client_socket, json.c_str(), json.size());
 					lock.unlock();
 					return;
 					

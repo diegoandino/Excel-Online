@@ -239,9 +239,10 @@ namespace NetworkController
                                 }
                         if (value.ToString().Contains("requestError"))
                         {
+                            string n = json["cellName"].ToString();
                             json.TryGetValue("message", out JToken error);
                             json.TryGetValue("message", out JToken cellName);
-                            Invalid("requestError" + " : " + error.Value<string>() + " on cell: " + cellName);
+                            Invalid("requestError" + " : " + error.Value<string>() + " on cell: " + n);
                             server.RemoveData(0, server.data.Length);
                             return;
                         }
