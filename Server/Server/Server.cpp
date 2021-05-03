@@ -5,19 +5,23 @@
 /// </summary>
 /// <returns></returns>
 int Server::Init() {
-	// Initialize WinSock 
+#ifdef _WIN32
 	WSADATA wsaData;
 	WORD ver = MAKEWORD(2, 2);
 	int wsOK = WSAStartup(ver, &wsaData);
-	if (wsOK != 0) {
+	if (wsOK != 0)
 		return wsOK;
-	}
+#endif	
 
 	// Create Socket
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socket == INVALID_SOCKET) {
+#ifdef _WIN32
+	if (_socket == INVALID_SOCKET)
 		return WSAGetLastError();
-	}
+#else	
+	if (_socket < 0)
+		return errno;
+#endif
 
 	// Bind IP and Port to Socket
 	sockaddr_in sock_address;
@@ -25,14 +29,26 @@ int Server::Init() {
 	sock_address.sin_port = htons(_port);
 	inet_pton(AF_INET, _ip_address, &sock_address.sin_addr);
 
+#ifdef _WIN32
 	if (bind(_socket, (sockaddr*)&sock_address, sizeof(sock_address)) == SOCKET_ERROR) {
 		return WSAGetLastError();
 	}
+#else
+	if (bind(_socket, (sockaddr*)&sock_address, sizeof(sock_address)) == -1) {
+		return errno;
+	}
+#endif	
 
 	// Tell Winsock the socket is ready for listening
+#ifdef _WIN32
 	if (listen(_socket, SOMAXCONN) == SOCKET_ERROR) {
 		return WSAGetLastError();
 	}
+#else
+	if (listen(_socket, SOMAXCONN) == -1) {
+		return errno;
+	}
+#endif	
 
 	// Create the master file descriptor set and zero it;
 	FD_ZERO(&_master);
@@ -40,30 +56,44 @@ int Server::Init() {
 	// Add Socket to FDSet to get later incoming connections
 	FD_SET(_socket, &_master);
 
+	_max_socket = _socket;
+
 	return 0;
 }
+
 
 /// <summary>
 /// Run the server
 /// </summary>
 /// <returns></returns>
 int Server::Run() {
+	std::cout << "Server Is Running . . ." << "\n"; 
+
 	bool is_connected = true;
 	while (is_connected) {
 		fd_set copy = _master;
 
+		//int socket_count = select(0, &copy, nullptr, nullptr, nullptr);
 		int socket_count = select(0, &copy, nullptr, nullptr, nullptr);
 
 		// Loop through all current connections
 		for (int i = 0; i < socket_count; i++) {
+#ifdef _WIN32
 			SOCKET current_socket = copy.fd_array[i];
-
+			SOCKET current = _max_socket;
+#else
+			SOCKET current_socket = _max_socket;
+#endif
+			std::cout << current << "\n"; 
 			if (current_socket == _socket) {
 				// Accept new connection in
 				SOCKET client = accept(_socket, nullptr, nullptr);
 
 				// Add the new connection into the list of connected clients
 				FD_SET(client, &_master);
+
+				if (client > _max_socket)
+					_max_socket = client;
 
 				// Client Connected Callback
 				OnClientConnect(client);
@@ -72,19 +102,22 @@ int Server::Run() {
 			else {
 				const int buffer_length = 4096;
 				char buffer[buffer_length];
-				ZeroMemory(buffer, buffer_length);
+				memset(buffer, 0, buffer_length);
 
 				// Receive Message
 				int bytes_in = recv(current_socket, buffer, buffer_length, 0);
 				if (bytes_in <= 0) {
 					// Disconnect Client using Client Disconnected callback
 					OnClientDisconnect(current_socket, buffer, buffer_length);
+#ifdef _WIN32
 					closesocket(current_socket);
+#else
+					close(current_socket);
+#endif	
 					FD_CLR(current_socket, &_master);
 				}
 
 				else {
-					// TODO: Check for JSON . . .
 					OnMessageReceived(current_socket, buffer, bytes_in);
 				}
 			}
@@ -93,8 +126,12 @@ int Server::Run() {
 
 	// Remove listening socket from the master file descriptor set and close it
 	FD_CLR(_socket, &_master);
+#ifdef _WIN32
 	closesocket(_socket);
 	WSACleanup();
+#else
+	close(_socket);
+#endif	
 	return 0;
 }
 

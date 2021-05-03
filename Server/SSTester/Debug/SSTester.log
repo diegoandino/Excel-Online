@@ -1,1 +1,8 @@
-﻿
+﻿  pch.cpp
+  test.cpp
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Server\Formula.cpp(38,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Server\dependency_graph.cpp(28,28): warning C4101: 'e': unreferenced local variable
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Server\dependency_graph.cpp(48,28): warning C4101: 'e': unreferenced local variable
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Server\changes_stack.cpp(57,26): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Server\Spreadsheet.cpp(288,28): warning C4101: 'e': unreferenced local variable
+  SSTester.vcxproj -> C:\Users\Diego\Desktop\CODE\CS_3505\Final_Project\cs3505-final-project\Server\Debug\SSTester.exe

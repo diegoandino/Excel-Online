@@ -5,7 +5,7 @@
 # extension.)
 #
 # docker pull ubuntu
-# docker build --tag server_teamname .
+# docker build --tag it_should_work_now .
 # 
 # (Don't forget the trailing . to specify that this directory is the context.)
 
@@ -34,23 +34,14 @@ RUN apt-get -y update && apt-get -y install \
   apt-utils \
   emacs-nox \
   g++ \
-   autoconf \
+  autoconf \
   automake \
   build-essential \
   cmake \
   git-core \
-  libass-dev \
-  libfreetype6-dev \
-  libgnutls28-dev \
-  libtool \
-  libvorbis-dev \
-  meson \
-  ninja-build \
   pkg-config \
-  texinfo \
-  wget \
-  yasm \
-  zlib1g-dev \
-  netcat
+  python3 \
+  netcat \
+  nlohmann-json3-dev
 
 COPY . /server 
