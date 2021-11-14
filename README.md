@@ -1,2 +1,2 @@
 # cs3505-final-project
-CS3505 Final Project using Docker, C++ and C#
+An extension of my Spreadsheet project that adds a Google Sheets-like experience. Built with C++, C#, Docker and AWS.
